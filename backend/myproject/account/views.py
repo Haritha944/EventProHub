@@ -30,13 +30,14 @@ class UserLoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             email=serializer.data.get('email')
             password=serializer.data.get('password')
+            print(f"Attempting to authenticate user: {email}") 
             user=authenticate(email=email,password=password)
             if user is not None:
                 token=get_tokens_for_user(user)
                 return Response({'token':token,'user_id':user.id,'msg':'Login Success'},status=status.HTTP_200_OK)
             else:
                 return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}},status=status.HTTP_404_NOT_FOUND)
-
+            
 class UserProfileView(APIView):
     permission_classes = [AllowAny]
     def get(self,request):
