@@ -54,7 +54,7 @@ export default function UserSignupComponent () {
         <div className="w-full md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${signup})`,width:'500px' }}>
         {/* Optionally add some overlay or content here */}
          </div>
-        <div className='w-full md:w-1/2 flex items-center justify-center pt-8 md:pl-10'>
+        <div className='w-full md:w-1/2 flex items-center justify-center pt-4 md:pl-10'>
             <div className='w-full flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto'>
             <div className='pb-5 '>
                 <h1 className='text-2xl font-bold mt-2 '>USER REGISTRATION</h1>
