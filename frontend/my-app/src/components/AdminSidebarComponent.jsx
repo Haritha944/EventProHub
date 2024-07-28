@@ -13,6 +13,7 @@ function AdminSidebarComponent  ()  {
 
     const navigate=useNavigate()
     const handleLogout = ()=>{
+        localStorage.removeItem('adminToken'); 
         navigate('/adminlogin');
     };
   return (
@@ -30,13 +31,13 @@ function AdminSidebarComponent  ()  {
         </a>
       </li>
       <li>
-        <a href="#" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+        <a href="#" onClick={() => navigate('/adminuserlist')}  class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
           <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-indigo-400"><PersonIcon className="me-2" /></span>
           <span class="text-sm font-medium text-pink-400">Customers</span>
         </a>
       </li>
       <li>
-        <a href="#" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+        <a href="#" onClick={() => navigate('/adminownerlist')} class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
           <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-indigo-400"><SupervisedUserCircleIcon className="me-2" /></span>
           <span class="text-sm font-medium text-pink-400">Servicers</span>
         </a>
@@ -54,7 +55,7 @@ function AdminSidebarComponent  ()  {
         </a>
       </li>
       <li>
-        <a href="#" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+        <a href="#" onClick={handleLogout} class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
           <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-indigo-400"><LogoutIcon className="me-2" /></span>
           <span class="text-sm font-medium  text-pink-400">Logout</span>
         </a>

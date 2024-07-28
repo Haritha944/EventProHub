@@ -3,6 +3,8 @@ import {Route,Router,Routes} from 'react-router-dom';
 import { UserSignupPage } from './Pages/UserSignupPage';
 import {UserLoginPage} from './Pages/UserLoginPage';
 import Homepage from './Pages/Homepage'
+import PrivateRoute from './utils/PrivateRoute';
+import AdminPrivateRoute from './utils/AdminPrivateRoute';
 import {AdminLoginPage} from './Pages/AdminLoginPage'
 import AdminUserlistpage from './Pages/AdminUserlistpage'
 
@@ -13,11 +15,11 @@ function App() {
       <Routes>
         <Route path="/signup" element={<UserSignupPage/>}/>
         <Route path="/login" element={<UserLoginPage/>}/>
-        <Route path="/homepage" element={<Homepage/>}/>
+        <Route path="/homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
-        <Route path="/adminuserlist" element={<AdminUserlistpage/>}/>
+        <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
 
       </Routes>
     </div>

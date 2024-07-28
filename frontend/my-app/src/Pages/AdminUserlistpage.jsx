@@ -13,6 +13,7 @@ function AdminUserlistpage ()  {
             <div>
                 <h3 className='text-orange-400 font-bold text-2xl mb-5'>Customers</h3>
             </div>
+            <AdminUserlistComponent/>
         </div>
     </div>
     </div>

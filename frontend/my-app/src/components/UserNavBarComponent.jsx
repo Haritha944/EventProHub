@@ -41,6 +41,7 @@ export const UserNavBarComponent = () => {
         setUserName('');
         setLoggedIn(false);
         setDropdownOpen(false);
+        localStorage.removeItem('authToken');
         navigate('/homepage');
 
         }
