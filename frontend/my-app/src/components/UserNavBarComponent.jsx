@@ -1,11 +1,13 @@
 import React,  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { clearUser } from '../redux/Slices/userSlice'; 
 import eventlogo from '../Images/Eventpro hub (1).png'
 
 export const UserNavBarComponent = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [userName,setUserName]=useState('');
     const [loggedIn, setLoggedIn] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -42,6 +44,7 @@ export const UserNavBarComponent = () => {
         setLoggedIn(false);
         setDropdownOpen(false);
         localStorage.removeItem('authToken');
+        dispatch(clearUser()); 
         navigate('/homepage');
 
         }
