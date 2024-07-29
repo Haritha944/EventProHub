@@ -36,6 +36,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    otp=models.CharField(max_length=6,null=True,blank=True)
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name","phone_number"]
