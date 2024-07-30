@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import AdminPrivateRoute from './utils/AdminPrivateRoute';
 import {AdminLoginPage} from './Pages/AdminLoginPage'
 import AdminUserlistpage from './Pages/AdminUserlistpage'
+import UserOTPVerificationPage from './Pages/UserOTPVerificationPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/signup" element={<UserSignupPage/>}/>
         <Route path="/login" element={<UserLoginPage/>}/>
         <Route path="/homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
+        <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
