@@ -8,6 +8,7 @@ import AdminPrivateRoute from './utils/AdminPrivateRoute';
 import {AdminLoginPage} from './Pages/AdminLoginPage'
 import AdminUserlistpage from './Pages/AdminUserlistpage'
 import UserOTPVerificationPage from './Pages/UserOTPVerificationPage';
+import ServicerSignupPage from './Pages/ServicerSignupPage';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
         <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
+
+        <Route path="/servicersignup" element={<ServicerSignupPage/>}/>
+
 
       </Routes>
     </div>
