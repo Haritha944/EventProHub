@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'account',
     'adminapp',
+    'servicer',
     
 ]
 
@@ -179,4 +180,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'trendyfoot.official@gmail.com'
-EMAIL_HOST_PASSWORD = 'ogmexiihifysxkni'
+EMAIL_HOST_PASSWORD = 'gxgt zqus fsav mufu'

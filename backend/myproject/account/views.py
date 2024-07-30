@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate
 from account.emails import *
 from account.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,VerifyAccountSerializer
 from .models import User
+from django.http import JsonResponse
+
 
 # Create your views here.
 def get_tokens_for_user(user):
@@ -58,7 +60,7 @@ class VerifyOTP(APIView):
             data=request.data
             serializer = VerifyAccountSerializer(data=data)
             if serializer.is_valid(raise_exception=True):
-                email=serializer.validated_data['email']
+                email=serializer.data['email']
                 otp=serializer.data['otp']
                 user_queryset = User.objects.filter(email=email)
                 if not user_queryset.exists():
@@ -66,19 +68,23 @@ class VerifyOTP(APIView):
                         'status':400,
                         'message':'Invalid Email',
                         'data':'Invalid Email'
-                    })
+                    },status=status.HTTP_400_BAD_REQUEST)
                 user = user_queryset.first()
-                if user is None:
+                if user.otp!=otp:
                     return Response({
-                         'status': 400,
-                        'message': 'Invalid Email',
-                        'data': 'Invalid Email'
-                    })
-                serializer=UserLoginSerializer(user,data={'is_active':True},partial=True)
-                if serializer.is_valid():
-                    serializer.save()
+                        'status': 400,
+                        'message': 'Invalid OTP',
+                        'data': 'Invalid OTP'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                user.is_active=True
+                user.save()     
                 return Response({'msg':'Account Verified'},status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
             return Response({'message':'Something went wrong','status':status.HTTP_500_INTERNAL_SERVER_ERROR}, 
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+def test_send_otp(request):
+    email = 'meera@gmail.com'
+    send_otp_via_email(email)
+    return JsonResponse({'status': 'OTP sent'})
