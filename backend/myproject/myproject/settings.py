@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'account',
     'adminapp',
-    'servicer',
+    'provider',
+    
+    
     
 ]
 
