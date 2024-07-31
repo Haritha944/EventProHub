@@ -6,15 +6,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerServicer } from "../redux/Slices/servicerSlice";
+import signup from '../Images/signup (2).jpg'
 
 const fields = [
   { label: 'Name', name: 'name', type: 'text', required: true, gridCols: 2, placeholder: 'Enter your name' },
   { label: 'Email', name: 'email', type: 'email', required: true, gridCols: 2, placeholder: 'Enter your email' },
   { label: 'Phone Number', name: 'phone_number', type: 'tel', required: true, gridCols: 1, placeholder: 'Enter your phone number' },
-  { label: 'Service Type', name: 'service_types', type: 'text', required: false, gridCols: 1, placeholder: 'Enter service types' },
   { label: 'Experience', name: 'experience', type: 'text', required: true, gridCols: 1, placeholder: 'Enter your Experience' },
-  { label: 'Location', name: 'location', type: 'text', required: true, gridCols: 1, placeholder: 'Enter your location' },
-  { label: 'Venture Address', name: 'venture_address', type: 'text', required: true, gridCols: 2, placeholder: 'Enter your venture address' },
+  { label: 'Address', name: 'address', type: 'text', required: true, gridCols: 2, placeholder: 'Enter your address' },
   { label: 'Password', name: 'password', type: 'password', required: true, gridCols: 1, placeholder: 'Enter your password' },
   { label: 'Confirm Password', name: 'password2', type: 'password', required: true, gridCols: 1, placeholder: 'Confirm your password' },
 ];
@@ -38,13 +37,10 @@ export default function ServicerSignupComponent () {
       formData.append("email", data.email);
       formData.append("phone_number", data.phone_number);
       formData.append("experience", data.experience);
-      formData.append("location", data.location);
-      formData.append("venture_address", data.venture_address);
+      formData.append("address", data.address);
       formData.append("password", data.password);
       formData.append("password2", data.password2);
-      if (data.service_types) {
-        data.service_types.split(',').forEach(type => formData.append('service_types', type.trim()));
-      }
+     
 
       dispatch(registerServicer(formData));
     };
@@ -58,8 +54,13 @@ export default function ServicerSignupComponent () {
        
   return (
     <div>
-      <div className="container mx-auto mt-48">
-        <div className="lg:w-7/12 pb-10 pt-5 w-full p-4 flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto">
+      <div className="flex container mx-auto mt-48">
+      <div className="w-full md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${signup})`,width:'500px' }}>
+        {/* Optionally add some overlay or content here */}
+         </div>
+      
+         <div className='w-full md:w-1/2 flex items-center justify-center pt-4 md:pl-10'>
+        <div className="w-full flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto">
           <div className="pb-5">
             <h1 className="text-3xl font-bold">Servicer Registeration</h1>
           </div>
@@ -115,6 +116,7 @@ export default function ServicerSignupComponent () {
                 </a>
             </div>
           </form>
+          </div>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ export const registerServicer = createAsyncThunk(
   'servicer/register',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/servicer/register/', formData);
+      const response = await axios.post('http://localhost:8000/api/provider/register/', formData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

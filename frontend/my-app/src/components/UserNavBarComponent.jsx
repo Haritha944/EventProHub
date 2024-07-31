@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { clearUser } from '../redux/Slices/userSlice'; 
-import eventlogo from '../Images/Eventpro hub (1).png'
+import eventlogo from '../Images/logo.png'
 
 export const UserNavBarComponent = () => {
     const navigate = useNavigate();
@@ -61,7 +61,7 @@ return (
     <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
     <a href="#"  className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src={eventlogo} className="h-20" alt="Flowbite Logo" />
-            <span onClick={() => navigate('/homepage')} className="self-center text-2xl font-semibold whitespace-nowrap dark:text-dark">EVENTPRO HUB</span>
+            <span onClick={() => navigate('/homepage')} className="self-center text-2xl font-semibold whitespace-nowrap dark:text-dark">SERVICELINK PRO</span>
           </a>  
     <div className='flex bg-white md:space-0' >
         <button onClick={()=>navigate('/servicersignup')} type="submit"className="mr-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-2 py-2 text-center ">Become a Servicer</button>
