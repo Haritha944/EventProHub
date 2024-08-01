@@ -64,7 +64,7 @@ return (
             <span onClick={() => navigate('/homepage')} className="self-center text-2xl font-semibold whitespace-nowrap dark:text-dark">SERVICELINK PRO</span>
           </a>  
     <div className='flex bg-white md:space-0' >
-        <button onClick={()=>navigate('/servicersignup')} type="submit"className="mr-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-2 py-2 text-center ">Become a Servicer</button>
+        <button onClick={()=>navigate('/servicersignup')} type="submit"className="mr-2 text-white bg-fuchsia-600 hover:bg-blue-600 font-medium rounded-lg text-sm px-2 py-2 text-center ">Become a Servicer</button>
         {loggedIn ? (
           <div className='relative'>
             <button onClick={toggleDropdown} className='text-white bg-red-700 hover:bg-red-900 rounded-lg text-sm px-2 py-2 text-center'>
@@ -85,9 +85,9 @@ return (
                 )}
                  </div>
         ):(
-            <button onClick={() => navigate('/signup')} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 ">Login/Register</button>
+            <button onClick={() => navigate('/signup')} type="submit" className="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 ">Login/Register</button>
         )}
-         <button onClick={() => navigate('/adminlogin')} type="button" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 ml-2">
+         <button onClick={() => navigate('/adminlogin')} type="button" className="text-white bg-fuchsia-600 hover:bg-blue-600 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 ml-2">
         Admin
       </button>
 

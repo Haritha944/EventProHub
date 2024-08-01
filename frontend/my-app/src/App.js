@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/signup" element={<UserSignupPage/>}/>
         <Route path="/login" element={<UserLoginPage/>}/>
-        <Route path="/homepage" element={<PrivateRoute><Homepage /></PrivateRoute>} />
+        <Route path="/homepage" element={<Homepage />}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
 
 

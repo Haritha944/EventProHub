@@ -7,7 +7,7 @@ import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import { setUserEmail,setUserName } from '../redux/Slices/userSlice';
 import { useDispatch } from 'react-redux';
-import signup from '../Images/background.jpg'
+import signup from '../Images/lady.png'
 const fields = [
     {label:'Name',name:'name',type:'text',required : true,gridCols:2, placeholder:'Enter your Name'},
     {label:'Email',name:'email',type:'text',required:true,gridCols:2,placeholder:'Enter your Email'},

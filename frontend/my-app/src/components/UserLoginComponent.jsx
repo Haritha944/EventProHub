@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { setUserId,setUserEmail,setToken,setUserName } from '../redux/Slices/userSlice';
 import axios from 'axios';
-import login from '../Images/login.jpg';
+import login from '../Images/login3.png';
 
 export const UserLoginComponent = () => {
   const navigate = useNavigate();
