@@ -9,13 +9,15 @@ import {AdminLoginPage} from './Pages/AdminLoginPage'
 import AdminUserlistpage from './Pages/AdminUserlistpage'
 import UserOTPVerificationPage from './Pages/UserOTPVerificationPage';
 import ServicerSignupPage from './Pages/ServicerSignupPage';
+import ServicerOTPVerification from './Pages/ServicerOTPVerification';
+import ServiceLoginPage from './Pages/ServiceLoginPage';
 
 function App() {
   return (
     <>
     <div>
       <Routes>
-       <Route path="/" element={<Homepage />}/>
+       <Route path="/homepage" element={<Homepage />}/>
         <Route path="/signup" element={<UserSignupPage/>}/>
         <Route path="/login" element={<UserLoginPage/>}/>
         
@@ -26,6 +28,8 @@ function App() {
         <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
 
         <Route path="/servicersignup" element={<ServicerSignupPage/>}/>
+        <Route path="/servicerverifyotp" element={<ServicerOTPVerification/>}/>
+        <Route path="/servicelogin" element={<ServiceLoginPage/>}/>
 
 
       </Routes>

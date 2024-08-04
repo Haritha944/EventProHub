@@ -55,7 +55,7 @@ export default function ServicerSignupComponent () {
   return (
     <div>
       <div className="flex container mx-auto mt-48">
-      <div className="w-full md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${signup})`,width:'500px' }}>
+      <div className="w-full md:w-1/2 bg-cover bg-center -mt-80" style={{ backgroundImage: `url(${signup})`,width:'500px' }}>
         {/* Optionally add some overlay or content here */}
          </div>
       
