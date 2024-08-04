@@ -15,11 +15,11 @@ const ThreeDAnimation = () => {
     camera.position.z = 5;
 
     // Create renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true,alpha: true });
     renderer.setSize(window.innerWidth/2, window.innerHeight);
 
     // Set background color
-    renderer.setClearColor('#f3f4f6'); // Tailwind's bg-gray-100 color
+    renderer.setClearColor(0x000000, 0); // Tailwind's bg-gray-100 color
 
     mountRef.current.appendChild(renderer.domElement);
 
@@ -87,6 +87,9 @@ const ThreeDAnimation = () => {
     };
   }, []);
 
-  return <div ref={mountRef} className="w-full h-screen" />;
+  return( <div className="relative w-full h-screen bg-black">
+  <div ref={mountRef} className="absolute inset-0" />
+</div>
+  );
 }
 export default ThreeDAnimation;

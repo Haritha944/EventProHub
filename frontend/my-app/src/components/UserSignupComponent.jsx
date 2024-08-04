@@ -41,7 +41,7 @@ export default function UserSignupComponent () {
             console.log(response.data);
             localStorage.setItem("registered Email",data.email);
             navigate("/verifyOTP");
-        }catch (error) {
+        } catch (error) {
             console.error(
               "Registration failed:",
               error.response?.data || error.message
@@ -50,12 +50,12 @@ export default function UserSignupComponent () {
     }
   return (
     <div>
-        <div className='flex h-screen mx-auto mt-40 mr-3 md:pl-10'>
+        <div className='flex h-screen mx-auto mt-40 mr-3 md:pl-10 '>
         <div className="w-full md:w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${signup})`,width:'500px' }}>
         {/* Optionally add some overlay or content here */}
          </div>
         <div className='w-full md:w-1/2 flex items-center justify-center pt-4 md:pl-10'>
-            <div className='w-full flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto'>
+            <div className='w-full flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto bg-gradient-to-br from-blue-400 via-pink-400 to-red-400'>
             <div className='pb-5 '>
                 <h1 className='text-2xl font-bold mt-2 '>USER REGISTRATION</h1>
             </div>

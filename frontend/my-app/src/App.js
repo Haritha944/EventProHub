@@ -15,9 +15,10 @@ function App() {
     <>
     <div>
       <Routes>
+       <Route path="/" element={<Homepage />}/>
         <Route path="/signup" element={<UserSignupPage/>}/>
         <Route path="/login" element={<UserLoginPage/>}/>
-        <Route path="/homepage" element={<Homepage />}/>
+        
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
 
 

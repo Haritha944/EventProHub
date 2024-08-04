@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerServicer } from "../redux/Slices/servicerSlice";
-import signup from '../Images/signup (2).jpg'
+import signup from '../Images/service.png'
 
 const fields = [
   { label: 'Name', name: 'name', type: 'text', required: true, gridCols: 2, placeholder: 'Enter your name' },
@@ -59,14 +59,14 @@ export default function ServicerSignupComponent () {
         {/* Optionally add some overlay or content here */}
          </div>
       
-         <div className='w-full md:w-1/2 flex items-center justify-center pt-4 md:pl-10'>
-        <div className="w-full flex flex-wrap justify-center shadow-2xl my-20 rounded-md mx-auto">
+         <div className='w-full md:w-1/2 ml-8 flex items-center justify-center bg-gradient-to-tr from-purple-500 to-blue-500 pt-3 md:pl-10'>
+        <div className="w-full flex flex-wrap justify-center shadow-2xl rounded-md mx-auto">
           <div className="pb-5">
             <h1 className="text-3xl font-bold">Servicer Registeration</h1>
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col justify-start items-center w-full m-auto"
+            className="flex flex-col justify-start items-center w-full m-auto mx-4"
           >
             <div className="grid grid-cols-1 mb-6 md:grid-cols-2 gap-3 w-full">
               {fields.map((field, index) => (
@@ -104,10 +104,10 @@ export default function ServicerSignupComponent () {
                 <HiOutlineArrowCircleRight size={20} />
               </button>
             </div>
-            <div className="mt-4 font-semibold text-sm text-slate-500 text-center md:text-left">
+            <div className="mt-4 font-semibold text-sm text-indigo-800 text-center md:text-left">
                 Already have an account?{" "}
                 <a
-                    className="text-red-600 hover:underline hover:underline-offset-4"
+                    className="text-rose-600 hover:underline hover:underline-offset-4"
                     onClick={() => navigate('/servicerlogin')}
 
                     href="#"

@@ -44,17 +44,17 @@ export const UserLoginComponent = () => {
   };
   return (
     <>
-    <section className='flex h-screen mx-auto mt-40 mr-3 md:pl-10'>
+    <section className='flex h-screen mt-40 mr-3 md:pl-10 rounded-md'>
     <div className=" md:w-1/3 sm:w-full bg-cover bg-center  h-64 md:h-80 lg:h-96" style={{ backgroundImage: `url(${login})`,width:'550px' }}>
       </div>
-      <div className='md:w-1/3 sm:w-full ml-10'>
+      <div className='md:w-1/3 sm:w-full ml-10 '>
       <div className='pb-5'>
         <h1 className='text-3xl text-center font-bold ml-5'> USER LOGIN</h1>
       </div>
        <div className='pb-2'>
         <label className='text-sm font-semibold'>Email Address</label>
          <input
-          className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-2"
+          className="text-sm w-full  px-3 py-2 border border-solid border-gray-300 rounded mt-2"
           type="text"
           placeholder="Email Address"
           value={email}
