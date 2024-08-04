@@ -5,7 +5,7 @@ from .models import User
 
 
 def send_otp_via_email(email):
-    subject = f'Hi {email},Welcome to EventPro Hub!!.'
+    subject = f'Hi {email},Welcome to ServiceLink Pro!!.'
     otp=random.randint(100000,999999)
     message=f'Hi {email},Thank you for registering with us.Here is your Verification Mail.Your OTP is {otp}'
     email_from = "trendyfoot.official@gmail.com"

@@ -31,6 +31,7 @@ class Servicer(AbstractBaseUser):
     is_servicer = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    otp=models.CharField(max_length=6,null=True,blank=True)
     objects = ServicerManager()
 
     USERNAME_FIELD = "email"

@@ -24,3 +24,20 @@ class ServiceSignupSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class ServicerLoginSerializer(serializers.ModelSerializer):
+    email=serializers.EmailField(max_length=255)
+    class Meta:
+        model=Servicer
+        fields= ['email','password']
+
+class VerifyAccountSerializer(serializers.Serializer):
+    email=serializers.EmailField()
+    otp=serializers.CharField()
+
+
+class ServicerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Servicer
+        fields = ['email','name','phone_number','experience','address','is_active','is_servicer','is_verified']
