@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Servicer
+from django.contrib.auth import authenticate
 
 class ServiceSignupSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -20,7 +21,7 @@ class ServiceSignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        user = Servicer.objects.create_user(**validated_data)
+        user= Servicer.objects.create_user(**validated_data)
         user.set_password(password)
         user.save()
         return user
@@ -28,10 +29,11 @@ class ServiceSignupSerializer(serializers.ModelSerializer):
 
 class ServicerLoginSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=255)
+   
     class Meta:
         model=Servicer
         fields= ['email','password']
-
+    
 class VerifyAccountSerializer(serializers.Serializer):
     email=serializers.EmailField()
     otp=serializers.CharField()

@@ -183,3 +183,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'trendyfoot.official@gmail.com'
 EMAIL_HOST_PASSWORD = 'gxgt zqus fsav mufu'
+
+AUTHENTICATION_BACKENDS = (
+    'provider.backends.ServicerBackend',  # Replace 'your_app' with the actual name of your Django app
+    'django.contrib.auth.backends.ModelBackend',  # Optional: Keep the default backend as a fallback
+)
