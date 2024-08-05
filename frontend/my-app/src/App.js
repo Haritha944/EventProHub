@@ -11,6 +11,8 @@ import UserOTPVerificationPage from './Pages/UserOTPVerificationPage';
 import ServicerSignupPage from './Pages/ServicerSignupPage';
 import ServicerOTPVerification from './Pages/ServicerOTPVerification';
 import ServiceLoginPage from './Pages/ServiceLoginPage';
+import AdminServicerlistPage from './Pages/AdminServicerlistPage';
+
 
 function App() {
   return (
@@ -26,6 +28,9 @@ function App() {
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
         <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
+        <Route path="/adminservicerlist" element={<AdminPrivateRoute><AdminServicerlistPage/></AdminPrivateRoute>}/>
+
+
 
         <Route path="/servicersignup" element={<ServicerSignupPage/>}/>
         <Route path="/servicerverifyotp" element={<ServicerOTPVerification/>}/>

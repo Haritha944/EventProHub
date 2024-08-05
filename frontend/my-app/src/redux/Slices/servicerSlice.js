@@ -14,6 +14,18 @@ export const registerServicer = createAsyncThunk(
     }
   }
 );
+export const loginServicer = createAsyncThunk(
+  'servicer/login',
+  async (credentials,{rejectWithValue})=>{
+    try{
+      const response = await axios.post('http://127.0.0.1:8000/api/provider/login/',credentials);
+      
+      return response.data;
+    } catch (error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const servicerSlice = createSlice({
   name: 'servicer',
@@ -21,8 +33,13 @@ const servicerSlice = createSlice({
     data: null,
     error: null,
     loading: false,
+    token :null,
   },
-  reducers: {},
+  reducers: {
+    setToken:(state,action)=>{
+      state.token = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerServicer.pending, (state) => {
@@ -37,8 +54,22 @@ const servicerSlice = createSlice({
       .addCase(registerServicer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(loginServicer.pending, (state)=>{
+        state.loading=true;
+        state.error=null;
+      })
+      .addCase(loginServicer.fulfilled, (state,action)=>{
+        state.loading=false;
+        state.token=action.payload.token;
+        state.error=null;
+      })
+      .addCase(loginServicer.rejected,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload;
       });
   },
 });
 
+export const { setToken } = servicerSlice.actions;
 export default servicerSlice.reducer;

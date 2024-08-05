@@ -61,7 +61,7 @@ return (
     <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
     <a href="#"  className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src={eventlogo} className="h-20" alt="Flowbite Logo" />
-            <span onClick={() => navigate('/')} className="self-center text-2xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent whitespace-nowrap dark:text-dark">SERVICELINK PRO</span>
+            <span onClick={() => navigate('/homepage')} className="self-center text-2xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent whitespace-nowrap dark:text-dark">SERVICELINK PRO</span>
           </a>  
     <div className='flex bg-black md:space-0' >
         <button onClick={()=>navigate('/servicersignup')} type="submit"className="mr-2 text-white bg-fuchsia-600 hover:bg-blue-600 font-medium rounded-lg text-sm px-2 py-2 text-center ">Become a Servicer</button>

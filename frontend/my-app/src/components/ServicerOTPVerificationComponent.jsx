@@ -1,48 +1,35 @@
 import React,{useEffect} from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setOTP,setVerificationSuccess,clearOTP } from '../redux/Slices/otpSlice';
+import { setOTP,verifyOTP } from '../redux/Slices/otpServicerSlice';
 import servicer from '../Images/otp2.png'
 
 function ServicerOTPVerificationComponent () {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const otp=useSelector((state)=> state.otp.otp);
-    const verificationSuccess = useSelector((state)=>state.otp.verificationSuccess)
-    const email = localStorage.getItem('registered Email');
+    const otp=useSelector((state)=> state.otpServicer.otp);
+    const verificationSuccess = useSelector((state)=>state.otpServicer.verificationSuccess)
+    const email = localStorage.getItem('registeredEmail');
+    const status = useSelector((state) => state.otpServicer.status);
+    const error = useSelector((state) => state.otpServicer.error);
 
-    useEffect(() => {
-       
-        dispatch(clearOTP());
-    }, [dispatch]);
+    console.log('OTP:', otp);
+    console.log('Email:', email);
 
 
-    const submitHandler = async ()=>{
-        try{
-            const response= await fetch('http://127.0.0.1:8000/api/provider/verify/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({
-            email:email,
-            otp:otp,
-        }),
-    });
-    if (response.ok){
-        dispatch(setVerificationSuccess(true));
-        navigate('/servicelogin');
-        dispatch(clearOTP());
-    
-    }else{
-        console.error('OTP veification failed')
-    } 
-   }
-    catch (error){
-        console.error('Error during OTP verification:', error);
-    }
-   
+    const submitHandler = async () => {
+      try {
+        await dispatch(verifyOTP({ email, otp })).unwrap();
+        if (verificationSuccess) {
+          navigate('/servicelogin');
+        }
+      } catch (err) {
+        console.error('Error during OTP verification:', err);
+      }
     };
+
+
+  
   return (
     <>
       <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0">
@@ -68,10 +55,10 @@ function ServicerOTPVerificationComponent () {
             <button
               className="mt-4 bg-blue-600 text-bold hover:bg-white hover:text-blue-500 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
               type="button"
-              onClick={submitHandler}
+              onClick={submitHandler} disabled={status === 'loading'}
             >
               Submit
-            </button>
+            </button> {status === 'failed' && <p>{error}</p>}
           </div>
           
         </div>

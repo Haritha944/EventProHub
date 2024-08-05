@@ -32,6 +32,7 @@ export default function ServicerSignupComponent () {
   
 
     const onSubmit = async (data) => {
+    try {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
@@ -40,16 +41,16 @@ export default function ServicerSignupComponent () {
       formData.append("address", data.address);
       formData.append("password", data.password);
       formData.append("password2", data.password2);
-     
-
-      dispatch(registerServicer(formData));
-    };
-    React.useEffect(() => {
-        if (data) {
-          localStorage.setItem("registeredEmail", data.email);
-          navigate("/servicerverifyOTP");
-        }
-      }, [data, navigate]);
+      localStorage.setItem("registeredEmail", data.email);
+      const result = await dispatch(registerServicer(formData)).unwrap();
+      if (result) {
+        navigate("/servicerverifyOTP");
+      }
+    }  catch (error) {
+      console.error("Error during registration:", error);
+    }
+  }
+    
   
        
   return (
@@ -108,7 +109,7 @@ export default function ServicerSignupComponent () {
                 Already have an account?{" "}
                 <a
                     className="text-rose-600 hover:underline hover:underline-offset-4"
-                    onClick={() => navigate('/servicerlogin')}
+                    onClick={() => navigate('/servicelogin')}
 
                     href="#"
                 >
