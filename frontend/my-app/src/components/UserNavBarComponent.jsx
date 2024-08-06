@@ -12,29 +12,32 @@ export const UserNavBarComponent = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const Token = useSelector(state => state.user.token);
-    const accessToken = Token.access;
+    const accessToken = Token?.access;
     useEffect(()=>{
+     
         const fetchUserName =  async ()=>{
+          if (!accessToken) return;
             try{
                 const response =  await axios.get('http://127.0.0.1:8000/api/user/user-navbar/',{
                     headers:{
                         Authorization:`Bearer ${accessToken}`
                     }
                 });
+                
                 setUserName(response.data.name);
                 setLoggedIn(true);
             }
             catch (error) {
                 console.error('Error fetching user details:', error);
+               
                 setLoggedIn(false);
               }
         };
-        if (Token) {
-            fetchUserName();
-        }
+      
+      fetchUserName();
     }, [accessToken]);
     const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
+        setDropdownOpen(prev => !prev);
       };
     const handleLogout = async () =>{
         try{
@@ -76,7 +79,7 @@ return (
                       <button onClick={() => navigate('/userprofile')} className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Profile</button>
                     </li>
                     <li>
-                      <button onClick={() => navigate('/userbooking')} className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Bookings</button>
+                      <button  className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Bookings</button>
                     </li>
                     <li>
                       <button onClick={handleLogout} className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Logout</button>
@@ -104,6 +107,7 @@ return (
                 <a href="#" onClick={() => navigate('/homepage')} className="block py-2 px-3 text-blue-600 rounded md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500">Home</a>
               </li>
               <li>
+
                 <a href="#" className="block py-2 px-3 text-blue-600 rounded md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500">Profile</a>
               </li>
               <li>

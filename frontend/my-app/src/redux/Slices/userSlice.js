@@ -1,9 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { useActionData } from 'react-router-dom';
+
 const initialState = {
     name:'',
     email:'',
     token:'',
+    id:'',
 };
 
 const userSlice = createSlice({

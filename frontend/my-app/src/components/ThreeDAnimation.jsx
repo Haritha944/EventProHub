@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 
 const ThreeDAnimation = () => {
     const mountRef = useRef(null);
@@ -20,9 +19,9 @@ const ThreeDAnimation = () => {
 
     // Set background color
     renderer.setClearColor(0x000000, 0); // Tailwind's bg-gray-100 color
-
+    if (mountRef.current) {
     mountRef.current.appendChild(renderer.domElement);
-
+    }
     // Create particle system
     const numParticles = 500;
     const radius = 2.3; // Radius of the circle
@@ -83,7 +82,9 @@ const ThreeDAnimation = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current) {
+      mountRef.current.removeChild(renderer.domElement);}
+      renderer.dispose();
     };
   }, []);
 
