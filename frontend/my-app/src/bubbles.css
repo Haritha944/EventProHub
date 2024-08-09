@@ -1,0 +1,25 @@
+@keyframes bubble-move {
+    0% {
+        transform: rotate(0deg) translateX(150px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(150px) rotate(-360deg);
+    }
+    
+  }
+  
+  .bubble {
+    @apply absolute w-20 h-20 bg-gradient-to-b from-blue-100 to-blue-400 rounded-full flex items-center justify-center text-center  text-black opacity-80;
+    animation: bubble-move 10s linear infinite;
+  }
+  
+  .bubble-text {
+    @apply text-sm font-medium;
+  }
+  
+  /* Position bubbles at random places */
+  .bubble-0 { left: 20%; top: 20%; animation-delay: 0s; }
+  .bubble-1 { left: 10%;top: 60%; animation-delay: 2s; }
+  .bubble-2 { left: 30%;top: 30%; animation-delay: 4s; }
+  .bubble-3 { left: 50%;top: 10%; animation-delay: 6s; }
+  

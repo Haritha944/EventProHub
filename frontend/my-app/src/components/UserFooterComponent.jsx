@@ -3,7 +3,7 @@ import React from 'react'
 function UserFooterComponent() {
   return (
     <>
-        <footer className="bg-black dark:bg-gray-900 w-full pt-10">
+        <footer className="bg-gray-200 dark:bg-gray-900 w-full pt-10">
             <div className="mx-auto w-full max-w-screen-xl">
             <div className="grid grid-cols-2 md:grid-cols-4">
                 <div>
@@ -72,7 +72,7 @@ function UserFooterComponent() {
                     </ul>
                 </div>
             </div>
-            <div className="px-4 py-6 bg-black dark:bg-gray-700 md:flex md:items-center md:justify-between">
+            <div className="px-4 py-6 bg-gray-200 dark:bg-gray-700 md:flex md:items-center md:justify-between">
                 <span className="text-sm text-gray-500 dark:text-gray-300 sm:text-center">© 2024 ServiceLink Pro™. All Rights Reserved.
                 </span>
                 <div className="flex mt-4 sm:justify-center md:mt-0 space-x-5 rtl:space-x-reverse">

@@ -7,6 +7,7 @@ import otpServicerReducer from './Slices/otpServicerSlice';
 import adminServicerReducer from './Slices/adminservicerSlice';
 
 
+
 const store = configureStore({
     reducer:{
         user:userReducer,
@@ -15,6 +16,7 @@ const store = configureStore({
         servicer: servicerReducer,
         otpServicer: otpServicerReducer,
         adminServicers: adminServicerReducer,
+        
         
     },
 });

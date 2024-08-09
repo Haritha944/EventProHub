@@ -8,7 +8,7 @@ import UserFooterComponent from '../components/UserFooterComponent';
 function Homepage () {
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen overflow-x-hidden">
     <UserNavBarComponent/>
     <div className='flex-grow'>
     <UserHomeComponent/>

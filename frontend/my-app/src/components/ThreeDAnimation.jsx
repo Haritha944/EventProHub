@@ -88,7 +88,7 @@ const ThreeDAnimation = () => {
     };
   }, []);
 
-  return( <div className="relative w-full h-screen bg-black">
+  return( <div className="relative w-full h-screen bg-gray-100">
   <div ref={mountRef} className="absolute inset-0" />
 </div>
   );

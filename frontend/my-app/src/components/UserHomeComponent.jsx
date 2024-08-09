@@ -1,13 +1,33 @@
 import React from 'react'
-import ThreeDAnimation from '../components/ThreeDAnimation';
-import rentals from '../Images/rentals .png'
+import {motion} from 'framer-motion'
+import rentals from '../Images/rentals.png'
 import cleaning from '../Images/cleaning.png'
 import packers from '../Images/packers.png'
 import LoginIcon from '@mui/icons-material/Login';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import home1 from '../Images/home11.png'
+import home3 from '../Images/home33.png'
+import Bubbles from './Bubble'
 
+
+const SlideUp = (delay)=>{
+  return {
+    initial:{
+      y:'100%',
+      opacity:0
+    },
+    animate:{
+      y:0,
+      opacity:1,
+      transition:{
+        duration:0.6,
+        delay:delay,
+      }
+    }
+  }
+}
 
 
 
@@ -15,31 +35,38 @@ const UserHomeComponent = () => {
   return (
     <>
     <div className="relative w-full h-screen flex ">
-    <div className="w-1/2 h-full">
-      <ThreeDAnimation />
-      </div>
-      <div className="w-1/2 h-full flex items-center justify-center bg-black">
-        <div className="text-left p-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent opacity-90">Local Service Providers, Just a Click Away</h1>
-          <p className="text-xl text-purple-600 mt-4">Connect with top-rated Rental Servicers, cleaning servicers, and packers & movers right in your area</p>
-          <button className="mt-8 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">Get Started</button>
+    <div className="w-1/2 h-full flex items-center justify-center bg-gray-100 relative overflow-hidden">
+    <div className="text-balance ml-20 mt-5">
+          <motion.h2 variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="text-3xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent opacity-90">Find Your Perfect Cleaner – Multiple Services, One Platform</motion.h2>
+          <motion.p variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="text-xl text-purple-600 mt-4">Seamlessly connect with expert cleaners for every need, from home to office.</motion.p>
+          <motion.button variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="mt-8 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">Get Started </motion.button>
         </div>
+      </div>
+      <div className="w-1/2 h-full flex items-center justify-center bg-gray-100">
+       <div className=''><Bubbles/></div>
+        <motion.img initial={{opacity:0,rotate:120,x:200, y:100}} whileInView={{opacity:1,rotate:0,x:0,y:0}}
+         transition={{duration:2.5}} src={home3} alt="image" className='w-[200px] h-150px] absolute bottom-[0px] right-2 z-10'/>
+       
       </div>
     </div>
     
-<div className='w-full h-full bg-black'>
-  <div className='container mx-auto px-4 bg-black '>
-  <h2 className="text-3xl font-semibold text-center mb-6 bg-gradient-to-r from-teal-500 via-pink-500 to-blue-500 bg-clip-text text-transparent">Services Offered</h2>
-  <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 '>
-  <div className="relative  mt-10 bg-gradient-to-r from-indigo-300 via-pink-300 to-blue-300 p-4 rounded-lg shadow-md hover:animate-zoom transition-transform">
-  <img src={rentals} alt="Rental Services" className="w-full h-48 object-cover rounded-t-lg" />
+<div className='w-full h-full container mx-auto px-4 py-8 bg-gray-100'>
+  <div className='container mx-auto px-4 bg-gray-100 '>
+  <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-teal-500 via-pink-500 to-blue-500 bg-clip-text text-transparent">Services Offered</h2>
+  <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+    <div className='flex flex-col items-center'>
+  <div className=" w-48 h-48 bg-gradient-to-r from-indigo-300 via-pink-300 to-blue-300 rounded-full overflow-hidden mb-4 border-4 border-yellow-200 shadow-md hover:animate-zoom transition-transform">
+  <img src={rentals} alt="Rental Services" className="w-full h-full mt-6 object-cover rounded-t-lg" />
   <div className="absolute inset-0 bg-gray opacity-0 hover:opacity-50 transition-opacity duration-300 flex items-center justify-center">
-          <h3 className="text-lg font-bold">Rental Services</h3>
+          <h3 className="text-xl font-bold mb-2">Home Cleaning</h3>
+          <p className='text-center teaxt-gray-600 mb-4'></p>
       </div>
         <div className="mt-4">
-          <h3 className="text-xl text-blue-800 font-bold">Rental Services</h3>
-          <p className="text-gray-700 font-semibold mt-2">Find top-notch rental services for your needs.</p>
+          <h3 className="text-xl text-blue-800 font-bold">Home cleaning</h3>
+          <p className="text-gray-700 text-center font-semibold mb-2">Find top-notch rental services for your needs.</p>
+          <button className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center">&gt;</button>
         </div>
+  </div>
   </div>
   <div className='relative mt-10 bg-gradient-to-t from-purple-300 via-pink-300 to-red-300 p-4 rounded-lg shadow-md hover:animate-zoom transition-transform'>
   <img src={cleaning} alt="Cleaning Services" className="w-full h-48 object-cover rounded-t-lg" />
@@ -64,7 +91,7 @@ const UserHomeComponent = () => {
     </div>
   </div>
   </div>
-  <div className='w-full h-full bg-black p-4'>
+  <div className='w-full h-full bg-gray-100 p-4'>
   <h2 className="mt-36 bg-gradient-to-t from-pink-600 to-blue-500 bg-clip-text text-transparent mb-4 text-center font-semibold text-3xl">How to Get in Touch with Service Providers?</h2>
 
 <div className="flex ml-20">
@@ -104,7 +131,7 @@ const UserHomeComponent = () => {
   </div>
   </div>
   </div>
-  <div className='flex flex-col items-center justify-center pt-10 bg-black space-y-8'>
+  <div className='flex flex-col items-center justify-center pt-10 bg-gray-100 space-y-8'>
   <h1 className='text-3xl font-bold bg-gradient-to-r from-blue-600 to-pink-600 bg-clip-text text-transparent'>
         Join Our Platform and Enhance Your Experience!
       </h1>

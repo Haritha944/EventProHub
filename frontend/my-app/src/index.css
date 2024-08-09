@@ -6,3 +6,5 @@
 body {
     @apply bg-gray-100; /* Example */
   }
+
+  @import './bubbles.css';
