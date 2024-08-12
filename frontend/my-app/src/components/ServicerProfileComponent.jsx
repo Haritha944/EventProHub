@@ -75,7 +75,7 @@ function ServicerProfileComponent  ()  {
 
   return (
     <>
-     <h1 className="text-3xl font-bold text-black text-center mb-5">Profile Details</h1>
+     <h1 className="text-3xl font-bold text-blue-600 text-center mb-5">Profile Details</h1>
      <div className="h-full">
         <div className='w-full md:w-3/5 p-8 bg-gradient-to-tr from-lime-600 to-sky-400 lg:ml-56 shadow-md'>
         <div className='flex justify-center '>
@@ -86,7 +86,7 @@ function ServicerProfileComponent  ()  {
             <div className='flex'>
                 <input 
                   id="username"
-                  className='border border-gray-200 rounded-r px-4 py-2 w-full'
+                  className='border border-gray-200 bg-white rounded-r px-4 py-2 w-full'
                   type='text'
                   value={servicerDetails ? servicerDetails.name :''}
                   onChange={(e) => setServicerDetails({ ...servicerDetails, name: e.target.value })}/>
@@ -96,17 +96,17 @@ function ServicerProfileComponent  ()  {
         <label htmlFor='about'  className="font-semibold text-gray-700 block pb-1">Email</label>
         <input
             id="email"
-            className="border border-gray-200  rounded-r px-4 py-2 w-full"
+            className="border border-gray-200 bg-gray-300 rounded-r px-4 py-2 w-full"
             type="email"
             value={servicerDetails ? servicerDetails.email : ''}
-            onChange={(e) => setServicerDetails({ ...servicerDetails, email: e.target.value })}
+            readOnly
                     />
         </div>
         <div className="pb-4">
                     <label htmlFor="about" className="font-semibold text-gray-700 block pb-1">Phone Number</label>
                     <input
                         id="number"
-                        className="border border-gray-200  rounded-r px-4 py-2 w-full"
+                        className="border border-gray-200 bg-white rounded-r px-4 py-2 w-full"
                         type="text"
                         value={servicerDetails ? servicerDetails.phone_number : ''}
                         onChange={(e) => setServicerDetails({ ...servicerDetails, phone_number: e.target.value })}
@@ -116,7 +116,7 @@ function ServicerProfileComponent  ()  {
         <label htmlFor="about" className="font-semibold text-gray-700 block pb-1">Address</label>
                     <input
                         id="number"
-                        className="border border-gray-200 rounded-r px-4 py-2 w-full"
+                        className="border border-gray-200 bg-white rounded-r px-4 py-2 w-full"
                         type="text"
                         value={servicerDetails ? servicerDetails.address : ''}
                         onChange={(e) => setServicerDetails({ ...servicerDetails, address: e.target.value })}
@@ -126,7 +126,7 @@ function ServicerProfileComponent  ()  {
         <label htmlFor="about" className="font-semibold text-gray-700 block pb-1">Experience</label>
                     <input
                         id="number"
-                        className="border border-gray-200 rounded-r px-4 py-2 w-full"
+                        className="border border-gray-200 bg-white rounded-r px-4 py-2 w-full"
                         type="text"
                         value={servicerDetails ? servicerDetails.experience : ''}
                         onChange={(e) => setServicerDetails({ ...servicerDetails, experience: e.target.value })}

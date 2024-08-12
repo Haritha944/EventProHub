@@ -14,6 +14,7 @@ import ServiceLoginPage from './Pages/ServiceLoginPage';
 import AdminServicerlistPage from './Pages/AdminServicerlistPage';
 import UserProfilePage from './Pages/UserProfilePage';
 import ServicerProfilePage from './Pages/ServicerProfilePage';
+import ServicerServicecreatePage from './Pages/ServicerServicecreatePage';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/servicerverifyotp" element={<ServicerOTPVerification/>}/>
         <Route path="/servicelogin" element={<ServiceLoginPage/>}/>
         <Route path="/servicerprofile" element={<ServicerProfilePage/>}/>
+        <Route path="/servicecreate" element={<ServicerServicecreatePage/>}/>
 
 
       </Routes>

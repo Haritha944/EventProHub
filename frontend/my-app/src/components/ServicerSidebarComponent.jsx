@@ -57,12 +57,8 @@ function ServicerSidebarComponent  () {
           <div class="flex items-center space-x-4 p-2 mb-5">
               <img class="h-12 rounded-full" src={man} alt="James Bhatta"/>
               <div>
-                  <h4 class="font-semibold text-lg text-gray-700 capitalize font-poppins tracking-wide">{servicerDetails ? servicerDetails.name : ''}</h4>
+                  <h4 class="font-semibold text-lg text-rose-800 capitalize font-poppins tracking-wide">Hi,{servicerDetails ? servicerDetails.name : ''}</h4>
                   <span class="text-sm tracking-wide flex items-center space-x-1">
-                  <h4 class="font-semibold text-lg text-gray-700 capitalize font-poppins tracking-wide">
-                   {servicerDetails ? servicerDetails.name : 'Loading...'}
-                  </h4>
-
                       <VerifiedUserIcon className='text-green-800'/>
                       <span>Verified</span>
                   </span>
@@ -90,7 +86,7 @@ function ServicerSidebarComponent  () {
                   </a>
               </li>
               <li>
-                  <a href="#" onClick={() => navigate('/ownerbikelist')} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                  <a href="#" onClick={() => navigate('/servicecreate')} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">
                         <CleaningServicesIcon/> 
                       </span>
