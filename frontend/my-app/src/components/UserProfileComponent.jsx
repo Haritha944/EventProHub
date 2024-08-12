@@ -8,6 +8,7 @@ function UserProfileComponent() {
       const savedUserDetails = localStorage.getItem('userDetails');
       return savedUserDetails ? JSON.parse(savedUserDetails) : null;
     });
+    
     const [showModal, setShowModal] = useState(false);
     const [confirmUpdate, setConfirmUpdate] = useState(false);
 

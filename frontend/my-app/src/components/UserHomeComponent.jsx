@@ -283,7 +283,7 @@ const UserHomeComponent = () => {
 
       <div className="text-center mt-12">
         <button className="bg-gradient-to-r from-fuchsia-400 to-blue-500 text-black font-semibold py-3 px-8 rounded-full">
-          VIEW ALL TEAM
+          VIEW ALL PROVIDERS
         </button>
       </div>
     </div>
