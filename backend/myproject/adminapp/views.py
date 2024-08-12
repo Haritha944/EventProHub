@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from account.models import User
 from rest_framework import status
-from .serializers import UserSerializers
+from provider.models import Servicer
+from .serializers import UserSerializers,ServicerSerializers
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
@@ -56,3 +57,23 @@ def admin_user_unblock(request,pk):
     user.save()
     return Response(status=status.HTTP_200_OK)
 
+class ServicerListView(ListAPIView):
+    permission_classes=[AllowAny]
+    queryset=Servicer.objects.all()
+    serializer_class=ServicerSerializers
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def admin_servicer_block(request,pk):
+    servicer=get_object_or_404(Servicer,id=pk)
+    servicer.is_active=False
+    servicer.save()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def admin_servicer_unblock(request,pk):
+    servicer=get_object_or_404(Servicer,id=pk)
+    servicer.is_active=True
+    servicer.save()
+    return Response(status=status.HTTP_200_OK)

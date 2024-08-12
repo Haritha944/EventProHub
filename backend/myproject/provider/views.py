@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Servicer
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
 from provider.emails import *
-from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer
+from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer
 # Create your views here.
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -91,3 +92,31 @@ class ServicerLoginView(APIView):
                 return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}},
                     status=status.HTTP_404_NOT_FOUND)
         
+class ServicerProfileView(APIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes=[IsAuthenticated]
+    def get(self,request):
+        user=request.user
+        print("Authenticated User:", user)
+        if isinstance(user, Servicer):
+            try:
+                servicer=Servicer.objects.get(email=user.email)
+                serializer = ServicerProfileSerializer(servicer)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Servicer.DoesNotExist:
+                return Response({"error": "Owner details not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class ServicerProfileUpdateView(APIView):
+
+    def put(self,request,id):
+        try:
+            servicer=Servicer.objects.get(id=id)
+        except Servicer.DoesNotExist:
+            return Response({"error":"Servicer not found"}, status=status.HTTP_404_NOT_FOUND)  
+        serializer= ServicerProfileSerializer(servicer,data=request.data)   
+        if serializer.is_valid():
+            serializer.save() 
+            print("Success")
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

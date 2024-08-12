@@ -1,5 +1,8 @@
 from django.core.mail import send_mail
 import random
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
 from .models import User
 
@@ -18,3 +21,14 @@ def send_otp_via_email(email):
     except Exception as e:
         print(f'Error sending email: {e}')
 
+def generate_unique_token(user):
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    return uid, token
+
+def send_password_reset_email(email,token):
+    subject="Your forget Password link"
+    message = f'Click the following link to reset your password: http://localhost:300/reset_password/{token}/'
+    email_from=settings.EMAIL_HOST
+    recipient_list = [email]
+    send_mail(subject,message,email_from,recipient_list)

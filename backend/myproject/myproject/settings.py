@@ -142,10 +142,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'provider.emails.ServicerAuthentication', 
     ),
-    'DEFAULT_PERMISSION_CLASSES':[
+    'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
-    ],
+    ),
 }
 SIMPLE_JWT ={
     "ACCESS_TOKEN_LIFETIME":timedelta(minutes=60),
