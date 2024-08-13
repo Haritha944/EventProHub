@@ -8,11 +8,12 @@ from rest_framework.generics import ListAPIView
 from account.models import User
 from rest_framework import status
 from provider.models import Servicer
-from .serializers import UserSerializers,ServicerSerializers
+from .serializers import UserSerializers,ServicerSerializers,ServiceSerializers
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAdminUser
+from services.models import Service
 
 
 class AdminLoginView(APIView):
@@ -77,3 +78,40 @@ def admin_servicer_unblock(request,pk):
     servicer.is_active=True
     servicer.save()
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def approve_service(request, pk):
+    try:
+        service = get_object_or_404(Service, id=pk)
+    except Service.DoesNotExist:
+        return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if service.is_available:
+        return Response({'error': 'Service is already approved'}, status=status.HTTP_400_BAD_REQUEST)
+
+    service.is_available = True
+    service.save()
+
+    serializer = ServiceSerializers(service)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def disapprove_service(request, pk):
+    service = get_object_or_404(Service, id=pk)
+    
+    if not service.is_available:
+        return Response({'error': 'Service is already disapproved.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    service.is_available = False
+    service.save()
+
+    return Response({'status': 'Service has been disapproved and is now unavailable.'}, status=status.HTTP_200_OK)
+
+class ServiceListView(ListAPIView):
+    permission_classes=[AllowAny]
+    queryset=Service.objects.all()
+    serializer_class=ServiceSerializers

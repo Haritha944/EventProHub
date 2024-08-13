@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (AdminLoginView,UserListView,admin_user_block,admin_user_unblock,ServicerListView,admin_servicer_block,admin_servicer_unblock)
+from .views import (AdminLoginView,UserListView,admin_user_block,admin_user_unblock,ServicerListView,admin_servicer_block,admin_servicer_unblock,ServiceListView)
 from . import views
 
 
@@ -12,5 +12,8 @@ urlpatterns = [
     path("servicer-list/", ServicerListView.as_view(), name="servicer-list"),
     path("servicer/<int:pk>/block/",views.admin_servicer_block, name="servicer-block"),
     path("servicer/<int:pk>/unblock/",views.admin_servicer_unblock, name="servicer-block"),
+    path("service-list/", ServiceListView.as_view(), name="service-list"),
+    path("service/<int:pk>/approve/",views.approve_service, name="service-approve"),
+    path("service/<int:pk>/disapprove/",views.disapprove_service, name="service-disapprove"),
 
 ]
