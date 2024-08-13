@@ -50,6 +50,8 @@ def add_service(request):
 
 
 class ServiceListView(APIView):
+    authentication_classes = [ServicerAuthentication]  # Specify authentication class
+    permission_classes = [IsAuthenticated] 
     def get(self,request):
         services=Service.objects.all()
         serializer=ServiceSerializer(services,many=True)
