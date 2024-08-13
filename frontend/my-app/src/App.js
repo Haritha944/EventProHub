@@ -16,6 +16,7 @@ import UserProfilePage from './Pages/UserProfilePage';
 import ServicerProfilePage from './Pages/ServicerProfilePage';
 import ServicerServicecreatePage from './Pages/ServicerServicecreatePage';
 import AdminServicelistPage from './Pages/AdminServicelistPage';
+import ServicerServicelistingPage from './Pages/ServicerServicelistingPage';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/servicelogin" element={<ServiceLoginPage/>}/>
         <Route path="/servicerprofile" element={<ServicerProfilePage/>}/>
         <Route path="/servicecreate" element={<ServicerServicecreatePage/>}/>
+        <Route path="/servicelist" element={<ServicerServicelistingPage/>}/>
 
 
       </Routes>

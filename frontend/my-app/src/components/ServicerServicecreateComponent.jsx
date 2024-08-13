@@ -23,7 +23,7 @@ const SERVICE_TYPES = [
     ['Residential', 'Residential'],
     ['Commercial', 'Commercial'],
     ['Vehicle Washing', 'Vehicle Washing'],
-    ['Other Cleaning', 'Other Cleaning'],
+    ['Specific Cleaning', 'Specific Cleaning'],
 ];
 
 
@@ -73,7 +73,7 @@ function ServicerServicecreateComponent  () {
             });
 
             console.log(response.data);
-            navigate('/services');
+            navigate('/servicelist');
         } catch (error) {
             console.error('Error adding service:', error);
             alert('There was an error adding the service. Please try again.');

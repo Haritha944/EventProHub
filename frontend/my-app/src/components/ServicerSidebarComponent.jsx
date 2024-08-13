@@ -6,6 +6,7 @@ import {clearUser} from '../redux/Slices/userSlice';
 import man from '../Images/man1.png';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BookIcon from '@mui/icons-material/Book';
@@ -85,12 +86,21 @@ function ServicerSidebarComponent  () {
                       <span>Dashboard</span>
                   </a>
               </li>
+              
               <li>
                   <a href="#" onClick={() => navigate('/servicecreate')} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">
                         <CleaningServicesIcon/> 
                       </span>
                       <span>Service Creation </span>
+                  </a>
+              </li>
+              <li>
+                  <a href="#" onClick={() => navigate('/servicelist')} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                      <span class="text-gray-600">
+                          <CollectionsIcon />
+                      </span>
+                      <span>My Services</span>
                   </a>
               </li>
               <li>

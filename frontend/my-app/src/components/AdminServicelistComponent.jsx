@@ -67,6 +67,7 @@ function AdminServicelistComponent  () {
                             <th scope="col" className="px-5 py-3">Additional Notes</th>
                             <th scope="col" className="px-5 py-3">Created At</th>
                             <th scope="col" className="px-5 py-3">Duration(hours)</th>
+                            <th scope="col" className="px-5 py-3">Images</th>
                             <th scope="col" className="px-5 py-3">Status</th>
                             <th scope="col" className="px-5 py-3">Action</th>
                         </tr>
@@ -90,6 +91,16 @@ function AdminServicelistComponent  () {
                                 <td className="px-5 py-4">{service.additional_notes}</td>
                                 <td className="px-5 py-4">{service.created_at}</td>
                                 <td className="px-5 py-4">{service.period}</td>
+                                <td>
+                               {service.images ? (
+                              <img
+                               src={service.images}
+                               alt={service.name} style={{ width: '100px', height: 'auto' }}
+                                  />
+                              ) : (
+                            'No image available'
+                                   )}
+                                </td>
                                 <td className="px-5 py-4">
                                 <span className={`px-2 py-1 rounded-md ${service.is_available ? 'bg-green-700 text-white' : 'bg-red-700 text-white'}`}>
                                  {service.is_available ? 'True' : 'False'}
