@@ -15,6 +15,7 @@ import AdminServicerlistPage from './Pages/AdminServicerlistPage';
 import UserProfilePage from './Pages/UserProfilePage';
 import ServicerProfilePage from './Pages/ServicerProfilePage';
 import ServicerServicecreatePage from './Pages/ServicerServicecreatePage';
+import AdminServicelistPage from './Pages/AdminServicelistPage';
 
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
         <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
         <Route path="/adminservicerlist" element={<AdminPrivateRoute><AdminServicerlistPage/></AdminPrivateRoute>}/>
-
+        <Route path="/adminservicelist" element={<AdminPrivateRoute><AdminServicelistPage/></AdminPrivateRoute>}/>
 
 
         <Route path="/servicersignup" element={<ServicerSignupPage/>}/>

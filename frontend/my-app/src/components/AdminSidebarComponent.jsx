@@ -6,6 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 
@@ -40,6 +41,12 @@ function AdminSidebarComponent  ()  {
         <a href="#" onClick={() => navigate('/adminservicerlist')} class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
           <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-indigo-400"><SupervisedUserCircleIcon className="me-2" /></span>
           <span class="text-sm font-medium text-pink-400">Servicers</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onClick={() => navigate('/adminservicelist')}  class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+          <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-indigo-400"><CleaningServicesIcon className="me-2" /></span>
+          <span class="text-sm font-medium  text-pink-400">Services</span>
         </a>
       </li>
       <li>
