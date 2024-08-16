@@ -113,5 +113,10 @@ def disapprove_service(request, pk):
 
 class ServiceListView(ListAPIView):
     permission_classes=[AllowAny]
-    queryset=Service.objects.all()
     serializer_class=ServiceSerializers
+    def get_queryset(self):
+        queryset = Service.objects.all()
+        service_type = self.request.query_params.get('service_type', None)
+        if service_type:
+            queryset = queryset.filter(service_type=service_type)
+        return queryset

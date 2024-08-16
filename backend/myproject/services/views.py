@@ -53,6 +53,37 @@ class ServiceListView(APIView):
     authentication_classes = [ServicerAuthentication]  # Specify authentication class
     permission_classes = [IsAuthenticated] 
     def get(self,request):
-        services=Service.objects.all()
+        servicer=request.user
+        services=Service.objects.filter(servicer=servicer)
         serializer=ServiceSerializer(services,many=True)
         return Response(serializer.data)
+    
+
+@api_view(['POST'])
+@authentication_classes([ServicerAuthentication])
+@permission_classes([IsAuthenticated])    
+def update_service(request,id):
+    try:
+        service=Service.objects.get(id=id)
+        serializer = ServiceSerializer(service,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Service.DoesNotExist:
+        return Response({'error': 'service not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['DELETE'])
+@authentication_classes([ServicerAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_service(request, id):
+    try:
+        service = Service.objects.get(id=id)
+        if service.servicer.email != request.user.email:
+            return Response({"error": "You are not authorized to delete this service."}, status=status.HTTP_403_FORBIDDEN)
+        service.delete()
+        return Response({"message": "Service deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
