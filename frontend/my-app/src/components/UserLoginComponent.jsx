@@ -34,7 +34,7 @@ export const UserLoginComponent = () => {
         dispatch(setUserId(data.user_id));
         console.log(data.token,"TOKENNNN")
         console.log(data.user_id,"Userrr")
-        navigate('/homepage');
+        navigate('/userservice');
       }else {
         console.error(data);
       }

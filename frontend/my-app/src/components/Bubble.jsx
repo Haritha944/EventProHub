@@ -27,11 +27,11 @@ const SlideUp = (delay)=>{
 
 const Bubbles = () => {
   return (
-    <div className="relative w-full h-screen flex items-center justify-center bg-blue-50">
+    <div className="relative w-full h-screen flex items-center justify-center bg-gray-100">
          <div className="relative z-10">
          <motion.img initial={{opacity:0,rotate:20,x:200, y:100}} whileInView={{opacity:1,rotate:0,x:0,y:0}}
          transition={{duration:2.5}}
-         src={home1} alt="alt" className='h-[550px] img-shadow'/>
+         src={home1} alt="alt" className='h-[550px] img-shadow '/>
           
          </div>
       {services.map((service, index) => (

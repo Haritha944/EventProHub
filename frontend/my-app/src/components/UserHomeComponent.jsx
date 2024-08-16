@@ -48,7 +48,7 @@ const UserHomeComponent = () => {
     <div className="relative w-full h-screen flex ">
     <div className="w-1/2 h-full flex items-center justify-center bg-gray-100 relative overflow-hidden">
     <div className="text-balance ml-20 mt-5">
-          <motion.h2 variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="text-3xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent opacity-90">Find Your Perfect Cleaner – Multiple Services, One Platform</motion.h2>
+          <motion.h2 variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="text-3xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent opacity-90">Find Your Perfect Cleaner – Multiple Servicers, One Platform</motion.h2>
           <motion.p variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="text-xl text-purple-600 mt-4">Seamlessly connect with expert cleaners for every need, from home to office.</motion.p>
           <motion.button variants={SlideUp(1.5)} initial="initial" whileInView="animate" className="mt-8 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">Get Started </motion.button>
         </div>

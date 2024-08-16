@@ -4,19 +4,26 @@ import axios from 'axios';
 function AdminServicelistComponent  () {
     const [services,setServices] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-
+    const [filterType, setFilterType] = useState("");
+  
 
     useEffect (()=>{
         const fetchServices = async ()=>{
             try {
+                
                 const response = await axios.get('http://127.0.0.1:8000/api/admin/service-list/');
                 setServices(response.data);
+                
+                
             } catch (error){
                 console.error('Error fetching services:', error);
             }
         };
         fetchServices();
     },[]);
+    
+        
+    
     const handleApproveService = (serviceId, isAvailable) => {
         const action = isAvailable ? "disapprove" : "approve";
         const path = `http://127.0.0.1:8000/api/admin/service/${serviceId}/${action}/`;
@@ -33,11 +40,16 @@ function AdminServicelistComponent  () {
                 console.log(error, `Error ${action}ing service:`);
             });
     };
+    useEffect(() => {
+        console.log("Available service types:", [...new Set(services.map(service => service.service_type))]);
+    }, [services]);
 
     const filteredServices = services.filter(service =>
-        service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        
+        (service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         service.service_type.toLowerCase().includes(searchQuery.toLowerCase())||
-        service.servicer_name.toLowerCase().includes(searchQuery.toLowerCase())
+        service.servicer_name.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (filterType === "" || service.service_type.toLowerCase() === filterType.toLowerCase())
     );
   return (
     <>
@@ -53,6 +65,22 @@ function AdminServicelistComponent  () {
                         <input type="text" id="table-search" className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..."
                         value = {searchQuery}  onChange={(e) => setSearchQuery(e.target.value)}/>
                     </div>
+                    <div className="relative">
+                        <label htmlFor="serviceTypeFilter" className="sr-only">Filter by Service Type</label>
+                        <select
+                            id="serviceTypeFilter"
+                            className="block p-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-48 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                        >
+                            <option value="">All Types</option>
+                            <option value="residential">Residential</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="vehicle washing">Vehicle Washing</option>
+                            <option value="specific cleaning">Specific Cleaning</option>
+                        </select>
+                    </div>
+                    
                 </div>
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

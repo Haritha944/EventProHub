@@ -79,7 +79,7 @@ return (
                       <button onClick={() => navigate('/userprofile')} className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Profile</button>
                     </li>
                     <li>
-                      <button  className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Bookings</button>
+                      <button onClick={() => navigate('/userservice')}  className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Services</button>
                     </li>
                     <li>
                       <button onClick={handleLogout} className="block px-8 py-2 text-white hover:bg-blue-800 font-medium rounded-lg text-sm w-full text-left">Logout</button>

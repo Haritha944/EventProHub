@@ -173,7 +173,7 @@ function ServicerServicecreateComponent  () {
                         />
                     </div> 
                     <div>
-                        <label htmlFor="price_per_sqft" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Price per sqft</label>
+                        <label htmlFor="price_per_sqft" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Price per sqft (Optional)</label>
                         <input 
                             type="number" 
                             id="price_per_sqft" 
