@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
+import new1 from '../Images/carou2.jpeg'
+
 
 const slides = [
   {
     id: 1,
-    src: 'https://tecdn.b-cdn.net/img/Photos/Slides/img%20(15).jpg',
+    src: 'https://tecdn.b-cdn.net/img/Photos/Slides/img%20(22).jpg',
     alt: 'First slide',
     caption: 'First slide label',
     text: 'Some representative placeholder content for the first slide.',
   },
   {
     id: 2,
-    src: 'https://tecdn.b-cdn.net/img/Photos/Slides/img%20(22).jpg',
+    src: new1,
     alt: 'Second slide',
     caption: 'Second slide label',
     text: 'Some representative placeholder content for the second slide.',
+    
   },
   {
     id: 3,
@@ -38,13 +41,14 @@ export default function CustomCarousel() {
   };
 
   return (
-    <div className="relative w-full h-64 overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       <img
         src={slides[currentIndex].src}
         alt={slides[currentIndex].alt}
-        className="w-full h-full object-cover"
+        className="object-cover w-full h-full" style={{ display: 'block' }}
+        
       />
-      <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center text-white text-center">
+      <div className="absolute inset-0 flex items-center justify-center text-white text-center">
         <div>
           <h3 className="text-xl font-bold">{slides[currentIndex].caption}</h3>
           <p>{slides[currentIndex].text}</p>
