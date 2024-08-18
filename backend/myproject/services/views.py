@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Service
 from provider.models import Servicer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes,authentication_classes
 from .serializers import ServiceSerializer
@@ -87,3 +87,14 @@ def delete_service(request, id):
         return Response({"message": "Service deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+class UserServiceView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,city=None):
+        if city:
+            services=Service.objects.filter(city__iexact=city)
+        else:
+            services=Service.objects.all()
+        serializer=ServiceSerializer(services,many=True)
+        return Response(serializer.data)
