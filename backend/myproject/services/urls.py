@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ServiceListView,UserServiceView,ServiceDetailView,ServicesByServicerView
+from .views import ServiceListView,UserServiceView,ServiceDetailView,ServicesByServicerView,ServicesByLocationView
 from . import views
 
 
@@ -13,4 +13,7 @@ urlpatterns = [
     path('servicelistuser/<str:city>/', UserServiceView.as_view(), name='service-list-by-city'),
     path('servicedetail/<int:serviceId>/', ServiceDetailView.as_view(), name='servicedetail'),
     path('relatedservicer/<int:servicer_id>/', ServicesByServicerView.as_view(), name='relatedservicer'),
+    path('relatedlocation/<str:city>/', ServicesByLocationView.as_view(), name='relatedservicer'),
+
+
 ]

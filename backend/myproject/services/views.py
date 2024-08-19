@@ -112,9 +112,19 @@ class ServiceDetailView(APIView):
         
 
 class ServicesByServicerView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny] 
 
     def get(self, request, servicer_id):
-        services = Service.objects.filter(servicer_id=servicer_id, is_available=True)
+        services = Service.objects.filter(servicer_id=servicer_id)
+        print(services)
+        serializer = ServiceSerializer(services, many=True)
+        return Response(serializer.data)
+    
+class ServicesByLocationView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, city):
+        services = Service.objects.filter(city__iexact=city)
+        print(services)
         serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)
