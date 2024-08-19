@@ -6,7 +6,7 @@ from provider.models import Servicer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes,authentication_classes
-from .serializers import ServiceSerializer
+from .serializers import ServiceSerializer,ServiceDetailSerializer
 from provider.emails import ServicerAuthentication
 
 
@@ -97,4 +97,24 @@ class UserServiceView(APIView):
         else:
             services=Service.objects.all()
         serializer=ServiceSerializer(services,many=True)
+        return Response(serializer.data)
+
+class ServiceDetailView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,serviceId):
+        try:
+            service=Service.objects.get(id=serviceId)
+            print(service)
+            serializer = ServiceDetailSerializer(service)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Service.DoesNotExist:
+            return Response({"error": "Service not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class ServicesByServicerView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, servicer_id):
+        services = Service.objects.filter(servicer_id=servicer_id, is_available=True)
+        serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)

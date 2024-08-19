@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Service
 from provider.models import Servicer
+from provider.serializers import ServicerSerializer
 from datetime import timedelta
 
 
@@ -19,3 +20,8 @@ class ServiceSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Please provide either Price or Price per Sqft.')
         return data
     
+class ServiceDetailSerializer(serializers.ModelSerializer):
+    servicer = ServicerSerializer()
+    class Meta:
+        model = Service
+        fields = ['name', 'servicer', 'city', 'service_type', 'description', 'price', 'price_per_sqft', 'employees_required', 'images', 'period','additional_notes',]
