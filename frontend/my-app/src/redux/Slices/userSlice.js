@@ -58,6 +58,6 @@ export const selectUser = (state)=>state.user.name;
 export const selectUserId = (state) => state.user.id;
 export const selectToken = (state) => state.user.token;
 export const selectFilteredServices = (state) => state.user.filteredServices;
-export const selectSelectedServices = (state) => state.user.selectedServices;
+export const selectSelectedServices = (state) => state.user.selectedService;
 
 export default userSlice.reducer;

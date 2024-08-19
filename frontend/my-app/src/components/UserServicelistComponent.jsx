@@ -65,7 +65,7 @@ function UserServicelistComponent  ()  {
   const handleServiceClick = (selectedService) => {
     dispatch(setService(selectedService));
     console.log('Selected Service:', selectedService);
-    navigate('/userservicedetail');
+    navigate(`/userservicedetail/${selectedService.id}`);
   };
 
 
@@ -92,20 +92,28 @@ function UserServicelistComponent  ()  {
 </div>
     </div>
   </div>
+  
+  
   <div className='relative w-full h-screen flex'>
+    
   <img
         src={new2}
-        alt="Descriptive text about the image" className="h-[400px] w-auto object-cover mt-12 ml-20 items-center"
+        alt="Descriptive text about the image" className="h-[300px] w-auto object-cover mt-15 ml-20 items-center"
       />
-      <div className="absolute inset-0 px-10 py-20 flex items-start justify-center">
-        <div>
-          <h3 className="text-blue-500 text-center font-bold text-4xl mb-2">FIND A SERVICE</h3>
-          <h2 className="text-fuchsia-400 text-center font-semibold mb-10">BOOK YOUR SERVICE TODAY!!</h2>
-          <label htmlFor="default-search" className="mb text-sm font-medium text-gray-900 sr-only dark:text-white">
+      <div className="absolute inset-0 px-5 py-6 flex items-start justify-center">
+        <div className='mt-12' >
+  
+        <h3 className="text-blue-500 text-center font-bold text-4xl mb-2 mt-8">FIND A SERVICE</h3>
+          <p className="text-blue-700 text-lg text-center mt-8 ml-15">  Our platform connects you with top-rated service providers 
+            in your area</p>
+            
+          <h2 className="text-fuchsia-400 text-center font-semibold mb-6 mt-8">BOOK YOUR SERVICE TODAY!!</h2>
+          
+          <label htmlFor="default-search" className=" text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search
           </label>
-          <div className="relative mt-2">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
+          <div className="relative max-w-md">
+          <div className="flex items-center justify-center ps-3 pointer-events-none"></div>
             <select
               value={selectedCity}
               onChange={handleCityChange}
@@ -120,7 +128,6 @@ function UserServicelistComponent  ()  {
                 </option>
               ))}
             </select>
-
             <button
               type="submit"
               onClick={handleSearch}
@@ -132,12 +139,12 @@ function UserServicelistComponent  ()  {
           </div>
           </div>
           <div className="relative w-full text-center">
-        <div className="flex justify-center items-center mb-2">
-          <h1 className="text-3xl font-semibold mb-4">Services</h1>
+        <div className="flex justify-center items-center -mt-32">
+          <h1 className="text-3xl text-fuchsia-500 font-semibold">Services</h1>
         </div>
         <div className="flex justify-center">
           {services.length === 0 ? (
-            <div className="text-center text-gray-500">No services found.</div>
+            <div className="text-center text-red-700">No services found.</div>
           ) : (
             services.map((service) => (
               <div
@@ -145,19 +152,26 @@ function UserServicelistComponent  ()  {
                 className="max-w-sm rounded overflow-hidden shadow-lg m-4 cursor-pointer"
                 onClick={() => handleServiceClick(service)}
               >
-                <img className="w-full" src={`http://127.0.0.1:8000${service.images}`} alt="Service" />
-                <div className="px-6 py-4">
-                  <div className="font-bold text-xl mb-2">{service.name}</div>
-                  <p className="text-gray-700 text-base">{service.description}</p>
-                  <p className="text-gray-700 text-base">{service.city}</p>
+                <img className="w-full h-40" src={`http://127.0.0.1:8000${service.images}`} alt="Service" />
+                <div className="px-6 py-4 text-left">
+                  <div className="font-bold text-teal-700 text-lg mb-2">{service.name}</div>
+                  <p className="text-orange-700 font-semibold">Service Type: {service.service_type}</p>
+                  <p className="text-orange-600 font-semibold text-base">Location:{service.city}</p>
+                  <p className="text-base font-semibold text-sky-700">
+                    Duration :{service.period} hrs
+                  </p>
+                  {service.price>0.1 && (
+                      <p className="text-red-700 text-base font-semibold mr-2 mb-2">
+                   Price: ₹{service.price}
+                     </p> )}
+                {service.price_per_sqft>0.1 && (
+                     <p className="text-red-600 text-base font-semibold mb-2">Price: ₹{service.price_per_sqft} per sqft</p>
+                   )}
+                    
                 </div>
-                <div className="px-6 pt-4 pb-2">
-                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                    ₹{service.price}
-                  </span>
-                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                    {service.period} hrs
-                  </span>
+                <div className="px-6 pt-1 pb-1 text-center">
+                <button type="button" className="bg-gradient-to-b from-sky-400 via-blue-500 to-blue-800 text-white font-medium rounded-lg text-sm px-4 py-2 hover:bg-blue-600 ">
+              More Details</button>
                 </div>
               </div>
             ))
