@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'adminapp',
     'provider',
     'services',
+    'payments'
     
     
     

@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/admin/', include('adminapp.urls')),
     path('api/provider/',include('provider.urls')),
     path('api/services/',include('services.urls')),
+    path('api/payments/',include('payments.urls')),
     
     
     
