@@ -19,7 +19,8 @@ import AdminServicelistPage from './Pages/AdminServicelistPage';
 import ServicerServicelistingPage from './Pages/ServicerServicelistingPage';
 import UserServicelistingPage from './Pages/UserServicelistingPage';
 import UserServiceDetailPage from './Pages/UserServiceDetailPage';
-
+import AdminSubscriptionPage from './Pages/AdminSubscriptionPage';
+import AdminSubscriplistPage from './Pages/AdminSubscriplistPage';
 
 function App() {
   return (
@@ -40,7 +41,8 @@ function App() {
         <Route path="/adminuserlist" element={<AdminPrivateRoute><AdminUserlistpage/></AdminPrivateRoute>}/>
         <Route path="/adminservicerlist" element={<AdminPrivateRoute><AdminServicerlistPage/></AdminPrivateRoute>}/>
         <Route path="/adminservicelist" element={<AdminPrivateRoute><AdminServicelistPage/></AdminPrivateRoute>}/>
-
+        <Route path="/adminsubscription" element={<AdminPrivateRoute><AdminSubscriptionPage/></AdminPrivateRoute>}/>
+        <Route path="/adminsubscriplist" element={<AdminPrivateRoute><AdminSubscriplistPage/></AdminPrivateRoute>}/>
 
         <Route path="/servicersignup" element={<ServicerSignupPage/>}/>
         <Route path="/servicerverifyotp" element={<ServicerOTPVerification/>}/>
