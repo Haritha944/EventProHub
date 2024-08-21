@@ -21,6 +21,9 @@ import UserServicelistingPage from './Pages/UserServicelistingPage';
 import UserServiceDetailPage from './Pages/UserServiceDetailPage';
 import AdminSubscriptionPage from './Pages/AdminSubscriptionPage';
 import AdminSubscriplistPage from './Pages/AdminSubscriplistPage';
+import ServicerDashboardPage from './Pages/ServicerDashboardPage';
+import UserPasswordResetPage from './Pages/UserPasswordResetPage';
+import UserResetPasswordComponent from './Pages/UserResetPasswordComponent';
 
 function App() {
   return (
@@ -33,7 +36,8 @@ function App() {
         <Route path="/userprofile" element={<UserProfilePage/>}/>
         <Route path="/userservice" element={<UserServicelistingPage/>}/>
         <Route path="/userservicedetail/:serviceId" element={<UserServiceDetailPage/>}/>
-        
+        <Route path="/request-reset" element={<UserPasswordResetPage/>}/>
+        <Route path="/reset-password/:uid/:token" element={<UserResetPasswordComponent/>}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
 
 
@@ -50,6 +54,8 @@ function App() {
         <Route path="/servicerprofile" element={<ServicerProfilePage/>}/>
         <Route path="/servicecreate" element={<ServicerServicecreatePage/>}/>
         <Route path="/servicelist" element={<ServicerServicelistingPage/>}/>
+        <Route path="/servicerdash" element={<ServicerDashboardPage/>}/>
+
 
 
       </Routes>

@@ -75,7 +75,7 @@ export const UserLoginComponent = () => {
         
           <a
             className="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
-            href="#"
+            onClick={() => navigate('/request-reset')}
           >
             Forgot Password?
           </a>

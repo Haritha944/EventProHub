@@ -79,7 +79,7 @@ function ServicerSidebarComponent  () {
                   </a>
               </li>
               <li>
-                  <a href="#" class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                  <a href="#" onClick={() => navigate('/servicerdash')} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">
                           <HomeIcon />
                       </span>

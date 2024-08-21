@@ -45,7 +45,7 @@ function AdminSubscriptionComponent  ()  {
             });
             alert('Subscription created successfully!');
             console.log(response.data);
-            navigate('/subscriptionlist'); // Redirect to a different page, like subscription list
+            navigate('/adminsubscriplist'); // Redirect to a different page, like subscription list
         } catch (error) {
             console.error('There was an error creating the subscription!', error);
             alert('There was an error creating the subscription. Please try again.');

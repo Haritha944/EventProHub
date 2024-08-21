@@ -3,11 +3,14 @@ import axios from 'axios';
 import { IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AdminEditSubscripModalComponent from './AdminEditSubscripModalComponent';
 
 function AdminSubscripComponent  () {
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedSubscription, setSelectedSubscription] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         const fetchSubscriptions = async () => {
             try {
@@ -22,9 +25,10 @@ function AdminSubscripComponent  () {
 
         fetchSubscriptions();
     }, []);
-    const handleEdit = (id) => {
-        // Handle edit functionality, e.g., open a dialog with a form to edit the subscription
-        console.log(`Edit subscription with ID: ${id}`);
+    const handleEdit = (subscription) => {
+        setSelectedSubscription(subscription);
+        setIsModalOpen(true);
+        
     };
 
     const handleDelete = async (id) => {
@@ -35,11 +39,24 @@ function AdminSubscripComponent  () {
             console.error('Failed to delete subscription', error);
         }
     };
+    const handleUpdate = () => {
+        // Reload subscriptions after update
+        setLoading(true);
+        axios.get('http://127.0.0.1:8000/api/payments/subscriptionlist/')
+            .then(response => {
+                setSubscriptions(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                setError('Failed to load subscriptions');
+                setLoading(false);
+            });
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
   return (
-    <div>
+    <div className="overflow-x-auto">
     <h1 className="text-3xl font-bold text-blue-800 text-center mb-5">List of Subscriptions</h1>
     <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
@@ -62,7 +79,7 @@ function AdminSubscripComponent  () {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(sub.start_date).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <Tooltip title="Edit">
-                                    <IconButton onClick={() => handleEdit(sub.id)}>
+                                    <IconButton onClick={() => handleEdit(sub)}>
                                         <EditIcon className='text-blue-600'/>
                                     </IconButton>
                                 </Tooltip>
@@ -76,6 +93,14 @@ function AdminSubscripComponent  () {
             ))}
         </tbody>
     </table>
+    {selectedSubscription && (
+                <AdminEditSubscripModalComponent
+                    open={isModalOpen}
+                    handleClose={() => setIsModalOpen(false)}
+                    subscription={selectedSubscription}
+                    onUpdate={handleUpdate}
+                />
+            )}
 </div>
   )
 }
