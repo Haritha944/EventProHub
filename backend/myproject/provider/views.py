@@ -7,7 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
+from rest_framework.generics import ListAPIView
 from provider.emails import *
+from payments.models import SubscriptionPlan
+from payments.serializers import SubscriptionPlanSerializer
 from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer
 # Create your views here.
 def get_tokens_for_user(user):
@@ -120,3 +123,15 @@ class ServicerProfileUpdateView(APIView):
             print("Success")
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class SubscriptionServicerListView(ListAPIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes=[IsAuthenticated]
+    serializer_class = SubscriptionPlanSerializer
+    def get_queryset(self):
+        user = self.request.user
+        
+        if not user.is_servicer:
+            return SubscriptionPlan.objects.none()
+        queryset = SubscriptionPlan.objects.all()
+        return queryset

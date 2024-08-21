@@ -42,6 +42,7 @@ class SubscriptionPlanListView(ListAPIView):
         return queryset 
     
 @api_view(['PUT'])
+@permission_classes([AllowAny])
 def update_subscription(request, pk):
     try:
         subscription = SubscriptionPlan.objects.get(pk=pk)
@@ -55,6 +56,7 @@ def update_subscription(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([AllowAny])
 def delete_subscription(request, pk):
     try:
         subscription = SubscriptionPlan.objects.get(pk=pk)

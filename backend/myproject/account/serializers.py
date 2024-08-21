@@ -33,29 +33,11 @@ class VerifyAccountSerializer(serializers.Serializer):
     email=serializers.EmailField()
     otp=serializers.CharField()
 
-class ChangePasswordSerializer(serializers.Serializer):
-    password=serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
-    password2=serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
-    class Meta:
-        fields=['password','password2']
-    def validate(self,attrs):
-        user=self.context['request'].user
-        password = attrs.get('password')
-        if not user.check_password(password):
-            raise serializers.ValidationError({"old_password": "Old password is not correct."})
-        return attrs
-    
-class SendResetPasswordEmailSerializer(serializers.Serializer):
-    email=serializers.EmailField(max_length=255)
-    def validate(self,attrs):
-        email=attrs.get('email')
-        if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({"email": "No user with this email address exists."})
-        return attrs
-    
 
-class UserPasswordResetSerializer(serializers.Serializer):
-  password = serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
-  password2 = serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
-  class Meta:
-    fields = ['password', 'password2']
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField()
