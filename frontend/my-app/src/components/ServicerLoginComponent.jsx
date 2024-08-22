@@ -74,7 +74,7 @@ export const ServicerLoginComponent = () => {
       <div className="mt-4 flex justify-between font-semibold text-sm">
         <a
           className="text-red-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
-          href="#"
+          onClick={() => navigate('/servicer-passwrdrequest')}
         >
           Forgot Password?
         </a>

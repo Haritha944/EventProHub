@@ -1,9 +1,8 @@
-// PasswordResetComponent.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation ,useNavigate} from 'react-router-dom';
 
-function ResetPasswordComponent() {
+function ServicerResetPasswordComponent  () {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
@@ -22,9 +21,9 @@ function ResetPasswordComponent() {
             return;
         }
         try {
-            await axios.post('http://127.0.0.1:8000/api/user/password-reset/', { uid, token, new_password: newPassword });
+            await axios.post('http://127.0.0.1:8000/api/provider/passwordservicer-reset/', { uid, token, new_password: newPassword });
             setMessage('Password has been reset.');
-            navigate('/login');
+            navigate('/servicelogin');
             setError('');
         } catch (error) {
             setError('Failed to reset password.');
@@ -32,8 +31,8 @@ function ResetPasswordComponent() {
         }
     };
 
-    return (
-        <div className="flex items-center justify-center min-h-screen">
+  return (
+    <div className="flex items-center justify-center min-h-screen">
              <div className="w-full max-w-md bg-blue-100 p-6 rounded-lg shadow-md">
             <h1 className="text-2xl font-bold text-center mb-4">Reset Password</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,7 +63,7 @@ function ResetPasswordComponent() {
             {error && <p className="text-red-600 text-center mt-4">{error}</p>}
         </div>
         </div>
-    );
+  )
 }
 
-export default ResetPasswordComponent;
+export default ServicerResetPasswordComponent

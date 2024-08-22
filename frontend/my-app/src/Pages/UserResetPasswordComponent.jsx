@@ -7,7 +7,9 @@ const UserResetPasswordComponent = () => {
   return (
     <>
     <UserNavBarComponent/>
+    <div className='mt-10'>
     <ResetPasswordComponent/>
+    </div>
     <UserFooterComponent/>
     </>
   )

@@ -1,16 +1,25 @@
 // PasswordResetRequestComponent.jsx
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 function PasswordResetComponent() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const token = useSelector(state => state.user.token);
+    console.log('Auth Token:', token);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://127.0.0.1:8000/api/user/password-reset-request/', { email });
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            
+            await axios.post('http://127.0.0.1:8000/api/user/password-reset-request/', 
+                { email },
+                { headers }
+            );
             setMessage('Password reset email sent.');
             setError('');
         } catch (error) {
@@ -20,8 +29,9 @@ function PasswordResetComponent() {
     };
 
     return (
-        <div className="p-4 max-w-md mx-auto">
-            <h1 className="text-2xl font-bold text-center mb-4">Request Password Reset</h1>
+        <div className="flex items-center justify-center min-h-screen ">
+            <div className="w-full max-w-md bg-blue-100 p-6 rounded-lg shadow-md">
+            <h1 className="text-2xl font-bold text-blue-700 mb-4">Request Password Reset</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                     type="email"
@@ -40,6 +50,7 @@ function PasswordResetComponent() {
             </form>
             {message && <p className="text-green-600 text-center mt-4">{message}</p>}
             {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+        </div>
         </div>
     );
 }
