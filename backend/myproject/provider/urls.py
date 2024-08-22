@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ServicerRegistrationView,ServicerLoginView,VerifyOTP,ServicerProfileView,ServicerProfileUpdateView,SubscriptionServicerListView
+from .views import ServicerRegistrationView,ServicerLoginView,VerifyOTP,ServicerProfileView,ServicerProfileUpdateView,SubscriptionServicerListView,ServicerPasswordResetRequestView,ServicerPasswordResetView
 
 
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
     path('servicer_profile/', ServicerProfileView.as_view(), name='servicer_profile'),
     path('servicer_profile/update/<int:id>/', ServicerProfileUpdateView.as_view(), name='servicer_profile_update'),
     path('servicersubscriptionlist/', SubscriptionServicerListView.as_view(), name='servicersubscription'),
-
+    path('servicer-reset-request/', ServicerPasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('passwordservicer-reset/', ServicerPasswordResetView.as_view(), name='password-reset'),
 ]

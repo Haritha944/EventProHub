@@ -10,6 +10,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.generics import ListAPIView
 from provider.emails import *
 from payments.models import SubscriptionPlan
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from account.serializers import PasswordResetSerializer,PasswordResetRequestSerializer
 from payments.serializers import SubscriptionPlanSerializer
 from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer
 # Create your views here.
@@ -135,3 +141,54 @@ class SubscriptionServicerListView(ListAPIView):
             return SubscriptionPlan.objects.none()
         queryset = SubscriptionPlan.objects.all()
         return queryset
+    
+class ServicerPasswordResetRequestView(APIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes=[AllowAny]
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                servicer = Servicer.objects.get(email=email)
+            except Servicer.DoesNotExist:
+                return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            token = default_token_generator.make_token(servicer)
+            uid = urlsafe_base64_encode(force_bytes(servicer.pk))
+            reset_link = f'http://localhost:3000/servicer-resetpasswrd?uid={uid}&token={token}'
+
+            send_mail(
+                'Password Reset Request',
+                f'Click the link to reset your password: {reset_link}',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            return Response({'message': 'Password reset email sent.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+class ServicerPasswordResetView(APIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes=[AllowAny]
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            uid = serializer.validated_data['uid']
+            token = serializer.validated_data['token']
+            new_password = serializer.validated_data['new_password']
+            
+            try:
+                uid = force_str(urlsafe_base64_decode(uid))
+                servicer = Servicer.objects.get(pk=uid)
+            except (TypeError, ValueError, OverflowError, Servicer.DoesNotExist):
+                return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not default_token_generator.check_token(servicer, token):
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            servicer.set_password(new_password)
+            servicer.save()
+            return Response({'message': 'Password has been reset.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

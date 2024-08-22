@@ -94,6 +94,7 @@ def test_send_otp(request):
     return JsonResponse({'status': 'OTP sent'})
 
 class UserProfileUpdateView(APIView):
+    
     def put(self,request):
         user=request.user
         serializer=UserProfileSerializer(user,data=request.data)
@@ -119,6 +120,7 @@ class UserProfileee(APIView):
 
 
 class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -130,7 +132,7 @@ class PasswordResetRequestView(APIView):
             
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = 'http://localhost:3000/reset-password?uid={uid}&token={token}'
+            reset_link = f'http://localhost:3000/reset-password?uid={uid}&token={token}'
 
             send_mail(
                 'Password Reset Request',
@@ -144,6 +146,7 @@ class PasswordResetRequestView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
 class PasswordResetView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetSerializer(data=request.data)
         if serializer.is_valid():
