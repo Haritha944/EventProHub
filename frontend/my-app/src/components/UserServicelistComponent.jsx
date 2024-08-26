@@ -6,7 +6,12 @@ import new1 from '../Images/front.png'
 import new2 from '../Images/NEW2.png'
 import { useNavigate } from 'react-router-dom';
 
-
+const SERVICE_TYPE = [
+  ('residential', 'Residential'),
+  ('commercial', 'Commercial'),
+  ('vehicle_washing', 'Vehicle Washing'),
+  ('specific', 'Specific Cleaning'),
+]
 
 const CITY_CHOICES = [
   ['Kasaragod', 'Kasaragod'],
@@ -27,6 +32,11 @@ const CITY_CHOICES = [
 function UserServicelistComponent  ()  {
   const [services, setServices] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
+  const [serviceType, setServiceType] = useState('');
+ const [minPrice, setMinPrice] = useState('');
+ const [maxPrice, setMaxPrice] = useState('');
+ const [minPricePerSqft, setMinPricePerSqft] = useState('');
+ const [maxPricePerSqft, setMaxPricePerSqft] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -67,7 +77,22 @@ function UserServicelistComponent  ()  {
     console.log('Selected Service:', selectedService);
     navigate(`/userservicedetail/${selectedService.id}`);
   };
+  const handleOtherFiltersSearch = async () => {
+    try {
+      const filters = {
+        service_type: serviceType,
+        min_price: minPrice,
+        max_price: maxPrice,
+        min_price_per_sqft: minPricePerSqft,
+        max_price_per_sqft: maxPricePerSqft,
+      };
 
+      const response = await axios.post('http://127.0.0.1:8000/api/services/servicelistfilter/', filters);
+      setServices(response.data);  // Update services in state based on response
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  };
 
 
   return (
@@ -112,12 +137,12 @@ function UserServicelistComponent  ()  {
           <label htmlFor="default-search" className=" text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search
           </label>
-          <div className="relative max-w-md">
+          <div className="relative max-w-md ml-4">
           <div className="flex items-center justify-center ps-3 pointer-events-none"></div>
             <select
               value={selectedCity}
               onChange={handleCityChange}
-              className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              className="block w-full p-4 text-sm text-gray-900 border ml-8 border-gray-300 rounded-lg bg-gray-50  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
             >
               <option value="" disabled defaultValue>
                 Choose a City
@@ -131,14 +156,81 @@ function UserServicelistComponent  ()  {
             <button
               type="submit"
               onClick={handleSearch}
-              className="text-white absolute mr-2 end-2.5 bottom-2.5 bg-blue-700 hover:bg-red-800  font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700">
+              className="text-white absolute -mr-2 end-2.5 bottom-2.5 bg-blue-700  hover:bg-red-800  font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700">
               Search
             </button>
           </div>
             </div>
           </div>
           </div>
-          <div className="relative w-full text-center">
+          <div className="relative w-full h-screen flex">
+          <div className="w-1/4 bg-gray-100 p-4 -mt-24">
+            <h2 className="text-lg font-semibold mb-4">Filter Services</h2>
+            <div className="mb-4">
+            <select
+            value={serviceType}
+            onChange={(e) => setServiceType(e.target.value)}
+            className="block w-full p-2 border rounded-lg"
+          >
+            <option value="">Select Service Type</option>
+            {SERVICE_TYPE.map((type, index) => (
+              <option key={index} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex mb-4 space-x-4">
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="MinPrice"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="block w-full p-1 border rounded-lg"
+          />
+        </div>
+        <span className="text-md">–</span> 
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="MaxPrice"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="block w-full p-1 border rounded-lg"
+          />
+        </div>
+        </div>
+        <div className="flex mb-4 space-x-4">
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="Min Rs/sqft"
+            value={minPricePerSqft}
+            onChange={(e) => setMinPricePerSqft(e.target.value)}
+            className="block w-full p-1 border rounded-lg"
+          />
+        </div>
+        <span className="text-md">–</span> 
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="Max Rs/sqft"
+            value={maxPricePerSqft}
+            onChange={(e) => setMaxPricePerSqft(e.target.value)}
+            className="block w-full p-1 border rounded-lg"
+          />
+        </div>
+        </div>
+        <button onClick={handleOtherFiltersSearch} className="text-white bg-gradient-to-b from-sky-400 via-blue-500 to-blue-800 w-full rounded-lg px-4 py-1">
+          Search
+        </button>
+
+           </div>
+  
+  
+         <div className="w-3/4 p-4">
+         
         <div className="flex justify-center items-center -mt-32">
           <h1 className="text-3xl text-fuchsia-500 font-semibold">Services</h1>
         </div>
@@ -177,7 +269,7 @@ function UserServicelistComponent  ()  {
             ))
           )}
         </div>
-         
+         </div>
     </div>
     </>
   )

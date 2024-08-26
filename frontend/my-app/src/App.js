@@ -26,6 +26,8 @@ import UserPasswordResetPage from './Pages/UserPasswordResetPage';
 import UserResetPasswordComponent from './Pages/UserResetPasswordComponent';
 import ServicerPasswordResetPage from './Pages/ServicerPasswordResetPage';
 import ServicerResetPage from './Pages/ServicerResetPage';
+import UserReviewBookingComponent from './components/UserReviewBookingComponent';
+import UserReviewBookingPage from './Pages/UserReviewBookingPage';
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
         <Route path="/request-reset" element={<UserPasswordResetPage/>}/>
         <Route path="/reset-password" element={<UserResetPasswordComponent/>}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
+        <Route path="/userreviewbooking" element={<UserReviewBookingPage/>}/>
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
