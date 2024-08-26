@@ -6,7 +6,7 @@ from provider.models import Servicer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes,authentication_classes
-from .serializers import ServiceSerializer,ServiceDetailSerializer
+from .serializers import ServiceSerializer,ServiceDetailSerializer,ServiceBookingSerializer
 from provider.emails import ServicerAuthentication
 
 
@@ -128,3 +128,45 @@ class ServicesByLocationView(APIView):
         print(services)
         serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)
+    
+class OtherFiltersView(APIView):
+    permission_classes=[AllowAny]
+
+    def post(self,request):
+        filters = request.data
+        services = Service.objects.all()
+
+        service_type = filters.get('service_type')
+        if service_type:
+            services = services.filter(service_type__iexact=service_type)
+        
+        min_price = filters.get('min_price')
+        if min_price:
+            services = services.filter(price__gte=min_price)
+        
+        max_price = filters.get('max_price')
+        if max_price:
+            services = services.filter(price__lte=max_price)
+        
+        min_price_per_sqft = filters.get('min_price_per_sqft')
+        if min_price_per_sqft:
+            services = services.filter(price_per_sqft__gte=min_price_per_sqft)
+        
+        max_price_per_sqft = filters.get('max_price_per_sqft')
+        if max_price_per_sqft:
+            services = services.filter(price_per_sqft__lte=max_price_per_sqft)
+
+        serializer = ServiceSerializer(services, many=True)
+        return Response(serializer.data)
+    
+class BookingCreateView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        print("Data received:", request.data)
+        serializer = ServiceBookingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

@@ -42,7 +42,7 @@ class VerifyAccountSerializer(serializers.Serializer):
 class ServicerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Servicer
-        fields = ['email','name','phone_number','experience','address','is_active','is_servicer','is_verified']
+        fields = ['id','email','name','phone_number','experience','address','is_active','is_servicer','is_verified']
         
 
 class ServicerProfileSerializer(serializers.ModelSerializer):

@@ -1,5 +1,6 @@
 from django.db import models
 from provider.models import Servicer
+from account.models import User
 # Create your models here.
 class Service(models.Model):
     CITY_CHOICES = [
@@ -44,3 +45,32 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class ServiceBooking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)  
+    service_date = models.DateField()
+    service_time = models.TimeField()
+    address = models.CharField(max_length=255)  # Service address (e.g., hometown)
+    city = models.CharField(max_length=100)  # City where service will be provided
+    zip_code = models.CharField(max_length=20)  # ZIP or postal code
+    instructions = models.TextField(blank=True, null=True)
+    area_sqft = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # Square footage of the room
+    price_paid= models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
+    is_paid = models.BooleanField(default=False)
+    is_canceled = models.BooleanField(default=False)
+
+    def calculate_price(self):
+        if self.service.price_per_sqft:
+            if self.area_sqft:
+                self.price_paid = self.area_sqft * self.service.price_per_sqft
+            else:
+                self.price_paid = 0
+        else:
+            self.price_paid = self.service.price
+
+    def save(self, *args, **kwargs):
+        self.calculate_price()  # Calculate the price before saving
+        super(ServiceBooking, self).save(*args, **kwargs) 
