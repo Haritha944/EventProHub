@@ -1,14 +1,13 @@
 import React,{useEffect} from 'react'
 import { useLocation,useNavigate } from 'react-router-dom';
-import { useDispatch,useSelector } from 'react-redux';
-import { selectUser,setUserName ,selectToken} from '../redux/Slices/userSlice'; 
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { selectUser} from '../redux/Slices/userSlice'; 
+import UserNavBarComponent from './UserNavBarComponent';
+import UserFooterComponent from './UserFooterComponent';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 const UserOrderStatusComponent = () => {
-    const dispatch = useDispatch();
     const navigate=useNavigate()
-    const accessToken = useSelector(selectToken);
     const location = useLocation();
     const queryParams= new URLSearchParams(location.search)
     const isPaymentCanceled = queryParams.get("canceled") === "true";
@@ -16,22 +15,9 @@ const UserOrderStatusComponent = () => {
     const amount = queryParams.get("amount");
     const currency = queryParams.get("currency");
     const userName = useSelector(selectUser);
+
     
     useEffect(() => {
-      const fetchUserName = async () => {
-        try {
-          const response = await axios.get(`${BASE_URL}user/user-navbar/`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
-          });
-          dispatch(setUserName(response.data.name)); // Update Redux store with the user's name
-        } catch (error) {
-          console.error('Error fetching user details:', error);
-        }
-      };
-  
-      fetchUserName();
         if (isPaymentCanceled) {
           console.log("Payment canceled");
         } else if (isSuccess) {
@@ -41,12 +27,12 @@ const UserOrderStatusComponent = () => {
         } else {
           console.log("Unexpected order status");
         }
-      }, [dispatch,isPaymentCanceled, isSuccess, amount, currency]);
+      }, [isPaymentCanceled, isSuccess, amount, currency]);
     
   return (
     <>
+    <UserNavBarComponent/>
     <div className="text-center">
-        
       {isPaymentCanceled && <h2>Order Canceled</h2>}
       {isSuccess ? (
         <div className="flex flex-col items-center justify-center h-screen">
@@ -80,6 +66,7 @@ const UserOrderStatusComponent = () => {
       )}
       
     </div>
+    <UserFooterComponent/>
     </>
   )
 }

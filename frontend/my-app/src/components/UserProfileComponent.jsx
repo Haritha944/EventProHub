@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import PersonIcon from '@mui/icons-material/Person';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function UserProfileComponent() {
+    const navigate=useNavigate()
     const [userDetails, setUserDetails] = useState(() => {
       const savedUserDetails = localStorage.getItem('userDetails');
       return savedUserDetails ? JSON.parse(savedUserDetails) : null;
@@ -67,8 +69,23 @@ function UserProfileComponent() {
 
 
   return (
-    <div className="flex mt-32 justify-center items-center h-full">
-      <div className="w-full md:w-3/5 p-8 bg-white shadow-md">
+    <div className="flex mt-32 h-full">
+      <div className='sm:w-1/4 md:w-1/4 p-4 bg-gray-100 min-h-screen text-blue-700 shadow-md'>
+      <div className='items-center space-x-4 p-2 mb-5'>
+      <h2 className="text-xl font-bold mb-4">Sidebar</h2>
+      <ul class="space-y-2 text-sm">
+      <li>
+                  <a  onClick={() => navigate('/userbookings')} class="flex items-center space-x-1 text-emerald-700 p-2 rounded-md font-medium hover:bg-sky-200 focus:bg-sky-200 focus:shadow-outline">
+                      <span class="text-teal-600">
+                          <PersonIcon />
+                      </span>
+                      <span>My Bookings</span>
+                  </a>
+              </li>
+        </ul>
+        </div>
+      </div>
+      <div className="w-3/4 md:w-3/5 p-8 bg-white shadow-md">
         <h1 className="text-3xl font-bold text-blue-700 text-center mb-5"> <AccountCircleIcon className="mr-2" fontSize="large" />Profile Details</h1>
        
         <div className="rounded shadow p-6">
@@ -121,7 +138,7 @@ function UserProfileComponent() {
             type="button">
             Save Changes
           </button>
-          
+           
           {showModal && (
           <div id="popup-modal" tabindex="-1" className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
               <div className="relative p-4 w-full max-w-md max-h-full">

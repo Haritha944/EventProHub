@@ -29,6 +29,7 @@ import ServicerResetPage from './Pages/ServicerResetPage';
 import UserReviewBookingComponent from './components/UserReviewBookingComponent';
 import UserReviewBookingPage from './Pages/UserReviewBookingPage';
 import UserOrderStatusComponent from './components/UserOrderStatusComponent';
+import UserBookingPage from './Pages/UserBookingPage';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
         <Route path="/userreviewbooking" element={<UserReviewBookingPage/>}/>
         <Route path="/order-status" element={<UserOrderStatusComponent/>}/>
+        <Route path="/userbookings" element={<UserBookingPage/>}/>
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>
