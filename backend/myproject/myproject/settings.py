@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -191,3 +192,8 @@ AUTHENTICATION_BACKENDS = (
     'provider.backends.ServicerBackend',  # Replace 'your_app' with the actual name of your Django app
     'django.contrib.auth.backends.ModelBackend',  # Optional: Keep the default backend as a fallback
 )
+
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = config("STRIPE_PUBLIC_KEY")
+
+SITE_URL = config("SITE_URL", default="http://localhost:3000/")

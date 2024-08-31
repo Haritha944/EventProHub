@@ -30,5 +30,5 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
 class ServiceBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceBooking
-        fields = ['service_date','service_time','address','city','zip_code','instructions','area_sqft','user','servicer','service']
+        fields = ['id','service_date','service_time','address','city','zip_code','instructions','area_sqft','user','servicer','service']
     

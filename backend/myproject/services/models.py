@@ -48,11 +48,21 @@ class Service(models.Model):
     
 
 class ServiceBooking(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Paid', 'Paid'),
+        ('Approved', 'Approved'),
+        ('Canceled', 'Canceled'),
+        ('Completed', 'Completed'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)  
     service_date = models.DateField()
     service_time = models.TimeField()
+    status = models.CharField(max_length=50,choices=STATUS_CHOICES, default='pending')
+    approval_by_servicer = models.BooleanField(default=False)
+    stripe_session_id = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=255)  # Service address (e.g., hometown)
     city = models.CharField(max_length=100)  # City where service will be provided
     zip_code = models.CharField(max_length=20)  # ZIP or postal code
