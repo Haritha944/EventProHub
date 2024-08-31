@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { setOTP,verifyOTP } from '../redux/Slices/otpServicerSlice';
 import servicer from '../Images/otp2.png'
 
+
 function ServicerOTPVerificationComponent () {
     const dispatch = useDispatch();
     const navigate = useNavigate();

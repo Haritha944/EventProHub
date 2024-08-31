@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useSelector,useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerServicelistingComponent  ()  {
     const [services, setServices] = useState([]);
     const [selectedServiceId, setSelectedServiceId] = useState(null);
@@ -13,7 +14,7 @@ function ServicerServicelistingComponent  ()  {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/services/servicelist/', {
+                const response = await axios.get(`${BASE_URL}services/servicelist/`, {
                     headers: {
                         Authorization: `Bearer ${token.access}`,
                     },
@@ -28,7 +29,7 @@ function ServicerServicelistingComponent  ()  {
     }, [token]);
     const handleDeleteService = async () => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/services/delete_service/${selectedServiceId}/`, {
+            await axios.delete(`${BASE_URL}services/delete_service/${selectedServiceId}/`, {
                 headers: {
                     Authorization: `Bearer ${token.access}`,
                 },

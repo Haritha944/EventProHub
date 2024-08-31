@@ -4,7 +4,7 @@ import { selectToken,setService,selectSelectedServices } from '../redux/Slices/u
 import { useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
 import ServiceDetailFetcherComponent from './ServiceDetailFetcherComponent';
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function UserServiceDetailComponent () {
 
   const dispatch =useDispatch();
@@ -19,7 +19,7 @@ function UserServiceDetailComponent () {
     
     const fetchServiceDetails = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/services/servicedetail/${serviceId}/`);
+            const response = await axios.get(`${BASE_URL}services/servicedetail/${serviceId}/`);
             console.log('Service details:', response.data);
             dispatch(setService(response.data));
            

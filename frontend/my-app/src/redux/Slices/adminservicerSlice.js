@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const fetchAdminServicers = createAsyncThunk(
     'adminServicers/fetchAdminServicers',
     async (_,thunkAPI)=>{
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/admin/servicer-list');
+            const response = await axios.get(`${BASE_URL}admin/servicer-list`);
             return response.data;
         } catch(error){
             return thunkAPI.rejectWithValue(error.response.data);
@@ -19,7 +19,7 @@ export const toggleServicerStatus = createAsyncThunk(
     async ({servicerId,isActive}) =>{
         const action = isActive ? 'block':'unblock';
         const response = await axios.put(
-            `http://127.0.0.1:8000/api/admin/servicer/${servicerId}/${action}/`
+            `${BASE_URL}admin/servicer/${servicerId}/${action}/`
         );
         return {servicerId, isActive :!isActive};
     }

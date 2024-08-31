@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { setOTP,setVerificationSuccess,clearOTP } from '../redux/Slices/otpSlice';
 import myImage from '../Images/otp.jpg'
 
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 function  UserOTPVerificationComponent  ()  {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +22,7 @@ function  UserOTPVerificationComponent  ()  {
 
     const submitHandler = async ()=>{
         try{
-            const response= await fetch('http://127.0.0.1:8000/api/user/verify/', {
+            const response= await fetch(`${BASE_URL}user/verify/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

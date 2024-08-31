@@ -3,12 +3,24 @@ import { useSelector } from 'react-redux';
 import { selectToken,selectSelectedServices,selectUserId } from '../redux/Slices/userSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { loadStripe } from '@stripe/stripe-js';
 
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const endpoint = `${BASE_URL}payments/createcheckoutsession/`;
 function UserReviewBookingComponent () {
   const user = useSelector(selectUserId);
   const token = useSelector(selectToken);
   const serviceDetails = useSelector(selectSelectedServices);
+  const [error, setError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const navigate = useNavigate();
+  
+  
   const [bookingDetails, setBookingDetails] = useState({
     service_date: '',
     service_time: '',
@@ -24,6 +36,17 @@ const handleBookingSubmit = async (e) => {
   const serviceId = serviceDetails.id;  
   const servicerId = serviceDetails?.servicer?.id;
   const userId = user;  
+  
+  const selectedTime = bookingDetails.service_time;
+  const startTime = "09:00";
+  const endTime = "18:00";
+  if (selectedTime < startTime || selectedTime > endTime) {
+    setError('Service time must be between 9:00 AM and 6:00 PM.');
+    setOpenSnackbar(true);
+    return;
+  }
+ 
+  
   try {
       const formData = new FormData();
       formData.append('service_date', bookingDetails.service_date);
@@ -40,18 +63,49 @@ const handleBookingSubmit = async (e) => {
       formData.append('servicer', servicerId);  // Assuming servicer name is part of service
       formData.append('user', user);
 
-      const response = await axios.post('http://127.0.0.1:8000/api/services/bookings/', formData, {
+      const response = await axios.post(`${BASE_URL}services/bookings/`, formData, {
           headers: {
               'Content-Type': 'multipart/form-data',
               Authorization: `Bearer ${token.access}`,
           },
       });
+      const bookingId = response.data.id;
+      await handlePayment(bookingId);
+      console.log('Booking ID:',bookingId);
+      
 
-      console.log(response.data);
-      navigate('/bookinglist');
   } catch (error) {
       console.error('Error booking service:', error);
       alert('There was an error booking the service. Please try again.');
+  }
+};
+const handlePayment = async (bookingId) => {
+  try {
+    const stripe = await stripePromise;
+    console.log('Stripe instance:', stripe);
+    const token = localStorage.getItem("token");
+    const paymentResponse = await axios.post(`${BASE_URL}payments/createcheckoutsession/`, { servicebooking_id: bookingId }, {
+      
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (paymentResponse.data.error) {
+      console.error("Error creating checkout session:", paymentResponse.data.error);}
+    else{
+    const { session_id } = paymentResponse.data;
+    const {error} = await stripe.redirectToCheckout({sessionId: session_id});
+    }
+    if (error) {
+      console.error('Error during payment:', error);
+      setError(error);
+      setOpenSnackbar(true);
+    }
+  } catch (error) {
+    console.error('Payment failed:', error);
+    alert('There was an error processing the payment. Please try again.');
   }
 };
 const handleInputChange = (e, field) => {
@@ -60,12 +114,13 @@ const handleInputChange = (e, field) => {
       [field]: e.target.value,
   });
 };
+const handleCloseSnackbar = () => {
+  setOpenSnackbar(false);
+};
 
-console.log("Service ID:", serviceDetails);
-console.log("Servicer ID:", serviceDetails);
-console.log("User ID:", user);  
-console.log('User Token',token)
-  return (
+console.log('Stripe API Key:', stripePromise);
+console.log(endpoint)
+return (
     <>
     <div className='relative w-full min-h-screen flex flex-col lg:flex-row mb-6'>
     <div  className="w-full lg:w-1/2 max-w-lg p-4 bg-white shadow-lg rounded-lg mx-4 lg:mx-20 mt-10">
@@ -89,7 +144,10 @@ console.log('User Token',token)
             <p className='mx-0 md:mx-5 mt-3 md:mt-0'><strong>Servicer Name:</strong> {serviceDetails.servicer.name}</p>
             </div>
           </div>
+          
         )}
+         
+        
       <form onSubmit={handleBookingSubmit} className="space-y-4">
         <div className='flex flex-col md:flex-row items-center space-y-4 md:space-y-0'>
         <div className='w-full md:w-1/2' >
@@ -171,6 +229,16 @@ console.log('User Token',token)
           />
         </div>
         </div>
+        <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
         <button
           type="submit"
           className="bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2 text-white"
@@ -183,7 +251,7 @@ console.log('User Token',token)
     <div className='w-full lg:w-1/3 p-4 bg-gray-100 border-l border-gray-300 mt-10 mx-5'>
     <h2 className="text-lg font-semibold mb-4 text-center text-blue-700">Service Details</h2>
       <div className="mb-6 ml-6">
-        <p className='text-blue-700'><strong>Service:</strong> ${serviceDetails.name}</p>
+        <p className='text-blue-700'><strong>Service:</strong> {serviceDetails.name}</p>
         <p className='text-blue-700'><strong>Description:</strong> {serviceDetails.description}</p>
         <p className='text-blue-700'><strong>Service Type:</strong> {serviceDetails.service_type}</p>
         <p className='text-blue-700'><strong>Servicer Name:</strong> {serviceDetails.servicer.name}</p>
@@ -205,6 +273,7 @@ console.log('User Token',token)
         Pay Now
       </button>
     </div>
+    
     </div>
     
     </>

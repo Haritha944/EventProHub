@@ -8,6 +8,7 @@ const SUBSCRIPTION_TYPES = [
     ('Quarterly', 'Quarterly'),
     ('Yearly', 'Yearly'),
 ]
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function AdminSubscriptionComponent  ()  {
     
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ function AdminSubscriptionComponent  ()  {
         console.log([...data.entries()]); 
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/payments/createplan/', data, {
+            const response = await axios.post(`${BASE_URL}payments/createplan/`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     

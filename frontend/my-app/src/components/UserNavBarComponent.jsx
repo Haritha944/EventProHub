@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { clearUser } from '../redux/Slices/userSlice'; 
-import eventlogo from '../Images/logo.png'
+import eventlogo from '../Images/logo.png';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const UserNavBarComponent = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -18,7 +19,7 @@ export const UserNavBarComponent = () => {
         const fetchUserName =  async ()=>{
           if (!accessToken) return;
             try{
-                const response =  await axios.get('http://127.0.0.1:8000/api/user/user-navbar/',{
+                const response =  await axios.get(`${BASE_URL}user/user-navbar/`,{
                     headers:{
                         Authorization:`Bearer ${accessToken}`
                     }

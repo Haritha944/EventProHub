@@ -2,12 +2,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 // Async thunk for servicer registration
 export const registerServicer = createAsyncThunk(
   'servicer/register',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/provider/register/', formData);
+      const response = await axios.post(`${BASE_URL}provider/register/`, formData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -18,7 +19,7 @@ export const loginServicer = createAsyncThunk(
   'servicer/login',
   async (credentials,{rejectWithValue})=>{
     try{
-      const response = await axios.post('http://127.0.0.1:8000/api/provider/login/',credentials);
+      const response = await axios.post(`${BASE_URL}provider/login/`,credentials);
       
       return response.data;
     } catch (error){

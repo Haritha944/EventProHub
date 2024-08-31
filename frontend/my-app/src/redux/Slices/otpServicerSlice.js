@@ -7,11 +7,12 @@ const initialState = {
   status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null,
 };
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const verifyOTP = createAsyncThunk(
   'otpServicer/verifyOTP',
   async ({ email, otp }, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/provider/verify/', {
+      const response = await fetch(`${BASE_URL}provider/verify/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

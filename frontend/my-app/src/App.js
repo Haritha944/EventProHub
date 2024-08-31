@@ -28,6 +28,7 @@ import ServicerPasswordResetPage from './Pages/ServicerPasswordResetPage';
 import ServicerResetPage from './Pages/ServicerResetPage';
 import UserReviewBookingComponent from './components/UserReviewBookingComponent';
 import UserReviewBookingPage from './Pages/UserReviewBookingPage';
+import UserOrderStatusComponent from './components/UserOrderStatusComponent';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route path="/reset-password" element={<UserResetPasswordComponent/>}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
         <Route path="/userreviewbooking" element={<UserReviewBookingPage/>}/>
+        <Route path="/order-status" element={<UserOrderStatusComponent/>}/>
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>

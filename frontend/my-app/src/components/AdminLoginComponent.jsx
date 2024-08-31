@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const AdminLoginComponent = () => {
     const navigate = useNavigate()
     const [formData,setFormData] = useState({
@@ -19,7 +20,7 @@ export const AdminLoginComponent = () => {
         e.preventDefault();
     try{
         console.log('entered')
-        const response = await axios.post('http://127.0.0.1:8000/api/admin/admin-login/',formData);
+        const response = await axios.post(`${BASE_URL}admin/admin-login/`,formData);
         localStorage.setItem('adminToken',response.data.token);
         navigate('/adminuserlist');
     } catch(error){

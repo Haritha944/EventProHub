@@ -2,6 +2,8 @@ import React,{useState} from 'react'
 import { Modal, Box, TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 const AdminEditSubscripModalComponent = ({ open, handleClose, subscription, onUpdate }) => {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -27,7 +29,7 @@ const AdminEditSubscripModalComponent = ({ open, handleClose, subscription, onUp
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://127.0.0.1:8000/api/payments/subscriptionedit/${subscription.id}/`, formData);
+            await axios.put(`${BASE_URL}payments/subscriptionedit/${subscription.id}/`, formData);
             onUpdate();  // Update the subscription list after edit
             handleClose();
         } catch (error) {

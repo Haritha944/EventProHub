@@ -29,6 +29,7 @@ const CITY_CHOICES = [
   ['Alappuzha', 'Alappuzha'],
   ['Pathanamthitta', 'Pathanamthitta'],
 ];
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function UserServicelistComponent  ()  {
   const [services, setServices] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
@@ -44,7 +45,7 @@ function UserServicelistComponent  ()  {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/services/servicelistuser/');
+        const response = await axios.get(`${BASE_URL}services/servicelistuser/`);
         setServices(response.data);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -60,7 +61,7 @@ function UserServicelistComponent  ()  {
   const handleSearch = async () => {
     try {
       if (selectedCity) {
-        const response = await axios.get(`http://127.0.0.1:8000/api/services/servicelistuser/${selectedCity}/`);
+        const response = await axios.get(`${BASE_URL}services/servicelistuser/${selectedCity}/`);
         setServices(response.data);
         dispatch(selectFilteredServices(response.data));
         navigate('/userservlist');
@@ -87,7 +88,7 @@ function UserServicelistComponent  ()  {
         max_price_per_sqft: maxPricePerSqft,
       };
 
-      const response = await axios.post('http://127.0.0.1:8000/api/services/servicelistfilter/', filters);
+      const response = await axios.post(`${BASE_URL}services/servicelistfilter/`, filters);
       setServices(response.data);  // Update services in state based on response
     } catch (error) {
       console.error('Error fetching services:', error);

@@ -6,6 +6,7 @@ import { setUserEmail } from '../redux/Slices/userSlice';
 import { setToken } from '../redux/Slices/userSlice';
 import login from '../Images/loginn.png'
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const ServicerLoginComponent = () => {
   const dispatch=useDispatch();
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const ServicerLoginComponent = () => {
   const [password,setPassword] = useState('');
   const handleLogin = async () =>{
     try{
-      const response = await fetch('http://127.0.0.1:8000/api/provider/login/', {
+      const response = await fetch(`${BASE_URL}provider/login/`, {
         
         method: 'POST',
         headers: {

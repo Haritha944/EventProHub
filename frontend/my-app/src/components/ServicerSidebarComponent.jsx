@@ -13,6 +13,7 @@ import BookIcon from '@mui/icons-material/Book';
 import ChatIcon from '@mui/icons-material/Chat';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerSidebarComponent  () {
   const navigate = useNavigate()
   const dispatch=useDispatch();
@@ -28,7 +29,7 @@ function ServicerSidebarComponent  () {
   useEffect (() =>{
     const fetchServicerDetails = async ()=>{
       try {
-         const response = await axios.get('http://127.0.0.1:8000/api/provider/servicer_profile/',{
+         const response = await axios.get(`${BASE_URL}provider/servicer_profile/`,{
             headers: {
                         Authorization: `Bearer ${accessToken}`
          }

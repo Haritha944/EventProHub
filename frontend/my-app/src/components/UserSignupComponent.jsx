@@ -15,7 +15,7 @@ const fields = [
     {label:'Password',name:'password',type:'password',required:true,gridCols:2,placeholder:'Enter your Password'},
     {label:'Confirm Password',name:'password2',type:'password',required:true,gridCols:2,placeholder:'Confirm your password'},
 ];
-
+const BASE_URL =  process.env.REACT_APP_BASE_URL;
 export default function UserSignupComponent () {
     const dispatch=useDispatch()
     const navigate= useNavigate()
@@ -35,7 +35,7 @@ export default function UserSignupComponent () {
             formData.append("password2", data.password2);
             console.log(formData,"formData");
             const response = await axios.post(
-                "http://localhost:8000/api/user/register/",
+                `${BASE_URL}user/register/`,
                 formData,
             );
             console.log(response.data);
@@ -48,6 +48,7 @@ export default function UserSignupComponent () {
             );
           }
     }
+    
   return (
     <div>
         <div className='flex h-screen mx-auto mt-40 mr-3 md:pl-10 '>

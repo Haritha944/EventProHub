@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 function UserProfileComponent() {
     const [userDetails, setUserDetails] = useState(() => {
       const savedUserDetails = localStorage.getItem('userDetails');
@@ -23,7 +25,7 @@ function UserProfileComponent() {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/user/user-profile/', {
+                const response = await axios.get(`${BASE_URL}user/user-profile/`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}` // Include access token in the Authorization header
                     }
@@ -42,7 +44,7 @@ function UserProfileComponent() {
 
     const updateUserProfile = async () => {
       try {
-        const response = await axios.put('http://127.0.0.1:8000/api/user/user-profile/update/', userDetails, {
+        const response = await axios.put(`${BASE_URL}user/user-profile/update/`, userDetails, {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }

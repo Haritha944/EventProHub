@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation ,useNavigate} from 'react-router-dom';
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerResetPasswordComponent  () {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,7 +21,7 @@ function ServicerResetPasswordComponent  () {
             return;
         }
         try {
-            await axios.post('http://127.0.0.1:8000/api/provider/passwordservicer-reset/', { uid, token, new_password: newPassword });
+            await axios.post(`${BASE_URL}provider/passwordservicer-reset/`, { uid, token, new_password: newPassword });
             setMessage('Password has been reset.');
             navigate('/servicelogin');
             setError('');

@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const fetchAdminUsers = createAsyncThunk(
   'adminUsers/fetchAdminUsers',
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/admin/user-list/');
+      const response = await axios.get(`${BASE_URL}admin/user-list/`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -18,7 +19,7 @@ export const toggleUserStatus = createAsyncThunk(
     async ({ userId, isActive }) => {
       const action = isActive ? 'block' : 'unblock';
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/admin/user/${userId}/${action}/`
+        `${BASE_URL}admin/user/${userId}/${action}/`
       );
       return { userId, isActive: !isActive };
     }

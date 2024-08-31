@@ -7,6 +7,7 @@ import { setUserId,setUserEmail,setToken,setUserName } from '../redux/Slices/use
 import axios from 'axios';
 import login from '../Images/login3.png';
 
+const BASE_URL =  process.env.REACT_APP_BASE_URL;
 export const UserLoginComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -14,7 +15,9 @@ export const UserLoginComponent = () => {
   const [password,setPassword] = useState('');
   const handleLogin = async()=>{
     try{
-      const response = await fetch('http://127.0.0.1:8000/api/user/login/',{
+      console.log('BASE_URL:', BASE_URL); 
+      
+      const response = await fetch(`${BASE_URL}user/login/`,{
         method:'POST',
         headers:{
           'Content-Type':'application/json',
@@ -42,6 +45,7 @@ export const UserLoginComponent = () => {
       console.error('Error during login:',error);
     }
   };
+  
   return (
     <>
     <section className='flex h-screen mt-40 mr-3 md:pl-10 rounded-md'>

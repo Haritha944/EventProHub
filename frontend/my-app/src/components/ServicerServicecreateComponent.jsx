@@ -26,7 +26,7 @@ const SERVICE_TYPES = [
     ['Specific Cleaning', 'Specific Cleaning'],
 ];
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerServicecreateComponent  () {
 
     
@@ -65,7 +65,7 @@ function ServicerServicecreateComponent  () {
 
             
 
-            const response = await axios.post('http://127.0.0.1:8000/api/services/servicecreate/', formData, {
+            const response = await axios.post(`${BASE_URL}services/servicecreate/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token.access}`,

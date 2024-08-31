@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AdminEditSubscripModalComponent from './AdminEditSubscripModalComponent';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function AdminSubscripComponent  () {
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ function AdminSubscripComponent  () {
     useEffect(() => {
         const fetchSubscriptions = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/payments/subscriptionlist/');
+                const response = await axios.get(`${BASE_URL}payments/subscriptionlist/`);
                 setSubscriptions(response.data);
                 setLoading(false);
             } catch (error) {
@@ -33,7 +34,7 @@ function AdminSubscripComponent  () {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/payments/subscriptiondel/${id}/`);
+            await axios.delete(`${BASE_URL}payments/subscriptiondel/${id}/`);
             setSubscriptions(subscriptions.filter(sub => sub.id !== id));
         } catch (error) {
             console.error('Failed to delete subscription', error);
@@ -42,7 +43,7 @@ function AdminSubscripComponent  () {
     const handleUpdate = () => {
         // Reload subscriptions after update
         setLoading(true);
-        axios.get('http://127.0.0.1:8000/api/payments/subscriptionlist/')
+        axios.get(`${BASE_URL}payments/subscriptionlist/`)
             .then(response => {
                 setSubscriptions(response.data);
                 setLoading(false);

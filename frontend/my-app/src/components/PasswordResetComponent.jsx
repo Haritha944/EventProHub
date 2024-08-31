@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function PasswordResetComponent() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -16,7 +17,7 @@ function PasswordResetComponent() {
         try {
             const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
             
-            await axios.post('http://127.0.0.1:8000/api/user/password-reset-request/', 
+            await axios.post(`${BASE_URL}user/password-reset-request/`, 
                 { email },
                 { headers }
             );

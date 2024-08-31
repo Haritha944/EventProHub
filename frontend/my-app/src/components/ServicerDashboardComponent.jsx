@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerDashboardComponent  ()  {
     const [subscriptions, setSubscriptions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ function ServicerDashboardComponent  ()  {
         const fetchSubscriptions = async () => {
            
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/provider/servicersubscriptionlist/',{
+                const response = await axios.get(`${BASE_URL}provider/servicersubscriptionlist/`,{
                 headers: {
                     'Authorization': `Bearer ${token.access}`, // Replace `yourToken` with the actual token
                 },

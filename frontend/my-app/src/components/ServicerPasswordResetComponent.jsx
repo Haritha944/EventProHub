@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerPasswordResetComponent ()  {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -15,7 +16,7 @@ function ServicerPasswordResetComponent ()  {
         try {
             const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
             
-            await axios.post('http://127.0.0.1:8000/api/provider/servicer-reset-request/', 
+            await axios.post(`${BASE_URL}provider/servicer-reset-request/`, 
                 { email },
                 { headers }
             );

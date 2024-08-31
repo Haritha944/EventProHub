@@ -1,6 +1,7 @@
 import React ,{useState,useEffect}from 'react'
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function AdminServicelistComponent  () {
     const [services,setServices] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -11,7 +12,7 @@ function AdminServicelistComponent  () {
         const fetchServices = async ()=>{
             try {
                 
-                const response = await axios.get('http://127.0.0.1:8000/api/admin/service-list/');
+                const response = await axios.get(`${BASE_URL}admin/service-list/`);
                 setServices(response.data);
                 
                 
@@ -26,7 +27,7 @@ function AdminServicelistComponent  () {
     
     const handleApproveService = (serviceId, isAvailable) => {
         const action = isAvailable ? "disapprove" : "approve";
-        const path = `http://127.0.0.1:8000/api/admin/service/${serviceId}/${action}/`;
+        const path = `${BASE_URL}admin/service/${serviceId}/${action}/`;
 
         axios.put(path, {})
             .then((response) => {

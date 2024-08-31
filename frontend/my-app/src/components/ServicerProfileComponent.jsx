@@ -2,7 +2,7 @@ import React ,{useState,useEffect} from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerProfileComponent  ()  {
     const [servicerDetails, setServicerDetails] = useState(() => {
         const savedServicerDetails = localStorage.getItem('servicerDetails');
@@ -22,7 +22,7 @@ function ServicerProfileComponent  ()  {
         const fetchServicerDetails = async () => {
     
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/provider/servicer_profile/', {
+                const response = await axios.get(`${BASE_URL}provider/servicer_profile/`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                         'Content-Type': 'application/json', // Include access token in the Authorization header
@@ -48,7 +48,7 @@ function ServicerProfileComponent  ()  {
         try {
             const servicerId = servicerDetails.id;
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/provider/servicer_profile/update/${servicerId}/`,
+                `${BASE_URL}provider/servicer_profile/update/${servicerId}/`,
                 servicerDetails,
                 {
                     headers:{

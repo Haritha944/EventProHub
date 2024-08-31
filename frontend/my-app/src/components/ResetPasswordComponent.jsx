@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation ,useNavigate} from 'react-router-dom';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ResetPasswordComponent() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,7 +23,7 @@ function ResetPasswordComponent() {
             return;
         }
         try {
-            await axios.post('http://127.0.0.1:8000/api/user/password-reset/', { uid, token, new_password: newPassword });
+            await axios.post(`${BASE_URL}user/password-reset/`, { uid, token, new_password: newPassword });
             setMessage('Password has been reset.');
             navigate('/login');
             setError('');
