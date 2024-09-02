@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'adminapp',
     'provider',
     'services',
-    'payments'
+    'payments',
+    'channels',
     
     
     
@@ -197,3 +198,4 @@ STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = config("STRIPE_PUBLIC_KEY")
 
 SITE_URL = config("SITE_URL", default="http://localhost:3000/")
+

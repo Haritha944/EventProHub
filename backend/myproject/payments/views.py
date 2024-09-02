@@ -14,6 +14,8 @@ from rest_framework.permissions import AllowAny
 import json
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -123,6 +125,8 @@ def create_checkout_session(request):
             booking.is_paid = True  # Mark as paid
             booking.save()
 
+            
+
         # Return the session ID and Stripe public key to the frontend
             return JsonResponse(
                 {"session_id": session.id, "stripe_public_key": settings.STRIPE_PUBLIC_KEY}
@@ -131,4 +135,4 @@ def create_checkout_session(request):
             return JsonResponse({"error": str(e)}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON payload"}, status=400)
-    
+        

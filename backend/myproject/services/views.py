@@ -1,13 +1,18 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Service
+from .models import Service,ServiceBooking
 from provider.models import Servicer
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes,authentication_classes
-from .serializers import ServiceSerializer,ServiceDetailSerializer,ServiceBookingSerializer
+from .serializers import ServiceSerializer,ServiceDetailSerializer,ServiceBookingSerializer,BookingListSerializer
 from provider.emails import ServicerAuthentication
+from account.serializers import UserProfileSerializer
+import stripe
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 @api_view(['POST'])
@@ -170,3 +175,81 @@ class BookingCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class BookingListView(APIView):
+    permission_classes = [AllowAny]
+    def get(self,request,format=None):
+        user=request.user
+        
+        bookings=ServiceBooking.objects.filter(user=user,is_paid=True)
+        serializer = BookingListSerializer(bookings,many=True)
+        return Response(serializer.data)
+
+class PaymentSuccessView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        price_paid = request.query_params.get('price_paid')
+        if not price_paid:
+            return Response({'error': 'Price paid is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Find the ServiceBooking associated with the session_id
+            booking = ServiceBooking.objects.filter(price_paid=price_paid).last()
+            print(booking)
+            
+            # Optionally: Add more validation if necessary
+            if booking.status != "Paid":
+                return Response({'error': 'Booking is not paid'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Retrieve user details associated with the booking
+            user = booking.user  # Assuming the ServiceBooking model has a ForeignKey to the User model
+            serializer = UserProfileSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        except ServiceBooking.DoesNotExist:
+            return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+           
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def approve_service_booking(request, pk):
+    try:
+        booking = ServiceBooking.objects.get(pk=pk)
+    except ServiceBooking.DoesNotExist:
+        return Response({'error': 'Service booking not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    booking.approval_by_servicer = True
+    booking.status = 'Approved'
+    booking.save()
+    subject = 'Your Service Booking Has Been Approved'
+    message = f"Dear {booking.user.name},\n\nYour booking for {booking.service.name} on {booking.service_date} at {booking.service_time} has been approved by the servicer."
+    recipient_list = [booking.user.email]  # Assuming the user has an email field
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+
+    serializer = BookingListSerializer(booking)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ServiceBookingsView(APIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes=[AllowAny]
+    def get(self, request, servicer_id):
+        servicer = get_object_or_404(Servicer, id=servicer_id)
+        bookings = ServiceBooking.objects.filter(servicer=servicer,is_canceled=False)
+        serializer = BookingListSerializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def disapprove_booking(request, pk):
+    try:
+        booking = ServiceBooking.objects.get(pk=pk)
+    except ServiceBooking.DoesNotExist:
+        return Response({'error': 'Service booking not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    booking.approval_by_servicer = False
+    booking.status = 'Pending'
+    booking.save()
+
+    serializer = BookingListSerializer(booking)
+    return Response(serializer.data, status=status.HTTP_200_OK)

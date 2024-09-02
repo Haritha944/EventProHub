@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Service,ServiceBooking
 from provider.models import Servicer
 from provider.serializers import ServicerSerializer
+from account.serializers import UserProfileSerializer
 from datetime import timedelta
 
 
@@ -32,3 +33,10 @@ class ServiceBookingSerializer(serializers.ModelSerializer):
         model = ServiceBooking
         fields = ['id','service_date','service_time','address','city','zip_code','instructions','area_sqft','user','servicer','service']
     
+
+class BookingListSerializer(serializers.ModelSerializer):
+    service = ServiceDetailSerializer()
+    user=UserProfileSerializer()
+    class Meta:
+        model = ServiceBooking
+        fields = '__all__'
