@@ -5,7 +5,7 @@ import otpReducer from './Slices/otpSlice';
 import servicerReducer from './Slices/servicerSlice';
 import otpServicerReducer from './Slices/otpServicerSlice';
 import adminServicerReducer from './Slices/adminservicerSlice';
-
+import servicesReducer from './Slices/adminserviceapprovalSlice'
 
 
 const store = configureStore({
@@ -16,6 +16,7 @@ const store = configureStore({
         servicer: servicerReducer,
         otpServicer: otpServicerReducer,
         adminServicers: adminServicerReducer,
+        services: servicesReducer,
         
         
         

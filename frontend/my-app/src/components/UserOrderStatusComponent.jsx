@@ -1,13 +1,15 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState} from 'react'
 import { useLocation,useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser} from '../redux/Slices/userSlice'; 
+import { useSelector ,useDispatch} from 'react-redux';
+import { selectUser,setUserName} from '../redux/Slices/userSlice'; 
+import axios from 'axios';
 import UserNavBarComponent from './UserNavBarComponent';
 import UserFooterComponent from './UserFooterComponent';
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const UserOrderStatusComponent = () => {
     const navigate=useNavigate()
+    const dispatch = useDispatch();
     const location = useLocation();
     const queryParams= new URLSearchParams(location.search)
     const isPaymentCanceled = queryParams.get("canceled") === "true";
@@ -15,23 +17,39 @@ const UserOrderStatusComponent = () => {
     const amount = queryParams.get("amount");
     const currency = queryParams.get("currency");
     const userName = useSelector(selectUser);
+    const token = useSelector(state => state.user.token); 
+    const accessToken = token?.access;
+    const [userData, setUserData] = useState(null);
 
-    
     useEffect(() => {
+      
         if (isPaymentCanceled) {
           console.log("Payment canceled");
         } else if (isSuccess) {
           console.log("Payment successful");
           console.log("Amount:", amount);
           console.log("Currency:", currency);
+          const fetchUserData = async () => {
+            try {
+                const response = await axios.get(`${BASE_URL}services/paymentsucess/`, {
+                    params: { price_paid: amount }
+                });
+                setUserData(response.data);
+                
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            }
+        };
+
+        fetchUserData();
         } else {
           console.log("Unexpected order status");
         }
-      }, [isPaymentCanceled, isSuccess, amount, currency]);
-    
+      }, [isPaymentCanceled, isSuccess, amount,currency]);
+   console.log(accessToken) 
   return (
     <>
-    <UserNavBarComponent/>
+   <UserNavBarComponent/>
     <div className="text-center">
       {isPaymentCanceled && <h2>Order Canceled</h2>}
       {isSuccess ? (
@@ -49,15 +67,11 @@ const UserOrderStatusComponent = () => {
             Amount:Rs {amount} {currency}
           </p>
           <div className='flex space-x-4 mt-4'>
-          <button onClick={() => navigate('/userbooking')} className="mt-4  bg-blue-700 font-serif text-black px-4 py-2 rounded-lg">
-             Go to Booking List
-             </button>
-
             <button
-            onClick={() => navigate('/userservice')}
+            onClick={() => navigate('/homepage')}
             className="mt-4 bg-green-700 font-serif text-white px-4 py-2 rounded-lg"
           >
-            Go to Services list
+            Go to Home
           </button>
           </div>
         </div>

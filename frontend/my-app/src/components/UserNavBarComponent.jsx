@@ -17,7 +17,10 @@ export const UserNavBarComponent = () => {
     useEffect(()=>{
      
         const fetchUserName =  async ()=>{
-          if (!accessToken) return;
+          if (!accessToken){
+            setLoggedIn(false);
+            return;
+          }
             try{
                 const response =  await axios.get(`${BASE_URL}user/user-navbar/`,{
                     headers:{
@@ -47,7 +50,7 @@ export const UserNavBarComponent = () => {
         setUserName('');
         setLoggedIn(false);
         setDropdownOpen(false);
-        localStorage.removeItem('authToken');
+        //localStorage.removeItem('authToken');
         dispatch(clearUser()); 
         navigate('/homepage');
 

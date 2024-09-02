@@ -14,7 +14,7 @@ function UserbookingComponent  ()  {
     useEffect(() => {
         const fetchUserBookings = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}user/bookings/`, {
+                const response = await axios.get(`${BASE_URL}services/bookingslist/`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -27,6 +27,14 @@ function UserbookingComponent  ()  {
 
         fetchUserBookings();
     }, [accessToken]);
+
+    const formatTime = (timeStr) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12; // Convert hour to 12-hour format
+      const formattedMinutes = minutes.toString().padStart(2, '0'); // Add leading zero if needed
+      return `${formattedHours}:${formattedMinutes} ${period}`;
+    };
 
     const handleCancelBooking = async (bookingId) => {
         try {
@@ -49,7 +57,7 @@ function UserbookingComponent  ()  {
     };
   return (
 <div className='flex mt-32 h-full'>
-    <div className='sm:w-1/4 md:w-1/4 p-4 bg-gray-100 min-h-screen text-blue-700 shadow-md'>
+    <div className='sm:w-1/6 md:w-1/6 p-4 bg-gray-100 min-h-screen text-blue-700 shadow-md'>
       <div className='items-center space-x-4 p-2 mb-5'>
         <h2 className="text-xl font-bold mb-4">Sidebar</h2>
         <ul className="space-y-2 text-sm">
@@ -68,7 +76,7 @@ function UserbookingComponent  ()  {
       </div>
     </div>
 
-    <div className='w-3/4 md:w-3/5 p-8 bg-gray-100 shadow-md'>
+    <div className='w-3/4 md:w-full p-8 bg-gray-100 shadow-md'>
       <div className="mt-1 flex justify-center">
         <h1 className="text-gray-800 font-bold md:text-4xl sm:text-xl">YOUR BOOKINGS</h1>
       </div>
@@ -76,41 +84,64 @@ function UserbookingComponent  ()  {
         <div className="flex justify-center items-center flex-col mt-10">
           <p className="text-xl text-gray-600 mb-4">You don't have any bookings yet.</p>
           <button 
-            onClick={() => navigate('/userbikelist')} 
+            onClick={() => navigate('/userservice')} 
             className="text-white mb-10 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
             Book Now
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+        <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border mt-4 border-gray-200 shadow-md rounded-lg">
+        <thead>
+                <tr className="w-full bg-gray-100">
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Service Name</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Service Date & Time</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Servicer Details</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Service Details</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Amount Paid</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">User Address</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Booking Status</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Approval Status</th>
+                  <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+              </thead>
+        <tbody>
           {bookings.map((booking, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg p-4">
-              <h2 className="text-xl font-bold text-blue-700">
-                {booking.bike_details && `${booking.bike_details.brand.name} - ${booking.bike_details.model.name}`}
-              </h2>
-              <p className="text-gray-600">Pickup Date: {booking.pickup_date}</p>
-              <p className="text-gray-600">Drop Date: {booking.drop_date}</p>
-              <p className="text-gray-600">City: {booking.city}</p>
-              <p className="text-gray-600">Amount Paid: {booking.amount_paid}</p>
-              <p className="text-gray-600">Owner: {booking.owner}</p>
-              <p className="text-gray-600">
-                {booking.first_name} {booking.last_name}, {booking.phone_number}
-              </p>
+            <tr key={index} className="bg-white shadow-md rounded-lg p-4">
+              <td className="text-sm py-3 px-6 font-normal text-blue-700">
+                {booking.service && `${booking.service.name} - ${booking.service.service_type}`}
+              </td>
+              <td className="text-gray-600 py-3 px-6 text-sm ">{booking.service_date},<br/>{formatTime(booking.service_time)}</td>
+              <td className="text-gray-600 py-3 px-6 text-sm">{booking.service.servicer.name},
+                <br/>{booking.service.servicer.address}<br/>Ph: {booking.service.servicer.phone_number}</td>
+              <td className="text-gray-600 py-3 px-6 text-sm">Duration:{booking.service.period}hr
+                <br/>Employees:{booking.service.employees_required}
+              </td>
+              <td className="text-gray-600 py-3 px-6 text-sm">{booking.price_paid}</td>
+              <td className="text-gray-600 py-3 px-6 text-sm">{booking.user.name}<br/>{booking.address}
+                                                                 </td>
+              <td className="text-gray-600 py-3 px-6 text-sm">{booking.status}
+              </td>
+              <td className={`text-sm py-3 px-6 font-semibold ${booking.approval_by_servicer ? 'text-green-500' : 'text-red-700'}`}>
+              {booking.approval_by_servicer ? 'Approved' : 'Pending'}
+              </td>
               {booking.is_canceled ? (
-                <p className="mt-4 text-md font-bold text-white bg-red-700 rounded-full px-5 py-2">
+                <td className="mt-3 text-md font-bold text-white bg-red-700 rounded-full px-5 py-2">
                   Cancelled
-                </p>
+                </td>
               ) : (
                 <button 
                   onClick={() => handleCancelBooking(booking.id)} 
-                  className="mt-4 text-md font-bold text-white bg-blue-700 rounded-full px-5 py-2 hover:bg-blue-800"
+                  className="mt-6 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
                 >
                   Cancel Booking
                 </button>
               )}
-            </div>
+            </tr>
           ))}
+        </tbody>
+        </table>
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect} from 'react'
 import { useSelector } from 'react-redux';
 import { selectToken,selectSelectedServices,selectUserId } from '../redux/Slices/userSlice';
 import axios from 'axios';
@@ -7,10 +7,11 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { loadStripe } from '@stripe/stripe-js';
 
+
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const endpoint = `${BASE_URL}payments/createcheckoutsession/`;
+
 function UserReviewBookingComponent () {
   const user = useSelector(selectUserId);
   const token = useSelector(selectToken);
@@ -19,6 +20,7 @@ function UserReviewBookingComponent () {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const navigate = useNavigate();
+  
   
   
   const [bookingDetails, setBookingDetails] = useState({
@@ -31,6 +33,7 @@ function UserReviewBookingComponent () {
     area_sqft: '',
    
 });
+
 const handleBookingSubmit = async (e) => {
   e.preventDefault();
   const serviceId = serviceDetails.id;  
@@ -119,7 +122,7 @@ const handleCloseSnackbar = () => {
 };
 
 console.log('Stripe API Key:', stripePromise);
-console.log(endpoint)
+
 return (
     <>
     <div className='relative w-full min-h-screen flex flex-col lg:flex-row mb-6'>
