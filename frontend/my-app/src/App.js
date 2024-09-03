@@ -31,6 +31,7 @@ import UserReviewBookingPage from './Pages/UserReviewBookingPage';
 import UserOrderStatusComponent from './components/UserOrderStatusComponent';
 import UserBookingPage from './Pages/UserBookingPage';
 import ServicerserviceApprovalPage from './Pages/ServicerserviceApprovalPage';
+import ServicerSubscriptionStatusComponent from './components/ServicerSubscriptionStatusComponent';
 
 function App() {
   return (
@@ -68,7 +69,7 @@ function App() {
         <Route path="/servicer-passwrdrequest" element={<ServicerPasswordResetPage/>}/>
         <Route path="/servicer-resetpasswrd" element={<ServicerResetPage/>}/>
         <Route path="/servicerserviceapprove/:servicerId" element={<ServicerserviceApprovalPage/>}/>
-
+        <Route path="/subscription-status" element={<ServicerSubscriptionStatusComponent/>}/>
 
 
       </Routes>
