@@ -1,5 +1,7 @@
 import stripe
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
 from django.http import JsonResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -7,12 +9,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from services.models import ServiceBooking,Service
-from .models import SubscriptionPlan
+from .models import SubscriptionPlan,SubscriptionPayment
 from .serializers import SubscriptionPlanSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 import json
 from django.conf import settings
+from provider.emails import ServicerAuthentication
 from django.views.decorators.http import require_POST
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -136,3 +139,58 @@ def create_checkout_session(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON payload"}, status=400)
         
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CreateCheckoutView(APIView):
+    authentication_classes = [ServicerAuthentication]
+    permission_classes = [AllowAny]
+    def post(self, request):
+        servicer = request.user
+        try:
+            payload = json.loads(request.body)
+            print("Payload:", payload)
+            subscription_plan_id = payload.get("subscription_plan_id")
+            print("Subscription Plan ID:", subscription_plan_id)
+            if not subscription_plan_id:
+                return JsonResponse({"error": "Subscription Plan ID is required"}, status=400)
+            subscription_plan = get_object_or_404(SubscriptionPlan, pk=subscription_plan_id)
+            print("Subscription Plan:", subscription_plan)
+        
+            # Create a Stripe Checkout Session
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[
+                    {
+                        "price_data": {
+                            "currency": "inr",  # Change to your currency
+                            "product_data": {
+                                "name": subscription_plan.name,
+                                # 'images': [subscription_plan.image_url] if subscription_plan.image_url else [],
+                            },
+                            "unit_amount": int(subscription_plan.amount * 100),  # Amount in cents
+                        },
+                        "quantity": 1,
+                    }
+                ],
+                mode="payment",
+                success_url=settings.SITE_URL
+                + f"subscription-status/?success=true&amount={subscription_plan.amount}&currency=inr",
+                cancel_url=settings.SITE_URL + "subscription-status/?canceled=true",
+            )
+            servicer = request.user
+            subscription_payment = SubscriptionPayment.objects.create(
+                servicer=servicer,
+                subscription_plan=subscription_plan,
+                stripe_session_id=session.id,
+                price_paid=subscription_plan.amount,
+                is_paid=True,    # Mark as unpaid initially
+            )
+            print("Stripe Session:", session)
+            return JsonResponse(
+                {"session_id": session.id, "stripe_public_key": settings.STRIPE_PUBLIC_KEY}
+            )
+        except stripe.error.StripeError as e:
+            return JsonResponse({"error": str(e)}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload"}, status=400)

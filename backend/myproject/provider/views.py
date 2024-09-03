@@ -9,14 +9,14 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import ListAPIView
 from provider.emails import *
-from payments.models import SubscriptionPlan
+from payments.models import SubscriptionPlan,SubscriptionPayment
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from account.serializers import PasswordResetSerializer,PasswordResetRequestSerializer
-from payments.serializers import SubscriptionPlanSerializer
+from payments.serializers import SubscriptionPlanSerializer,SubscriptionPaymentSerializer
 from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer
 # Create your views here.
 def get_tokens_for_user(user):
@@ -139,8 +139,30 @@ class SubscriptionServicerListView(ListAPIView):
         
         if not user.is_servicer:
             return SubscriptionPlan.objects.none()
-        queryset = SubscriptionPlan.objects.all()
-        return queryset
+        paid_plans = SubscriptionPayment.objects.filter(servicer=user)
+        paid_plans_ids = paid_plans.values_list('subscription_plan_id', flat=True)
+        available_plans = SubscriptionPlan.objects.exclude(id__in=paid_plans_ids)
+        paid_plans_details = SubscriptionPlan.objects.filter(id__in=paid_plans_ids)
+        return available_plans, paid_plans_details
+    def list(self, request, *args, **kwargs):
+        available_plans, paid_plans_details = self.get_queryset()
+
+        # Serialize both available and paid plans
+        available_serializer =  SubscriptionPlanSerializer(available_plans, many=True)
+        paid_plans_data = []
+        for plan in paid_plans_details:
+            payment = SubscriptionPayment.objects.get(subscription_plan=plan, servicer=request.user)
+            plan_data = SubscriptionPlanSerializer(plan).data
+            end_date_formatted = payment.end_date.strftime('%d %B %Y')  # Example: '03 September 2025'
+            plan_data['end_date'] = end_date_formatted
+            paid_plans_data.append(plan_data)
+
+        response_data = {
+            'available_plans': available_serializer.data,
+            'paid_plans': paid_plans_data
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
     
 class ServicerPasswordResetRequestView(APIView):
     authentication_classes = [ServicerAuthentication]

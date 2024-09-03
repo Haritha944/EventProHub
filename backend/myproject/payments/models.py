@@ -34,3 +34,23 @@ class SubscriptionPlan(models.Model):
             return False
         now = timezone.now()
         return self.start_date <= now <= self.end_date
+
+class SubscriptionPayment(models.Model):
+    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE)
+    subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
+    stripe_session_id = models.CharField(max_length=255, unique=True)
+    price_paid= models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField() 
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.start_date:
+            self.start_date = timezone.now()
+        if not self.end_date:
+            self.end_date = self.start_date + timedelta(days=self.subscription_plan._get_duration_days())
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Payment by {self.servicer.name} for {self.subscription_plan.name}"
