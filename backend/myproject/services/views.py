@@ -253,3 +253,29 @@ def disapprove_booking(request, pk):
 
     serializer = BookingListSerializer(booking)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CancelBookingView(APIView):
+    permission_classes = [AllowAny]  # Assuming only authenticated users can cancel bookings
+
+    def post(self, request):
+        booking_id = request.data.get('booking_id')
+
+        if not booking_id:
+            return Response({"error": "Booking ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            booking = ServiceBooking.objects.get(pk=booking_id, user=request.user)
+        except ServiceBooking.DoesNotExist:
+            return Response({"error": "Booking not found or you are not authorized to cancel this booking"}, status=status.HTTP_404_NOT_FOUND)
+
+        if booking.is_canceled:
+            return Response({"error": "Booking is already canceled"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Update booking status to 'Canceled' and set the is_canceled flag
+        booking.status = 'Canceled'
+        booking.is_canceled = True
+        booking.save()
+
+        serializer = BookingListSerializer(booking)
+        return Response({"message": "Booking has been canceled", "data": serializer.data}, status=status.HTTP_200_OK)
