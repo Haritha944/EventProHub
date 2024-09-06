@@ -3,7 +3,8 @@ import React from 'react'
 function UserFooterComponent() {
   return (
     <>
-        <footer className="bg-gray-200 dark:bg-gray-900 w-full pt-10 mt-10">
+    
+        <footer className="bg-gray-200 dark:bg-gray-900 w-full pt-5 mt-10">
             <div className="mx-auto w-full max-w-screen-xl">
             <div className="grid grid-cols-2 md:grid-cols-4">
                 <div>
@@ -110,6 +111,7 @@ function UserFooterComponent() {
             </div>
             </div>
         </footer>
+        
     </>
   )
 }

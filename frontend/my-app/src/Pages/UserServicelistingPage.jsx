@@ -6,13 +6,21 @@ import UserServicelistComponent from '../components/UserServicelistComponent'
 const UserServicelistingPage = () => {
   return (
     <>
-    <div className='flex flex-wrap bg-gray-100 w-full h-screen'>
+    
    <UserNavBarComponent/>
-   <div className='mt-1'>
+   <div style={{
+      overflowY: 'scroll',
+      scrollbarWidth: 'none', /* Firefox */
+      msOverflowStyle: 'none', /* IE and Edge */
+      /* For WebKit browsers */
+      WebkitOverflowScrolling: 'touch',
+    }}
+    className="scrollbar-hide p-4">
    <UserServicelistComponent/>
    </div>
    <UserFooterComponent/>
-   </div>
+  
+   
    </>
   )
 }

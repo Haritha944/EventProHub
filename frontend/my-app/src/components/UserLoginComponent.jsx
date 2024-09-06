@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect}from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
@@ -13,7 +13,9 @@ export const UserLoginComponent = () => {
   const dispatch = useDispatch();
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  
   const handleLogin = async()=>{
+   
     try{
       console.log('BASE_URL:', BASE_URL); 
       
@@ -37,7 +39,8 @@ export const UserLoginComponent = () => {
         dispatch(setUserId(data.user_id));
         console.log(data.token,"TOKENNNN")
         console.log(data.user_id,"Userrr")
-        navigate('/userservice');
+        navigate('/userservice', { replace: true });
+       
       }else {
         console.error(data);
       }

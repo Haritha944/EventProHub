@@ -38,7 +38,7 @@ function UserbookingComponent  ()  {
 
     const handleCancelBooking = async (bookingId) => {
         try {
-            await axios.post(`${BASE_URL}user/cancel-booking/`, { booking_id: bookingId }, {
+            await axios.post(`${BASE_URL}services/cancel-booking/`, { booking_id: bookingId }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -127,7 +127,7 @@ function UserbookingComponent  ()  {
               {booking.approval_by_servicer ? 'Approved' : 'Pending'}
               </td>
               {booking.is_canceled ? (
-                <td className="mt-3 text-md font-bold text-white bg-red-700 rounded-full px-5 py-2">
+                <td className="mt-6 text-sm font-semibold text-red-700 rounded-full px-5 py-2">
                   Cancelled
                 </td>
               ) : (

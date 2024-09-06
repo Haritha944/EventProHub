@@ -10,6 +10,7 @@ export const fetchBookedServices = createAsyncThunk(
     async (servicerId, thunkAPI) => {
         try {
             const response = await axios.get(`${BASE_URL}services/approvebooking/${servicerId}/`);
+            console.log("API Response Data:", response.data); 
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
@@ -60,7 +61,7 @@ const servicesSlice = createSlice({
             })
             .addCase(fetchBookedServices.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                console.log("Fetched Booked Services:", action.payload);
+                console.log("Fetched Booked Services:", action.payload); 
                 state.bookedServices = action.payload;
             })
             .addCase(fetchBookedServices.rejected, (state, action) => {

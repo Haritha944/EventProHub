@@ -7,7 +7,7 @@ function ServicerServicelistingPage ()  {
     <>
      <div class="flex flex-wrap bg-gray-100 w-full h-screen">
      <ServicerSidebarComponent/>
-     <div className='w-9/12'>
+     <div className='w-9/12 flex-grow'>
      <ServicerServicelistingComponent/>
      </div>
      </div>

@@ -11,16 +11,19 @@ const ServicerServiceApprovalComponent  = () => {
   
 
   useEffect(() => {
-    if (servicerId && status === 'idle') {
+    if (servicerId) {
+      console.log("Dispatching fetchBookedServices with servicerId:", servicerId);
         dispatch(fetchBookedServices(servicerId));
     }
-}, [status, servicerId, dispatch]);
+}, [servicerId, dispatch]);
+useEffect(() => {
+  console.log("Booked Services State:", bookedServices);
+}, [bookedServices]);
 
 if (!servicerId) {
     return <p>Servicer ID is missing or undefined.</p>;
 }
-
-
+   
   const handleApprove = (serviceId) => {
     dispatch(approveService({ serviceId }));
   };
@@ -36,7 +39,7 @@ if (!servicerId) {
       <h2 className="text-2xl font-bold mb-4 mt-8 text-center text-sky-600">Booked Services </h2>
       {status === 'loading' && <p>Loading services...</p>}
      
-      {bookedServices.length === 0 && <p>No services found.</p>}
+      {bookedServices.length === 0 && status === 'succeeded' && <p>No services found.</p>}
       {bookedServices.length > 0 && (
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5 mx-5">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -71,7 +74,7 @@ if (!servicerId) {
                <td className='px-5 py-4'>{service.is_paid ? 'Paid' : 'Unpaid'}</td>
                <td className='px-5 py-4'>{service.status}</td>
                 <td className="px-5 py-4">
-                  <span className={`px-2 py-1 rounded-md ${service.approval_by_servicer ? 'bg-green-700 text-white' : 'bg-red-700 text-white'}`}>
+                  <span className={`px-2 py-1 rounded-md ${service.approval_by_servicer ? ' text-green-700 font-bold' : ' text-red-700 font-bold'}`}>
                     {service.approval_by_servicer ? 'Approved' : 'Pending'}
                   </span>
                 </td>

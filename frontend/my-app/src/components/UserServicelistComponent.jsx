@@ -99,14 +99,14 @@ function UserServicelistComponent  ()  {
   return (
     <>
      <div className="bg-blue-100 relative w-full h-screen flex ">
-    <div className="w-1/2 h-full flex items-center justify-center bg-gray-100 relative overflow-hidden">
-    <div className='text-balance ml-20 mt-5'>
+    <div className="w-1/2 md:w-1/2 h-full flex items-center justify-center bg-gray-100 relative overflow-hidden">
+    <div className='text-balance md:text-left ml-4 md:ml-20 mt-5'>
       <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-400 bg-clip-text text-transparent mb-4">Professional Cleaning Service</h1>
       <p className="text-blue-600 mb-6">We are one of the simple few Consulting firms on the planet to cover Strategic, Tactical parts of Sales and Marketing. We are one of the simple few Consulting firms on the planet</p>
       <button className="bg-gradient-to-t from-sky-400 via-blue-500 to-blue-800 text-black px-6 py-3 rounded-full font-semibold">BOOK NOW</button>
     </div>
     </div>
-    <div className="w-1/2 h-full flex items-center justify-center bg-gray-100">
+    <div className="w-1/2 md:w-1/2 h-full flex items-center justify-center bg-gray-100">
     <div className="absolute w-[540px] h-[540px] border-8 border-sky-200 rounded-full shadow-lg"></div>
     <div className="w-[500px] h-[500px] relative z-10 bg-gradient-to-r from-sky-300 via-fuchsia-200 to-blue-300  rounded-full overflow-hidden shadow-lg">
         <img src={new1} alt="Cleaner" className="object-cover w-[500px] h-[500px] mt-6" />
@@ -120,17 +120,17 @@ function UserServicelistComponent  ()  {
   </div>
   
   
-  <div className='relative w-full h-screen flex'>
+  <div className='relative w-full h-screen flex flex-col md:flex-row'>
     
   <img
         src={new2}
         alt="Descriptive text about the image" className="h-[300px] w-auto object-cover mt-15 ml-20 items-center"
       />
-      <div className="absolute inset-0 px-5 py-6 flex items-start justify-center">
+      <div className="absolute inset-0 px-5 py-6 flex flex-col sm:items-start md:items-center md:px-20 justify-center">
         <div className='mt-12' >
   
         <h3 className="text-blue-500 text-center font-bold text-4xl mb-2 mt-8">FIND A SERVICE</h3>
-          <p className="text-blue-700 text-lg text-center mt-8 ml-15">  Our platform connects you with top-rated service providers 
+          <p className="text-blue-700 md:text-lg text-sm text-center mb-6 md:mt-8 ml-15">  Our platform connects you with top-rated service providers 
             in your area</p>
             
           <h2 className="text-fuchsia-400 text-center font-semibold mb-6 mt-8">BOOK YOUR SERVICE TODAY!!</h2>
@@ -138,7 +138,7 @@ function UserServicelistComponent  ()  {
           <label htmlFor="default-search" className=" text-sm font-medium text-gray-900 sr-only dark:text-white">
             Search
           </label>
-          <div className="relative max-w-md ml-4">
+          <div className="relative max-w-md w-full ml-4">
           <div className="flex items-center justify-center ps-3 pointer-events-none"></div>
             <select
               value={selectedCity}
@@ -164,8 +164,8 @@ function UserServicelistComponent  ()  {
             </div>
           </div>
           </div>
-          <div className="relative w-full h-screen flex">
-          <div className="w-1/4 bg-gray-100 p-4 -mt-24">
+          <div className="relative w-full h-screen flex flex-col md:flex-row">
+          <div className="md:w-1/4 bg-gray-100 p-4 -mt-24">
             <h2 className="text-lg font-semibold mb-4">Filter Services</h2>
             <div className="mb-4">
             <select
@@ -230,16 +230,18 @@ function UserServicelistComponent  ()  {
            </div>
   
   
-         <div className="w-3/4 p-4">
+         <div className="md:w-3/4 p-4 pb-20">
          
-        <div className="flex justify-center items-center -mt-32">
-          <h1 className="text-3xl text-fuchsia-500 font-semibold">Services</h1>
+        <div className="flex justify-center items-center -mt-32 mb-4">
+          <h1 className="md:text-3xl text:2xl text-fuchsia-500 font-semibold">Services</h1>
         </div>
         <div className="flex justify-center">
           {services.length === 0 ? (
             <div className="text-center text-red-700">No services found.</div>
           ) : (
-            services.map((service) => (
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
+            {services.map((service) => (
+              
               <div
                 key={service.id}
                 className="max-w-sm rounded overflow-hidden shadow-lg m-4 cursor-pointer"
@@ -267,7 +269,9 @@ function UserServicelistComponent  ()  {
               More Details</button>
                 </div>
               </div>
-            ))
+            ))}
+              </div>
+          
           )}
         </div>
          </div>
