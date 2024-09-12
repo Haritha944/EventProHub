@@ -9,8 +9,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from services.models import ServiceBooking,Service
-from .models import SubscriptionPlan,SubscriptionPayment
-from .serializers import SubscriptionPlanSerializer
+from .models import SubscriptionPlan,SubscriptionPayment,Review
+from .serializers import SubscriptionPlanSerializer,ReviewSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 import json
@@ -92,7 +92,7 @@ def create_checkout_session(request):
             if not booking_id:
                 return JsonResponse({"error": "Booking ID is required"}, status=400)
         
-        # Retrieve the ServiceBooking object
+            
             booking = get_object_or_404(ServiceBooking,pk=booking_id)
             service = Service.objects.get(name=booking.service)
             print("Service Name:", service)
@@ -194,3 +194,71 @@ class CreateCheckoutView(APIView):
             return JsonResponse({"error": str(e)}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+        
+
+    
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_reviews(request,service_id):
+        servicer_id = request.query_params.get('servicer_id')
+        if service_id:
+            reviews = Review.objects.filter(service_id=service_id)
+        else:
+            # Filter reviews based on the provided servicer ID
+            reviews = Review.objects.filter(service__servicer_id=servicer_id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    
+    
+class ReviewDetailAPIView(APIView):
+    permission_classes = [AllowAny]  
+
+    def get(self, request, pk):
+        review = get_object_or_404(Review, pk=pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        review = get_object_or_404(Review, pk=pk)
+        serializer = ReviewSerializer(review, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        review = get_object_or_404(Review, pk=pk)
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def add_review(request,service_id):
+    if request.method == 'POST':
+        try:
+            service = Service.objects.get(id=service_id)
+            servicer = service.servicer
+
+            # Fetch the review and rating data
+            review_text = request.data.get('review')
+            stars = request.data.get('stars')
+            # Create a new review
+            review = Review.objects.create(
+                service=service,
+                servicer=servicer,
+                review_by=request.user,  # Authenticated user
+                review=review_text,
+                stars=stars,  # Save the stars rating (defaults to 1 if not provided)
+            )
+
+            # Serialize the created review and return it in the response
+            serializer = ReviewSerializer(review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Service.DoesNotExist:
+            return Response({'error': 'Service does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'error': 'Invalid request method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

@@ -48,8 +48,9 @@ class UserProfileView(APIView):
     def get(self,request):
         user=request.user
         print(user)
+        user=User.objects.get(email=user)
+        print(user)
         try:
-            user=User.objects.get(email=user.email)
             serializer = UserProfileSerializer(user)
             return Response(serializer.data,status=status.HTTP_200_OK)
         except User.DoesNotExist:

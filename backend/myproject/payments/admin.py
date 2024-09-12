@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SubscriptionPlan,SubscriptionPayment
+from .models import SubscriptionPlan,SubscriptionPayment,Review
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
@@ -10,3 +10,5 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
 class SubscriptionPaymentAdmin(admin.ModelAdmin):
     list_display = ('servicer', 'subscription_plan', 'stripe_session_id', 'price_paid', 'is_paid', 'start_date', 'end_date', 'created_at')
     search_fields = ('servicer__name', 'subscription_plan__name')
+
+admin.site.register(Review)

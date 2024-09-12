@@ -1,5 +1,7 @@
 from django.db import models
 from provider.models import Servicer
+from account.models import User
+from services.models import Service
 from django.utils import timezone
 from datetime import timedelta
 # Create your models here.
@@ -54,3 +56,14 @@ class SubscriptionPayment(models.Model):
 
     def __str__(self):
         return f"Payment by {self.servicer.name} for {self.subscription_plan.name}"
+
+class Review(models.Model):
+    review_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.TextField()
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)  # Link to Service model
+    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE)  # Link to Servicer model
+    stars = models.IntegerField(default=1, blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.review_by.email} - {self.service.name} (Servicer: {self.servicer.name})'

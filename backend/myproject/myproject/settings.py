@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'services',
     'payments',
     'channels',
+    'chatapp',
     
     
     
@@ -199,3 +200,13 @@ STRIPE_PUBLIC_KEY = config("STRIPE_PUBLIC_KEY")
 
 SITE_URL = config("SITE_URL", default="http://localhost:3000/")
 
+ASGI_APPLICATION = 'myproject.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],  # Default Redis port
+        },
+    },
+}

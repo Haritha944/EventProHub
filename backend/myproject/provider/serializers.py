@@ -48,4 +48,4 @@ class ServicerSerializer(serializers.ModelSerializer):
 class ServicerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=Servicer
-        fields = ['id','email','name','phone_number','experience','address']
+        fields = ['id','email','name','phone_number','experience','address','is_servicer',]

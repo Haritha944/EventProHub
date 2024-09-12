@@ -11,6 +11,8 @@ from .serializers import ServiceSerializer,ServiceDetailSerializer,ServiceBookin
 from provider.emails import ServicerAuthentication
 from account.serializers import UserProfileSerializer
 import stripe
+from account.models import User
+from account.views import get_tokens_for_user
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -178,7 +180,16 @@ class BookingCreateView(APIView):
 class BookingListView(APIView):
     permission_classes = [AllowAny]
     def get(self,request,format=None):
-        user=request.user
+        if request.user:
+            user=request.user
+        else:
+            user_id = request.query_params.get('user_id')
+            if not user_id:
+                return Response({'error': 'User ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         
         bookings=ServiceBooking.objects.filter(user=user,is_paid=True)
         serializer = BookingListSerializer(bookings,many=True)
@@ -191,20 +202,20 @@ class PaymentSuccessView(APIView):
         price_paid = request.query_params.get('price_paid')
         if not price_paid:
             return Response({'error': 'Price paid is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
         try:
-            # Find the ServiceBooking associated with the session_id
+            
             booking = ServiceBooking.objects.filter(price_paid=price_paid).last()
             print(booking)
-            
-            # Optionally: Add more validation if necessary
             if booking.status != "Paid":
                 return Response({'error': 'Booking is not paid'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Retrieve user details associated with the booking
             user = booking.user  # Assuming the ServiceBooking model has a ForeignKey to the User model
+            #tokens = get_tokens_for_user(user)
             serializer = UserProfileSerializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({
+                'user': serializer.data,
+                #'token': tokens, 
+                'email': user.email, # Include tokens in the response
+            }, status=status.HTTP_200_OK)
         
         except ServiceBooking.DoesNotExist:
             return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
