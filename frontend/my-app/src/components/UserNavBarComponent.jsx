@@ -2,7 +2,7 @@ import React,  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { clearUser } from '../redux/Slices/userSlice'; 
+import { clearUser} from '../redux/Slices/userSlice'; 
 import eventlogo from '../Images/logo.png';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -13,14 +13,11 @@ export const UserNavBarComponent = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const Token = useSelector(state => state.user.token);
-    const accessToken = Token?.access;
+    const accessToken = Token?.access || localStorage.getItem('token');
     useEffect(()=>{
      
         const fetchUserName =  async ()=>{
-          if (!accessToken){
-            setLoggedIn(false);
-            return;
-          }
+          console.log('Fetching user with token:', accessToken);
             try{
                 const response =  await axios.get(`${BASE_URL}user/user-navbar/`,{
                     headers:{

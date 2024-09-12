@@ -14,7 +14,9 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function UserReviewBookingComponent () {
   const user = useSelector(selectUserId);
+  console.log("Userrrrr", user)
   const token = useSelector(selectToken);
+  console.log("token", token)
   const serviceDetails = useSelector(selectSelectedServices);
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -87,6 +89,7 @@ const handlePayment = async (bookingId) => {
     const stripe = await stripePromise;
     console.log('Stripe instance:', stripe);
     const token = localStorage.getItem("token");
+    console.log('Token from localStorage:', token);
     const paymentResponse = await axios.post(`${BASE_URL}payments/createcheckoutsession/`, { servicebooking_id: bookingId }, {
       
       headers: {

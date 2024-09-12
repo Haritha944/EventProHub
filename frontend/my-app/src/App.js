@@ -32,6 +32,9 @@ import UserOrderStatusComponent from './components/UserOrderStatusComponent';
 import UserBookingPage from './Pages/UserBookingPage';
 import ServicerserviceApprovalPage from './Pages/ServicerserviceApprovalPage';
 import ServicerSubscriptionStatusComponent from './components/ServicerSubscriptionStatusComponent';
+import UserOrderStatusPage from './Pages/UserOrderStatusPage';
+import ChatComponent from './components/ChatComponent';
+
 
 function App() {
   return (
@@ -48,8 +51,10 @@ function App() {
         <Route path="/reset-password" element={<UserResetPasswordComponent/>}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
         <Route path="/userreviewbooking" element={<UserReviewBookingPage/>}/>
-        <Route path="/order-status" element={<UserOrderStatusComponent/>}/>
+        <Route path="/order-status" element={<UserOrderStatusPage/>}/>
         <Route path="/userbookings" element={<UserBookingPage/>}/>
+        <Route path="/chat" element={<ChatComponent/>}/>
+       
 
 
         <Route path="/adminlogin" element={<AdminLoginPage/>}/>

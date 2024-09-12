@@ -34,7 +34,8 @@ export const UserLoginComponent = () => {
       if (response.ok){
         console.log(data);
         console.log('success');
-        localStorage.setItem('authToken',data.token);
+        localStorage.setItem('authToken', JSON.stringify(data.token)); 
+        localStorage.setItem('userId', JSON.stringify(data.user_id));
         dispatch(setToken(data.token));
         dispatch(setUserId(data.user_id));
         console.log(data.token,"TOKENNNN")

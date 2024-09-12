@@ -1,8 +1,11 @@
 import React ,{useState,useEffect}from 'react'
 import {useSelector ,useDispatch} from 'react-redux';
+import { FaStar } from 'react-icons/fa'; 
 import { selectToken,setService,selectSelectedServices } from '../redux/Slices/userSlice';
 import { useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
+import PersonIcon from '@mui/icons-material/Person';
+import UserProfileReviewComponent from './UserProfileReviewComponent';
 import ServiceDetailFetcherComponent from './ServiceDetailFetcherComponent';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 function UserServiceDetailComponent () {
@@ -13,22 +16,47 @@ function UserServiceDetailComponent () {
   const selectedService = useSelector(selectSelectedServices);
   const [servicesByServicer, setServicesByServicer] = useState([]);
   const [servicesByLocation, setServicesByLocation] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   
   const navigate = useNavigate();
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <FaStar
+          key={i}
+          className={`text-${i <= rating ? 'yellow-400' : 'gray-400'}`}
+          size={24}
+        />
+      );
+    }
+    return stars;
+  };
   useEffect(() => {
     
     const fetchServiceDetails = async () => {
         try {
             const response = await axios.get(`${BASE_URL}services/servicedetail/${serviceId}/`);
             console.log('Service details:', response.data);
+            console.log('token',userToken)
             dispatch(setService(response.data));
            
         } catch (error) {
             console.error('Error fetching service details:', error);
         }
     };
+    const fetchReviews = async () => {
+      try {
+          const response = await axios.get(`${BASE_URL}payments/reviews/${serviceId}/`);
+          setReviews(response.data);
+      } catch (error) {
+          console.error('Error fetching reviews:', error);
+      }
+  };
 
     fetchServiceDetails();
+    fetchReviews();
 }, [dispatch,serviceId]);
 
 console.log('Selected Service:', selectedService); 
@@ -47,6 +75,7 @@ const handleBookNow = () => {
 const handleServiceClick = (service) => {
   navigate(`/userservicedetail/${service.id}`);
 };
+
 
   return (
     <>
@@ -86,6 +115,12 @@ const handleServiceClick = (service) => {
                             >
                                 Book Now
                             </button>
+                            <button 
+                            onClick= {() => navigate('/chat')}
+                             className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-white ml-4"
+                             >
+                            Chat
+                           </button>
                             <div className="flex items-center mt-2">
                               {selectedService.price >0.1 ? (
                          <span className="text-xl font-bold ml-5">Price:₹{selectedService.price}</span>
@@ -173,9 +208,53 @@ const handleServiceClick = (service) => {
                   )}
                 </div>
                 </div>
-            </div>
-        
+                <div className="mt-10 mx-5">
+                        <h2 className="text-2xl bg-gradient-to-r from-fuchsia-800 via-blue-500 to-blue-500 bg-clip-text text-transparent font-bold mb-4 text-center">
+                            Reviews
+                        </h2>
+                        {reviews.length > 0 ? (
+                            <div>
+                                {reviews.map((review) => (
+                                    <div key={review.id} className="border p-4 mb-2 rounded">
+                                       
+                                       <div>
+                                        <p className="font-semibold"> <PersonIcon className="text-gray-500 mr-3" />User:{review.review_by}</p>
+                                        <p>{review.review}</p>
+                                        <div className='flex'>Rating: {renderStars(review.stars)}</div>
+                                    </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No reviews yet.</p>
+                        )}
+                        <button
+                         onClick={() => setShowModal(true)} // Open modal on button click
+                         className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-white mt-2"
+                             >
+                         Add Review
+                        </button>
+                        {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-5 rounded shadow-lg relative w-full max-w-lg">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowModal(false)} // Close modal on button click
+              className="absolute top-2 right-2 text-gray-700"
+            >
+              &#x2716; {/* X symbol */}
+            </button>
 
+            {/* Add Review Form */}
+            
+            <UserProfileReviewComponent serviceId={serviceId} />
+          </div>
+        </div>
+      )}
+                    </div>
+            </div>
+         {/* Review Section */}
+         
 
     </>
   )
