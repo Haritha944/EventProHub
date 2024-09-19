@@ -19,6 +19,8 @@ function AdminSubscriptionComponent  ()  {
         subscription_type: '',
         start_date: ''
     });
+    const [formErrors, setFormErrors] = useState({});
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -35,6 +37,7 @@ function AdminSubscriptionComponent  ()  {
         data.append('amount', formData.amount);
         data.append('subscription_type', formData.subscription_type);
         data.append('start_date', formData.start_date);
+        setFormErrors({});
         console.log([...data.entries()]); 
 
         try {
@@ -48,9 +51,13 @@ function AdminSubscriptionComponent  ()  {
             console.log(response.data);
             navigate('/adminsubscriplist'); // Redirect to a different page, like subscription list
         } catch (error) {
+            if (error.response && error.response.data) {
+                setFormErrors(error.response.data);  // Set form-specific errors
+            } else {
             console.error('There was an error creating the subscription!', error);
             alert('There was an error creating the subscription. Please try again.');
         }
+      }
     };
   return (
     <>
@@ -71,6 +78,7 @@ function AdminSubscriptionComponent  ()  {
                             value={formData.name}
                             onChange={handleChange}
                         />
+                        {formErrors.name && <p className="text-red-600">{formErrors.name}</p>} {/* Show name error */}
                     </div>
                     <div>
                         <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">
@@ -84,6 +92,7 @@ function AdminSubscriptionComponent  ()  {
                             value={formData.description}
                             onChange={handleChange}
                         ></textarea>
+                        {formErrors.description && <p className="text-red-600">{formErrors.description}</p>} {/* Show description error */}
                     </div>
                     <div>
                         <label htmlFor="amount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">
@@ -98,6 +107,7 @@ function AdminSubscriptionComponent  ()  {
                             value={formData.amount}
                             onChange={handleChange}
                         />
+                        {formErrors.amount && <p className="text-red-600">{formErrors.amount}</p>}
                     </div>
                     <div>
                         <label htmlFor="subscription_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">

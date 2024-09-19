@@ -63,33 +63,20 @@ function AdminSubscripComponent  () {
         <thead className="bg-gray-50">
             <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                
             </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
             {subscriptions.map((sub) => (
                 <tr key={sub.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{sub.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.description}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.amount}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.subscription_type}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(sub.start_date).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <Tooltip title="Edit">
-                                    <IconButton onClick={() => handleEdit(sub)}>
-                                        <EditIcon className='text-blue-600'/>
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Delete">
-                                    <IconButton onClick={() => handleDelete(sub.id)}>
-                                        <DeleteIcon className='text-red-600' />
-                                    </IconButton>
-                                </Tooltip>
-                            </td>
+                   
                 </tr>
             ))}
         </tbody>

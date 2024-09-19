@@ -4,23 +4,25 @@ import { useNavigate ,useParams} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaStar } from 'react-icons/fa';
 
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function UserProfileReviewComponent ()  {
+function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
   const { serviceId } = useParams();
   const navigate = useNavigate();
-  const [newReview, setNewReview] = useState('');
-  const [newRating, setNewRating] = useState(0);
+  const [newReview, setNewReview] = useState(editingReview ? editingReview.review : '');
+  const [newRating, setNewRating] = useState(editingReview ? editingReview.stars : 0);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
   const userToken = useSelector((state) => state.user.token.access);
-
+ 
   const handleReviewChange = (e) => {
     setNewReview(e.target.value);
   };
+
 
   const handleRatingChange = (rating) => {
     setNewRating(rating);
@@ -39,8 +41,8 @@ function UserProfileReviewComponent ()  {
     
     if (userToken) {
         setIsSubmitting(true);
-      try {
-        const response = await axios.post(
+        try {
+         const response = await axios.post(
           `${BASE_URL}payments/add-review/${serviceId}/`, // Adjust API endpoint as needed
           { review: newReview, stars: newRating },
           {
@@ -51,11 +53,14 @@ function UserProfileReviewComponent ()  {
           }
         );
         console.log('Review submitted:', response.data);
+        if (onReviewAdded) {
+          onReviewAdded(response.data); // Assuming response.data contains the new review
+        }
         setIsReviewSubmitted(true);
        setShowReviewForm(false); 
         setShowModal(false);
         navigate(`/userservicedetail/${serviceId}`);// Navigate to the service detail page or wherever needed
-      } catch (error) {
+      }catch (error) {
         console.error('Error submitting review:', error);
         setError('Failed to submit review.');
       }finally {
@@ -68,21 +73,10 @@ function UserProfileReviewComponent ()  {
   useEffect(() => {
     // Redirect to service detail after review submission
     if (isReviewSubmitted) {
-      //navigate(`/userservicedetail/${serviceId}`);
+      //navigate(/userservicedetail/${serviceId});
     }
   }, [isReviewSubmitted, navigate, serviceId]);
-
-  const handleBackToServiceDetails = () => {
-    console.log('Attempting to navigate to service details');
-    try {
-      navigate(`/userservicedetail/${serviceId}`);
-    } catch (error) {
-      console.error('Navigation error:', error);
-      // Fallback navigation method
-      window.location.href = `/userservicedetail/${serviceId}`;
-    }
-  };
-
+  
   if (!showReviewForm) {
     return (
       <div className="text-center p-8">
@@ -97,7 +91,7 @@ function UserProfileReviewComponent ()  {
          {!isReviewSubmitted && showReviewForm && (
        <div className="w-full md:w-full p-8 bg-white shadow-md mt-10 mx-5">
     <h2 className="text-2xl bg-gradient-to-r from-fuchsia-800 via-blue-500 to-blue-500 bg-clip-text text-transparent font-bold mb-4 text-center">
-      Add a Review
+              {editingReview ? 'Edit Your Review' : 'Add a Review'}
     </h2>
     <textarea
       value={newReview}
@@ -126,7 +120,7 @@ function UserProfileReviewComponent ()  {
       className="mt-2 text-md font-bold text-white bg-green-800 rounded-full px-5 py-2 hover:bg-gray-800"
       type="button"
     >
-      Submit Review
+     Submit 
     </button>
     {error && <p className="text-red-500 mt-2">{error}</p>}
     
@@ -144,7 +138,7 @@ function UserProfileReviewComponent ()  {
                 type="button"
                 className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
               >
-                  {isSubmitting ? 'Submitting...' : 'Yes, Submit'}
+                   {isSubmitting ? 'Submitting...' : 'Yes,Submit'}`
               </button>
               <button
                 onClick={() => setShowModal(false)}

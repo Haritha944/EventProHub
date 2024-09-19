@@ -88,14 +88,11 @@ function AdminServicelistComponent  () {
                         <tr>
                             <th scope="col" className="px-5 py-3">ID</th>
                             <th scope="col" className="px-5 py-3">Name of Service</th>
-                            <th scope="col" className="px-5 py-3">Service Type</th>
                             <th scope="col" className="px-5 py-3">Servicer Details</th>
                             <th scope="col" className="px-5 py-3">Price</th>
-                            <th scope="col" className="px-5 py-3">Description</th>
-                            <th scope="col" className="px-5 py-3">Employees Required</th>
+                            <th scope="col" className="px-5 py-3">Employees Required and Time</th>
                             <th scope="col" className="px-5 py-3">Additional Notes</th>
                             <th scope="col" className="px-5 py-3">Created At</th>
-                            <th scope="col" className="px-5 py-3">Duration(hours)</th>
                             <th scope="col" className="px-5 py-3">Images</th>
                             <th scope="col" className="px-5 py-3">Status</th>
                             <th scope="col" className="px-5 py-3">Action</th>
@@ -105,8 +102,8 @@ function AdminServicelistComponent  () {
                         {filteredServices.map((service) => (
                             <tr key={service.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <th scope="row" className="px-5 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{service.id}</th>
-                                <td className="px-5 py-4">{service.name}</td>
-                                <td className="px-5 py-4">{service.service_type}</td>
+                                <td className="px-5 py-4">{service.name}<br/> Service Type:{service.service_type}</td>
+                                
                                 <td className="px-5 py-4">{service.servicer_name} <br/> {service.servicer_phone_number}</td>
                                 <td className="px-5 py-4">
                                 {Number(service.price) > 0.10 ? (
@@ -115,8 +112,7 @@ function AdminServicelistComponent  () {
                               <span>{`Price per sqft: ₹${service.price_per_sqft}`}</span>
                                          )}
                                     </td>
-                                <td className="px-5 py-4">{service.description}</td>
-                                <td className="px-5 py-4">{service.employees_required}</td>
+                                <td className="px-5 py-4">{service.employees_required}<br/>{service.period}hrs</td>
                                 <td className="px-5 py-4">{service.additional_notes}</td>
                                 <td className="px-5 py-4">{service.created_at}</td>
                                 <td className="px-5 py-4">{service.period}</td>

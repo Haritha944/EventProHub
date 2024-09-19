@@ -18,8 +18,14 @@ function UserServiceDetailComponent () {
   const [servicesByLocation, setServicesByLocation] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [showModal, setShowModal] = useState(false);
+ 
+  
   
   const navigate = useNavigate();
+  useEffect(() => {
+    // Scroll to the top of the page on component mount
+    window.scrollTo(0, 0);
+  }, [serviceId]);
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -50,6 +56,7 @@ function UserServiceDetailComponent () {
       try {
           const response = await axios.get(`${BASE_URL}payments/reviews/${serviceId}/`);
           setReviews(response.data);
+          
       } catch (error) {
           console.error('Error fetching reviews:', error);
       }
@@ -74,6 +81,11 @@ const handleBookNow = () => {
 };
 const handleServiceClick = (service) => {
   navigate(`/userservicedetail/${service.id}`);
+};
+
+const handleNewReview = (newReview) => {
+  setReviews((prevReviews) => [...prevReviews, newReview]);
+   // Append new review to the state
 };
 
 
@@ -221,6 +233,7 @@ const handleServiceClick = (service) => {
                                         <p className="font-semibold"> <PersonIcon className="text-gray-500 mr-3" />User:{review.review_by}</p>
                                         <p>{review.review}</p>
                                         <div className='flex'>Rating: {renderStars(review.stars)}</div>
+                                       
                                     </div>
                                     </div>
                                 ))}
@@ -244,18 +257,14 @@ const handleServiceClick = (service) => {
             >
               &#x2716; {/* X symbol */}
             </button>
-
-            {/* Add Review Form */}
             
-            <UserProfileReviewComponent serviceId={serviceId} />
+            <UserProfileReviewComponent serviceId={serviceId} 
+            onReviewAdded={handleNewReview}  />
           </div>
         </div>
       )}
-                    </div>
-            </div>
-         {/* Review Section */}
-         
-
+      </div>
+    </div>
     </>
   )
 }

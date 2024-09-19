@@ -50,8 +50,18 @@ const handleBookingSubmit = async (e) => {
     setOpenSnackbar(true);
     return;
   }
- 
-  
+  if (!bookingDetails.address || !bookingDetails.city) {
+    setError('Address and City are required.');
+    setOpenSnackbar(true);
+    return;
+  }
+  if (!bookingDetails.zip_code) {
+    setError('ZIP code is required.');
+    setOpenSnackbar(true);
+    return;
+  }
+
+
   try {
       const formData = new FormData();
       formData.append('service_date', bookingDetails.service_date);
@@ -81,7 +91,11 @@ const handleBookingSubmit = async (e) => {
 
   } catch (error) {
       console.error('Error booking service:', error);
-      alert('There was an error booking the service. Please try again.');
+      if (error.response && error.response.data) {
+        setError(`Error: ${error.response.data.detail || 'There was an error booking the service. Please try again.'}`);
+      } else {
+        setError('There was an error booking the service. Please try again.');
+      }
   }
 };
 const handlePayment = async (bookingId) => {

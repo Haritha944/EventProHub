@@ -14,6 +14,8 @@ function  UserOTPVerificationComponent  ()  {
     const verificationSuccess = useSelector((state)=>state.otp.verificationSuccess)
     const email = localStorage.getItem('registered Email');
 
+    console.log(otp)
+
     useEffect(() => {
        
         dispatch(clearOTP());

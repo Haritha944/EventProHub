@@ -125,8 +125,9 @@ const ChatComponent = () => {
           }
         };
       }, [activeRoomId]);
-    
+      
       const sendMessage = () => {
+        console.log(user)
         const message = {
           content: newMessage,
           sender: user.id,

@@ -40,7 +40,7 @@ export default function UserSignupComponent () {
             );
             console.log(response.data);
             localStorage.setItem("registered Email",data.email);
-            navigate("/verifyOTP");
+            navigate("/verifyOTP", {state: { email: data.email}});
         } catch (error) {
             console.error(
               "Registration failed:",
