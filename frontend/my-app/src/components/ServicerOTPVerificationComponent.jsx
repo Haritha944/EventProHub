@@ -1,33 +1,48 @@
-import React,{useEffect} from 'react';
-import { useDispatch,useSelector } from 'react-redux';
+import React,{ useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setOTP,verifyOTP } from '../redux/Slices/otpServicerSlice';
 import servicer from '../Images/otp2.png'
+import { removeServicer } from '../redux/Slices/servicerSlice';
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerOTPVerificationComponent () {
-    const dispatch = useDispatch();
+    const [otp, setOtp] = useState();
+    const [status, setStatus] = useState(false);
+    const [error, setError] = useState(false);
     const navigate = useNavigate();
-    const otp=useSelector((state)=> state.otpServicer.otp);
-    const verificationSuccess = useSelector((state)=>state.otpServicer.verificationSuccess)
-    const email = localStorage.getItem('registeredEmail');
-    const status = useSelector((state) => state.otpServicer.status);
-    const error = useSelector((state) => state.otpServicer.error);
-
-    console.log('OTP:', otp);
-    console.log('Email:', email);
+    const dispatch = useDispatch();
+    const { currentServicer } = useSelector((state)=> state.servicer);
+    console.log(currentServicer.user.email)
+    console.log("😂😂😊😊😊😊😁😁")
 
 
-    const submitHandler = async () => {
+    const handleVerifyOtp = async()=>{
       try {
-        await dispatch(verifyOTP({ email, otp })).unwrap();
-        if (verificationSuccess) {
-          navigate('/servicelogin');
+        const response = await fetch(`${BASE_URL}provider/verify/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: currentServicer.user.email, otp: otp }),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json(); 
+          console.error('OTP verification failed:', errorData);
+          setError(true)
+          setStatus("Error occured")
+          throw new Error(errorData.message || 'OTP verification failed');
+          
         }
-      } catch (err) {
-        console.error('Error during OTP verification:', err);
+        
+        dispatch(removeServicer());
+        navigate('/servicelogin');
+      } catch (error) {
+        console.log(error)
       }
-    };
+    }
+
+
 
 
   
@@ -50,16 +65,16 @@ function ServicerOTPVerificationComponent () {
             type="text"
             placeholder="OTP"
             value={otp}
-            onChange={(e) => dispatch(setOTP(e.target.value))}
+            onChange={(e) => setOtp(e.target.value)}
           />
           <div className="text-center md:text-left">
             <button
               className="mt-4 bg-blue-600 text-bold hover:bg-white hover:text-blue-500 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
               type="button"
-              onClick={submitHandler} disabled={status === 'loading'}
+              onClick={handleVerifyOtp} disabled={status === 'loading'}
             >
               Submit
-            </button> {status === 'failed' && <p>{error}</p>}
+            </button> <p>{error && "An error occured while verification"}</p>
           </div>
           
         </div>

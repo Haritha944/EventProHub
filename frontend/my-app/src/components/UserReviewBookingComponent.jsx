@@ -13,9 +13,9 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function UserReviewBookingComponent () {
-  const user = useSelector(selectUserId);
-  console.log("Userrrrr", user)
-  const token = useSelector(selectToken);
+  const { currentUser, token } = useSelector((state)=> state.user);
+  const userId = currentUser.id;
+  console.log("Userrrrr", userId)
   console.log("token", token)
   const serviceDetails = useSelector(selectSelectedServices);
   const [error, setError] = useState('');
@@ -23,7 +23,7 @@ function UserReviewBookingComponent () {
 
   const navigate = useNavigate();
   
-  
+  console.log(currentUser)
   
   const [bookingDetails, setBookingDetails] = useState({
     service_date: '',
@@ -40,7 +40,7 @@ const handleBookingSubmit = async (e) => {
   e.preventDefault();
   const serviceId = serviceDetails.id;  
   const servicerId = serviceDetails?.servicer?.id;
-  const userId = user;  
+  const userId = currentUser.id;  
   
   const selectedTime = bookingDetails.service_time;
   const startTime = "09:00";
@@ -76,7 +76,7 @@ const handleBookingSubmit = async (e) => {
       // Append static fields
       formData.append('service', serviceId);  // Get service name from state
       formData.append('servicer', servicerId);  // Assuming servicer name is part of service
-      formData.append('user', user);
+      formData.append('user', userId);
 
       const response = await axios.post(`${BASE_URL}services/bookings/`, formData, {
           headers: {

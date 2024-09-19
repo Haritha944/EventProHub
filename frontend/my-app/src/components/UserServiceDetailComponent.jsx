@@ -12,7 +12,7 @@ function UserServiceDetailComponent () {
 
   const dispatch =useDispatch();
   const { serviceId} = useParams();
-  const userToken = useSelector(selectToken);
+  const { token } = useSelector((state)=> state.user);
   const selectedService = useSelector(selectSelectedServices);
   const [servicesByServicer, setServicesByServicer] = useState([]);
   const [servicesByLocation, setServicesByLocation] = useState([]);
@@ -45,7 +45,7 @@ function UserServiceDetailComponent () {
         try {
             const response = await axios.get(`${BASE_URL}services/servicedetail/${serviceId}/`);
             console.log('Service details:', response.data);
-            console.log('token',userToken)
+            console.log('token',token)
             dispatch(setService(response.data));
            
         } catch (error) {
@@ -73,11 +73,7 @@ console.log('Selected Service:', selectedService);
   const city = selectedService?.city;
 
 const handleBookNow = () => {
-  if (userToken) {
       navigate('/userreviewbooking');
-  } else {
-      navigate('/login');
-  }
 };
 const handleServiceClick = (service) => {
   navigate(`/userservicedetail/${service.id}`);
@@ -128,7 +124,7 @@ const handleNewReview = (newReview) => {
                                 Book Now
                             </button>
                             <button 
-                            onClick= {() => navigate('/chat')}
+                            onClick= {() => navigate(`/chat?id=${selectedService?.servicer?.id}`)}
                              className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-white ml-4"
                              >
                             Chat

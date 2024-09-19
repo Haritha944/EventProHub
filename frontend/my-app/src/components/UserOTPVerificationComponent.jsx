@@ -1,7 +1,6 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setOTP,setVerificationSuccess,clearOTP } from '../redux/Slices/otpSlice';
 import myImage from '../Images/otp.jpg'
 
 
@@ -10,16 +9,12 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 function  UserOTPVerificationComponent  ()  {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const otp=useSelector((state)=> state.otp.otp);
-    const verificationSuccess = useSelector((state)=>state.otp.verificationSuccess)
+    const [otp, setOtp] = useState();
     const email = localStorage.getItem('registered Email');
 
     console.log(otp)
 
-    useEffect(() => {
-       
-        dispatch(clearOTP());
-    }, [dispatch]);
+ 
 
 
     const submitHandler = async ()=>{
@@ -35,9 +30,8 @@ function  UserOTPVerificationComponent  ()  {
         }),
     });
     if (response.ok){
-        dispatch(setVerificationSuccess(true));
         navigate('/login');
-        dispatch(clearOTP());
+      
     
     }else{
         console.error('OTP veification failed')
@@ -58,7 +52,7 @@ function  UserOTPVerificationComponent  ()  {
             <h1 className='text-3xl mt-8 font-bold text-center text-orange-500'>Verify OTP </h1>
         </div>
         <input className='text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded'
-           type="text" placeholder='OTP' value={otp} onChange={(e)=>dispatch(setOTP(e.target.value))}/>
+           type="text" placeholder='OTP' value={otp} onChange={(e)=> setOtp(e.target.value)}/>
 
            <div className='text-center flex justify-center md:text-left'>
             <button className='mt-4 bg-cyan-700 text-white px-4 py-1 rounded' type="button"

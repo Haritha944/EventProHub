@@ -1,23 +1,41 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import ChatSidebarComponet from "./ChatSidebarComponet";
 import axios from "axios";
+import io from 'socket.io-client';
+
+// const socket = io('http://localhost:3000');
+
+
+
 
 const ChatComponent = () => {
     const [rooms, setRooms] = useState([]);
     const [activeRoomId, setActiveRoomId] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [ownerDetails, setOwnerDetails] = useState();
     const [newMessage, setNewMessage] = useState("");
     const [user, setUser] = useState(null);
     const [isServicer, setIsServicer] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const servicerId = query.get('id');
   
     const scroll = useRef();
     const socketRef = useRef(null);
   
     const navigate = useNavigate();
   
+ 
+    // const handleFetchOwnerDetails = async()=>{
+       
+    // }
+
+
+
+
     const localBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const instance = axios.create({
       baseURL: localBaseUrl,
@@ -32,15 +50,15 @@ const ChatComponent = () => {
         const ownerDetails = JSON.parse(localStorage.getItem("ownerDetails"));
     
         // Check if ownerDetails is present and has the userID
-        if (ownerDetails && ownerDetails.userID) {
+        if (servicerId) {
           // Set author with the userID from ownerDetails
-          setUser(ownerDetails.userID);
+          setUser(servicerId);
     
           // Check if the user is a servicer
           if (ownerDetails.is_servicer) {
             // Fetch rooms specific to the servicer
             instance
-              .get(`chat/rooms/?servicer=${ownerDetails.userID}`)
+              .get(`chat/rooms/?servicer=${servicerId}`)
               .then((response) => {
                 setRooms(response.data);
                 console.log(response.data);
@@ -91,7 +109,6 @@ const ChatComponent = () => {
         }
       } catch (e) {
         // Redirect to login if there's an error or if user data is missing
-        navigate("/login");
         toast.error("Please Login for community chat", { duration: 5000 });
       }
     }, [navigate]);

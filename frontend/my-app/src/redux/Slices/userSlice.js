@@ -7,6 +7,7 @@ const initialState = {
     id:'',
     selectedService: null,
     filteredServices: [],
+    currentUser: null
     
 };
 
@@ -32,7 +33,9 @@ const userSlice = createSlice({
         setFilteredServices: (state,action) =>{
             state.filteredServices = action.payload;
         },
-        
+        setUserData: (state, action)=>{
+                 state.currentUser = action.payload;
+        },
         clearUser : (state)=>{
             state.id = '';
             state.name = '';
@@ -40,6 +43,7 @@ const userSlice = createSlice({
             state.token = '';
             state.filteredServices = [];
             state.selectedService = null; 
+            state.currentUser = null
            
         },
 
@@ -53,7 +57,8 @@ export const {
     clearUser,
     setFilteredServices,
     setService,
-    setUserId
+    setUserId,
+    setUserData
 
 } = userSlice.actions;
 

@@ -5,9 +5,10 @@ import { HiOutlineArrowCircleRight } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { registerServicer } from "../redux/Slices/servicerSlice";
+import { registerServicer, setServicer } from "../redux/Slices/servicerSlice";
 import signup from '../Images/service.png'
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const fields = [
   { label: 'Name', name: 'name', type: 'text', required: true, gridCols: 2, placeholder: 'Enter your name' },
   { label: 'Email', name: 'email', type: 'email', required: true, gridCols: 2, placeholder: 'Enter your email' },
@@ -19,8 +20,10 @@ const fields = [
 ];
 
 export default function ServicerSignupComponent () {
-    const navigate = useNavigate()
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+   
     const { data, error, loading } = useSelector((state) => state.servicer);
     const {
       register,
@@ -42,8 +45,9 @@ export default function ServicerSignupComponent () {
       formData.append("password", data.password);
       formData.append("password2", data.password2);
       localStorage.setItem("registeredEmail", data.email);
-      const result = await dispatch(registerServicer(formData)).unwrap();
-      if (result) {
+      const response = await axios.post(`${BASE_URL}provider/register/`, formData);
+      if (response.data) {
+        dispatch(setServicer(response.data));
         navigate("/servicerverifyOTP");
       }
     }  catch (error) {

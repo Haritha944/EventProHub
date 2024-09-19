@@ -2,8 +2,8 @@ import React ,{useEffect}from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { useDispatch } from 'react-redux';
-import { setUserId,setUserEmail,setToken,setUserName } from '../redux/Slices/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserId,setUserEmail,setToken,setUserName, setUserData } from '../redux/Slices/userSlice';
 import axios from 'axios';
 import login from '../Images/login3.png';
 
@@ -13,6 +13,13 @@ export const UserLoginComponent = () => {
   const dispatch = useDispatch();
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const { currentUser } = useSelector((state)=> state.user);
+
+  useEffect(()=>{
+   if(currentUser){
+    navigate("/userservice")
+   }
+  },[])
   
   const handleLogin = async()=>{
    
@@ -34,12 +41,13 @@ export const UserLoginComponent = () => {
       if (response.ok){
         console.log(data);
         console.log('success');
-        localStorage.setItem('authToken', JSON.stringify(data.token)); 
-        localStorage.setItem('userId', JSON.stringify(data.user_id));
+        // localStorage.setItem('authToken', JSON.stringify(data.token)); 
+        // dispatch(setToken(data.token));
+        // dispatch(setUserId(data.user_id));
+        // console.log(data.token,"TOKENNNN")
+        // console.log(data.user_id,"Userrr")
         dispatch(setToken(data.token));
-        dispatch(setUserId(data.user_id));
-        console.log(data.token,"TOKENNNN")
-        console.log(data.user_id,"Userrr")
+        dispatch(setUserData(data.user));
         navigate('/userservice', { replace: true });
        
       }else {

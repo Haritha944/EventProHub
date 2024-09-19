@@ -40,6 +40,17 @@ function UserServicelistComponent  ()  {
  const [maxPricePerSqft, setMaxPricePerSqft] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state)=> state.user);
+
+  console.log(currentUser);
+
+
+ useEffect(()=>{
+     if(!currentUser){
+   navigate("/login")
+     }
+ },[])
+
 
 
   useEffect(() => {

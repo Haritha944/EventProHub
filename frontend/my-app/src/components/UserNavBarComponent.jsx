@@ -9,34 +9,35 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const UserNavBarComponent = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [userName,setUserName]=useState('');
-    const [loggedIn, setLoggedIn] = useState(false);
+    // const [userName,setUserName]=useState('');
+    // const [loggedIn, setLoggedIn] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const Token = useSelector(state => state.user.token);
+    const {currentUser}=useSelector(state => state.user)
     const accessToken = Token?.access || localStorage.getItem('token');
-    useEffect(()=>{
+    // useEffect(()=>{
      
-        const fetchUserName =  async ()=>{
-          console.log('Fetching user with token:', accessToken);
-            try{
-                const response =  await axios.get(`${BASE_URL}user/user-navbar/`,{
-                    headers:{
-                        Authorization:`Bearer ${accessToken}`
-                    }
-                });
+    //     const fetchUserName =  async ()=>{
+    //       console.log('Fetching user with token:', accessToken);
+    //         try{
+    //             const response =  await axios.get(`${BASE_URL}user/user-navbar/`,{
+    //                 headers:{
+    //                     Authorization:`Bearer ${accessToken}`
+    //                 }
+    //             });
                 
-                setUserName(response.data.name);
-                setLoggedIn(true);
-            }
-            catch (error) {
-                console.error('Error fetching user details:', error);
+    //             setUserName(response.data.name);
+    //             setLoggedIn(true);
+    //         }
+    //         catch (error) {
+    //             console.error('Error fetching user details:', error);
                
-                setLoggedIn(false);
-              }
-        };
+    //             setLoggedIn(false);
+    //           }
+    //     };
       
-      fetchUserName();
-    }, [accessToken]);
+    //   fetchUserName();
+    // }, [accessToken]);
     const toggleDropdown = () => {
         setDropdownOpen(prev => !prev);
       };
@@ -44,8 +45,6 @@ export const UserNavBarComponent = () => {
         try{
         localStorage.removeItem('userName');
         localStorage.removeItem('userDetails');
-        setUserName('');
-        setLoggedIn(false);
         setDropdownOpen(false);
         //localStorage.removeItem('authToken');
         dispatch(clearUser()); 
@@ -69,10 +68,10 @@ return (
           </a>  
     <div className='flex bg-gray-100 md:space-0' >
         <button onClick={()=>navigate('/servicersignup')} type="submit"className="mr-2 text-white bg-fuchsia-600 hover:bg-blue-600 font-medium rounded-lg text-sm px-2 py-2 text-center ">Become a Servicer</button>
-        {loggedIn ? (
+        {currentUser ? (
           <div className='relative'>
             <button onClick={toggleDropdown} className='text-white bg-red-700 hover:bg-red-900 rounded-lg text-sm px-2 py-2 text-center'>
-                {`Hi,${userName}`}
+                {`Hi,${currentUser.name}`}
             </button>
             {dropdownOpen && (
                   <ul className="absolute top-full mt-1 bg-red-700 rounded-lg shadow-lg">

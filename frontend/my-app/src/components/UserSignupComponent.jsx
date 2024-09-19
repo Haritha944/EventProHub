@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useForm} from "react-hook-form";
 import { useNavigate ,Link} from 'react-router-dom';
 import { HiOutlineArrowCircleRight } from "react-icons/hi";
@@ -6,7 +6,7 @@ import axios from 'axios';
 import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import { setUserEmail,setUserName } from '../redux/Slices/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import signup from '../Images/lady.png'
 const fields = [
     {label:'Name',name:'name',type:'text',required : true,gridCols:2, placeholder:'Enter your Name'},
@@ -17,7 +17,10 @@ const fields = [
 ];
 const BASE_URL =  process.env.REACT_APP_BASE_URL;
 export default function UserSignupComponent () {
+  const { currentUser } = useSelector((state)=> state.user);
+  
     const dispatch=useDispatch()
+    console.log(currentUser + "😍😍😍😍😍")
     const navigate= useNavigate()
     const {
         register,
@@ -40,7 +43,7 @@ export default function UserSignupComponent () {
             );
             console.log(response.data);
             localStorage.setItem("registered Email",data.email);
-            navigate("/verifyOTP", {state: { email: data.email}});
+            navigate("/verifyOTP", {state: { userId: data.id}});
         } catch (error) {
             console.error(
               "Registration failed:",
@@ -48,6 +51,12 @@ export default function UserSignupComponent () {
             );
           }
     }
+
+    useEffect(()=>{
+    if(currentUser){
+      navigate('/userservice')
+    }
+    },[])
     
   return (
     <div>

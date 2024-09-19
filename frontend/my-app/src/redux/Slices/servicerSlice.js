@@ -35,11 +35,19 @@ const servicerSlice = createSlice({
     error: null,
     loading: false,
     token :null,
+    currentServicer: null
   },
   reducers: {
     setToken:(state,action)=>{
       state.token = action.payload;
     },
+    setServicer: (state, action)=>{
+      state.currentServicer = action.payload
+    },
+    removeServicer: (state)=>{
+      state.currentServicer = null;
+    }
+
   },
   extraReducers: (builder) => {
     builder
@@ -72,5 +80,5 @@ const servicerSlice = createSlice({
   },
 });
 
-export const { setToken } = servicerSlice.actions;
+export const { setToken, setServicer, removeServicer } = servicerSlice.actions;
 export default servicerSlice.reducer;
