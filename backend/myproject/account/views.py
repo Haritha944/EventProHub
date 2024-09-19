@@ -28,20 +28,66 @@ class UserRegistrationView(APIView):
             token = get_tokens_for_user(user)
             return Response({'token':token, 'msg':'Registration Successful'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+# class UserLoginView(APIView):
+#     permission_classes = [AllowAny]
+#     def post(self,request,format=None):
+#         serializer = UserLoginSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             email=serializer.data.get('email')
+#             password=serializer.data.get('password')
+#             print(f"Attempting to authenticate user: {email}") 
+#             user=authenticate(email=email,password=password)
+#             email_user=User.object.get(email=email)
+#             user_obj=UserProfileSerializer.email_user.data
+#             if user is not None:
+#                 token=get_tokens_for_user(user)
+#                 return Response({'token':token,'user':user_obj,'msg':'Login Success'},status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}},status=status.HTTP_404_NOT_FOUND)
+            
+
 class UserLoginView(APIView):
     permission_classes = [AllowAny]
-    def post(self,request,format=None):
+
+    def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
+        
         if serializer.is_valid(raise_exception=True):
-            email=serializer.data.get('email')
-            password=serializer.data.get('password')
-            print(f"Attempting to authenticate user: {email}") 
-            user=authenticate(email=email,password=password)
+            email = serializer.data.get('email')
+            password = serializer.data.get('password')
+
+            # Print log message for debugging
+            print(f"Attempting to authenticate user: {email}")
+
+            # Authenticate the user
+            user = authenticate(email=email, password=password)
+
             if user is not None:
-                token=get_tokens_for_user(user)
-                return Response({'token':token,'user_id':user.id,'msg':'Login Success'},status=status.HTTP_200_OK)
+                # Get serialized user data
+                user_profile = UserProfileSerializer(user).data
+
+                # Generate token for the user
+                token = get_tokens_for_user(user)
+
+                # Send response with token and full user data
+                return Response(
+                    {
+                        'token': token,
+                        'user': user_profile,
+                        'msg': 'Login Success'
+                    },
+                    status=status.HTTP_200_OK
+                )
             else:
-                return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}},status=status.HTTP_404_NOT_FOUND)
+                # Invalid login, return error response
+                return Response(
+                    {'errors': {'non_field_errors': ['Email or Password is not valid']}},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
             
 class UserProfileView(APIView):
     permission_classes = [AllowAny]
@@ -168,3 +214,4 @@ class PasswordResetView(APIView):
             user.save()
             return Response({'message': 'Password has been reset.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

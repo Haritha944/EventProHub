@@ -165,10 +165,12 @@ class OtherFiltersView(APIView):
 
         serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)
-    
+
+
+
+
 class BookingCreateView(APIView):
     permission_classes = [AllowAny]
-
     def post(self, request, format=None):
         print("Data received:", request.data)
         serializer = ServiceBookingSerializer(data=request.data)
@@ -176,6 +178,8 @@ class BookingCreateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class BookingListView(APIView):
     permission_classes = [AllowAny]

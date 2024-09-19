@@ -12,8 +12,9 @@ from services.models import ServiceBooking,Service
 from .models import SubscriptionPlan,SubscriptionPayment,Review
 from .serializers import SubscriptionPlanSerializer,ReviewSerializer
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 import json
+from rest_framework.exceptions import ValidationError
 from django.conf import settings
 from provider.emails import ServicerAuthentication
 from django.views.decorators.http import require_POST
@@ -32,6 +33,8 @@ def addsubscription(request):
         amount = request.data.get('amount')
         subscription_type = request.data.get('subscription_type')
         start_date = request.data.get('start_date')
+        if SubscriptionPlan.objects.filter(name=name).exists():
+            raise ValidationError({"name": "Subscription plan with this name already exists."})
         
         try:
             subscription_plan = SubscriptionPlan.objects.create(
@@ -210,28 +213,7 @@ def get_reviews(request,service_id):
         return Response(serializer.data)
 
     
-    
-class ReviewDetailAPIView(APIView):
-    permission_classes = [AllowAny]  
 
-    def get(self, request, pk):
-        review = get_object_or_404(Review, pk=pk)
-        serializer = ReviewSerializer(review)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        review = get_object_or_404(Review, pk=pk)
-        serializer = ReviewSerializer(review, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        review = get_object_or_404(Review, pk=pk)
-        review.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -240,7 +222,15 @@ def add_review(request,service_id):
         try:
             service = Service.objects.get(id=service_id)
             servicer = service.servicer
-
+            #try:
+                #booking = ServiceBooking.objects.get(service=service, user=request.user)
+                #if booking.status != 'Completed':
+                    #return Response({'error': 'You can only submit a review after the service is completed.'}, status=status.HTTP_400_BAD_REQUEST)
+            #except ServiceBooking.DoesNotExist:
+                #return Response({'error': 'No booking found for this service.'}, status=status.HTTP_400_BAD_REQUEST)
+            existing_review = Review.objects.filter(service=service, review_by=request.user).first()
+            if existing_review:
+                return Response({'error': 'You have already reviewed this service.'}, status=status.HTTP_400_BAD_REQUEST)
             # Fetch the review and rating data
             review_text = request.data.get('review')
             stars = request.data.get('stars')
@@ -262,3 +252,49 @@ def add_review(request,service_id):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'error': 'Invalid request method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def edit_review(request, review_id):
+    try:
+        # Fetch the review by review_id and ensure it belongs to the authenticated user
+        review = Review.objects.get(id=review_id, review_by=request.user)
+
+        # Get the updated review data from the request
+        review_text = request.data.get('review')
+        stars = request.data.get('stars')
+
+        # Update the review fields
+        if review_text:
+            review.review = review_text
+        if stars:
+            review.stars = stars
+
+        # Save the updated review
+        review.save()
+
+        # Serialize the updated review and return it in the response
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    except Review.DoesNotExist:
+        return Response({'error': 'Review does not exist or does not belong to you.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete_review(request, review_id):
+    try:
+        # Fetch the review by review_id and ensure it belongs to the authenticated user
+        review = Review.objects.get(id=review_id,review_by=request.user)
+
+        # Delete the review
+        review.delete()
+
+        return Response({'message': 'Review deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    
+    except Review.DoesNotExist:
+        return Response({'error': 'Review does not exist or does not belong to you.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

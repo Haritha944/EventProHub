@@ -7,7 +7,7 @@ class ServiceSignupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Servicer
-        fields = ['email', 'name', 'phone_number', 'password', 'password2', 'experience', 'address']
+        fields = ['email', 'name', 'phone_number', 'password', 'password2', 'experience', 'address','otp']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -42,7 +42,7 @@ class VerifyAccountSerializer(serializers.Serializer):
 class ServicerSerializer(serializers.ModelSerializer):
     class Meta:
         model=Servicer
-        fields = ['id','email','name','phone_number','experience','address','is_active','is_servicer','is_verified']
+        fields = ['id','email','name','phone_number','experience','address','is_active','is_servicer','is_verified','otp']
         
 
 class ServicerProfileSerializer(serializers.ModelSerializer):

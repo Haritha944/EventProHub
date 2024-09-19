@@ -17,7 +17,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from account.serializers import PasswordResetSerializer,PasswordResetRequestSerializer
 from payments.serializers import SubscriptionPlanSerializer,SubscriptionPaymentSerializer
-from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer
+from .serializers import ServiceSignupSerializer,VerifyAccountSerializer,ServicerLoginSerializer,ServicerProfileSerializer,ServicerSerializer
 # Create your views here.
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -26,16 +26,47 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
+# class ServicerRegistrationView(APIView):
+#     permission_classes=[AllowAny]
+#     def post(self,request,format=None):
+#         serializer = ServiceSignupSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             user = serializer.save()
+#             print(serializer)
+#             send_otp_via_mail(serializer.data['email'])
+#             token = get_tokens_for_user(user)
+#             user_obj = Servicer.objects.get(email = user)
+#             return Response({'token': token,'user': user_obj ,'msg': 'Registration Successful'}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ServicerRegistrationView(APIView):
-    permission_classes=[AllowAny]
-    def post(self,request,format=None):
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
         serializer = ServiceSignupSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            send_otp_via_mail(serializer.data['email'])
-            token = get_tokens_for_user(user)
-            return Response({'token': token, 'msg': 'Registration Successful'}, status=status.HTTP_201_CREATED)
+            user = serializer.save()  # Save the user data
+            send_otp_via_mail(serializer.data['email'])  # Send OTP via mail
+            token = get_tokens_for_user(user)  # Generate authentication tokens
+            
+            # Fetch the user object and serialize it
+            user_obj = Servicer.objects.get(email=user)  # Correctly get the user object based on email
+            user_data = ServicerSerializer(user_obj).data  # Serialize the user object
+            
+            # Return the response with token, serialized user data, and a success message
+            return Response(
+                {
+                    'token': token,
+                    'user': user_data,  # Serialized user object
+                    'msg': 'Registration Successful'
+                },
+                status=status.HTTP_201_CREATED
+            )
+        
+        # Return errors if the data is invalid
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class VerifyOTP(APIView):
     permission_classes=[AllowAny]
