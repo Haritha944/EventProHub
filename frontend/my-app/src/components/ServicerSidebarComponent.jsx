@@ -113,13 +113,13 @@ function ServicerSidebarComponent  () {
                   </a>
               </li>
               <li>
-                  <a onClick={() => navigate('/chat')}  class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+              <a onClick={() => navigate('/chat')}  class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">
                          <ChatIcon/>
                       </span>
                       <span>Chats</span>
-                  </a>
-              </li>
+                  </a>  
+                </li>
               <li>
                   <a href="#" onClick={handleLogout} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">

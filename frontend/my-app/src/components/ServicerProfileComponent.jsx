@@ -1,6 +1,7 @@
 import React ,{useState,useEffect} from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerProfileComponent  ()  {
@@ -15,8 +16,13 @@ function ServicerProfileComponent  ()  {
     const user = useSelector((state) => state.user); // accessing 'name' from the 'user' slice
     const Token = useSelector(state => state.user.token);
     const accessToken = Token.access
+    const navigate=useNavigate()
     
-    
+    useEffect(()=>{
+        if(!servicerDetails){
+            navigate('/servicelogin')
+        }
+    },[])
 
     useEffect(() => {
         const fetchServicerDetails = async () => {

@@ -115,7 +115,6 @@ function AdminServicelistComponent  () {
                                 <td className="px-5 py-4">{service.employees_required}<br/>{service.period}hrs</td>
                                 <td className="px-5 py-4">{service.additional_notes}</td>
                                 <td className="px-5 py-4">{service.created_at}</td>
-                                <td className="px-5 py-4">{service.period}</td>
                                 <td>
                                {service.images ? (
                               <img
