@@ -13,7 +13,8 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny,IsAdminUser
-from services.models import Service
+from services.serializers import BookingListSerializer
+from services.models import Service,ServiceBooking
 
 
 class AdminLoginView(APIView):
@@ -120,3 +121,9 @@ class ServiceListView(ListAPIView):
         if service_type:
             queryset = queryset.filter(service_type=service_type)
         return queryset
+    
+#<--------AdminSide bookings----->
+class AdminBookingList(ListAPIView):
+    permission_classes=[AllowAny]
+    queryset=ServiceBooking.objects.all()
+    serializer_class=BookingListSerializer
