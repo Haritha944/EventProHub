@@ -18,11 +18,7 @@ function ServicerProfileComponent  ()  {
     const accessToken = Token.access
     const navigate=useNavigate()
     
-    useEffect(()=>{
-        if(!servicerDetails){
-            navigate('/servicelogin')
-        }
-    },[])
+   
 
     useEffect(() => {
         const fetchServicerDetails = async () => {

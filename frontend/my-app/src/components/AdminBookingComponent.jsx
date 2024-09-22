@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -27,6 +28,35 @@ function AdminBookingComponent () {
            booking.status.toLowerCase().includes(searchQuery.toLowerCase())
         );
     });
+    const downloadPDF = ()=>{
+        const input =document.getElementById('booking-table');
+
+        html2canvas(input).then((canvas)=>{
+            const imgData= canvas.toDataURL('image/png');
+            const pdf=new jsPDF();
+            pdf.setFontSize(18); // Set font size for the heading
+            pdf.text('Bookings Report', 105, 20, null, null, 'center'); 
+            const imgWidth =250;
+            const pageHeight = pdf.internal.pageSize.height;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+
+            let position = 30;
+
+            pdf.addImage(imgData,'PNG',10,position,imgHeight,imgHeight);
+            heightLeft-=pageHeight;
+
+            while (heightLeft>=0){
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData,'PNG',10,position,imgHeight,imgHeight);
+                heightLeft-=pageHeight;
+
+            }
+            pdf.save('bookings.pdf');
+        });
+       
+    };
   return (
     <>
     <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
@@ -40,8 +70,9 @@ function AdminBookingComponent () {
                 value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}
                 placeholder="Search..."/>
             </div>
+            <button onClick={downloadPDF} className='bg-blue-500 text-black p-2 rounded-lg'>Download PDF</button>
         </div>
-        <table className='w-full text-sm text-left rtl:text-right text-gray-500'>
+        <table id="booking-table" className='w-full text-sm text-left rtl:text-right text-gray-500'>
             <thead className='text-xs text-gray-700 uppercase bg-gray-100 '>
                 <tr>
                  <th scope="col" className="px-5 py-3">Booking Id</th>

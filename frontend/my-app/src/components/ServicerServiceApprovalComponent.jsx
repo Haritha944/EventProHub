@@ -1,21 +1,38 @@
-import React ,{useEffect} from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React ,{useEffect,useState} from 'react'
+import axios from 'axios'
 import { useParams } from 'react-router-dom';
 import { fetchBookedServices, approveService, disapproveService } from '../redux/Slices/adminserviceapprovalSlice'
 
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const ServicerServiceApprovalComponent  = () => {
   const { servicerId } = useParams(); 
-  const dispatch = useDispatch();
-  const bookedServices = useSelector((state) => state.services.bookedServices);
-  const status = useSelector((state) => state.services.status);
+  const [bookedServices, setBookedServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   
 
   useEffect(() => {
+    const fetchBookedServices = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`${BASE_URL}services/approvebooking/${servicerId}/`);
+        setBookedServices(response.data);
+      } catch (err) {
+        setError(err.response?.data?.error|| 'Error fetching services');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    
     if (servicerId) {
-      console.log("Dispatching fetchBookedServices with servicerId:", servicerId);
-        dispatch(fetchBookedServices(servicerId));
+      fetchBookedServices();
     }
-}, [servicerId, dispatch]);
+  }, [servicerId]);
+
 useEffect(() => {
   console.log("Booked Services State:", bookedServices);
 }, [bookedServices]);
@@ -23,24 +40,52 @@ useEffect(() => {
 if (!servicerId) {
     return <p>Servicer ID is missing or undefined.</p>;
 }
-   
-  const handleApprove = (serviceId) => {
-    dispatch(approveService({ serviceId }));
-  };
+const handleApprove = async (serviceId) => {
+  try {
+    const response = await axios.put(`${BASE_URL}services/approveservice/${serviceId}/`);
+    setBookedServices((prev) =>
+      prev.map((service) => (service.id === serviceId ? response.data : service))
+    );
+  } catch (err) {
+    setError(err.response?.data?.error || 'Error approving service');
+  }
+};
 
-  const handleDisapprove = (serviceId) => {
-    dispatch(disapproveService({ serviceId }));
-  };
+const handleDisapprove = async (serviceId) => {
+  try {
+    const response = await axios.put(`${BASE_URL}services/disapproveservice/${serviceId}/`);
+    setBookedServices((prev) =>
+      prev.map((service) => (service.id === serviceId ? response.data : service))
+    );
+  } catch (err) {
+    setError(err.response?.data?.error || 'Error disapproving service');
+  }
+};
+
+const handleComplete = async (serviceId) => {
+  try {
+    const response = await axios.put(`${BASE_URL}services/completeservice/${serviceId}/`);
+    setBookedServices((prev) =>
+      prev.map((service) => (service.id === serviceId ? response.data : service))
+    );
+    
+  } catch (err) {
+    setError(err.response?.data?.error || 'Error disapproving service');
+  }
+}; 
+  
+if (loading) return <p>Loading services...</p>;
+if (error) return <p>{error}</p>;
   console.log("servicer",servicerId)
   console.log(bookedServices)
   return (
    <>
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <h2 className="text-2xl font-bold mb-4 mt-8 text-center text-sky-600">Booked Services </h2>
-      {status === 'loading' && <p>Loading services...</p>}
-     
-      {bookedServices.length === 0 && status === 'succeeded' && <p>No services found.</p>}
-      {bookedServices.length > 0 && (
+      
+      {bookedServices.length === 0 ? (
+        <p>No services found.</p>
+      ) : (
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-5 mx-5">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -94,6 +139,14 @@ if (!servicerId) {
                       Approve
                     </button>
                   )}
+                  {service.status !== 'Completed' && service.approval_by_servicer &&(
+                   <button
+                    onClick={() => handleComplete(service.id)}
+                    className="bg-blue-800 mt-2 text-white px-2 py-1 rounded-md"
+                  >
+                    Complete
+                  </button>
+                )}
                 </td>
               </tr>
             ))}
