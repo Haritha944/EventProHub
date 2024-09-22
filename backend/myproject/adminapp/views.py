@@ -12,9 +12,13 @@ from .serializers import UserSerializers,ServicerSerializers,ServiceSerializers
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
+from django.db.models.functions import TruncMonth, TruncYear,TruncDate
 from rest_framework.permissions import AllowAny,IsAdminUser
 from services.serializers import BookingListSerializer
 from services.models import Service,ServiceBooking
+from django.db.models import Sum,Avg
+from datetime import datetime
+from payments.models import SubscriptionPayment
 
 
 class AdminLoginView(APIView):
@@ -122,8 +126,72 @@ class ServiceListView(ListAPIView):
             queryset = queryset.filter(service_type=service_type)
         return queryset
     
-#<--------AdminSide bookings----->
+#<--------AdminSide bookings------------->
 class AdminBookingList(ListAPIView):
     permission_classes=[AllowAny]
     queryset=ServiceBooking.objects.all()
     serializer_class=BookingListSerializer
+#<---------------------------------------->
+
+#<--------AdminSide dasboard--------------->
+class AdminDashboard(ListAPIView):
+    permission_classes=[AllowAny]
+    def get(self,request):
+        start_date=request.query_params.get('start_date')
+        end_date=request.query_params.get("end_date")
+        totalbookings = ServiceBooking.objects.exclude(status='Canceled')
+        if start_date and end_date:
+            start_date=datetime.strptime(start_date,'%Y-%m-%d')
+            end_date=datetime.strptime(end_date,'%Y-%m-%d')
+            bookings=totalbookings.filter(date__range=(start_date,end_date))
+        else:
+            bookings=totalbookings
+        totalsales = totalbookings.aggregate(total_sales=Sum('price_paid')).get('totalsales') or 0
+        total_users=User.objects.count()
+        total_servicers=Servicer.objects.count()
+        total_sales = totalbookings.aggregate(total_sales=Sum('price_paid')).get('total_sales') or 0
+        #top_services=Service.objects.annotate(average_rating=Avg('review__stars')).order_by('-average_rating')[:5]
+        daily_sales=( 
+            totalbookings.annotate(date=TruncDate('service_date'))
+            .values('date')
+            .annotate(total_sales=Sum('price_paid'))
+            .order_by('date')
+            )
+        monthly_sales = (
+            totalbookings.annotate(month=TruncMonth('service_date'))
+            .values('month')
+            .annotate(total_sales=Sum('price_paid'))
+            .order_by('month')
+        )
+        yearly_sales = (
+            totalbookings.annotate(year=TruncYear('service_date'))
+            .values('year')
+            .annotate(total_sales=Sum('price_paid'))
+            .order_by('year')
+        )
+        dailysales = (
+              bookings.annotate(date=TruncDate('service_date'))
+              .values('date')
+              .annotate(totalsales=Sum('price_paid'))
+               .order_by('date')
+              )
+        sales_data = {sale['date'].strftime('%Y-%m-%d'): sale['totalsales'] for sale in dailysales}
+
+        subscribed_servicers = SubscriptionPayment.objects.select_related('servicer').all()
+
+        response_data={
+            'total_users':total_users,
+            'total_servicers':total_servicers,
+            'total_sales':total_sales,
+            'monthly_sales':list(monthly_sales),
+            'yearly_sales':list(yearly_sales),
+            'daily_sales':list(daily_sales),
+            'sales_data': sales_data,
+            'subscribed_servicers': [
+                {
+                    'servicer_name': payment.servicer.name,  # This line retrieves the servicer name
+                }
+                for payment in subscribed_servicers]
+           
+        }
+        return Response(response_data)

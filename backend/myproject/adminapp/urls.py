@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (AdminLoginView,UserListView,admin_user_block,admin_user_unblock,ServicerListView,admin_servicer_block,admin_servicer_unblock,ServiceListView,AdminBookingList)
+from .views import (AdminLoginView,UserListView,admin_user_block,admin_user_unblock,ServicerListView,admin_servicer_block,admin_servicer_unblock,ServiceListView,AdminBookingList,AdminDashboard)
 from . import views
 
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path("service/<int:pk>/approve/",views.approve_service, name="service-approve"),
     path("service/<int:pk>/disapprove/",views.disapprove_service, name="service-disapprove"),
     path("adminsidebooking/",AdminBookingList.as_view(),name="adminsidebooking"),
+    path('admindash/',AdminDashboard.as_view(),name='admindash'),
 ]
