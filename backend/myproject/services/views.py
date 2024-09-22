@@ -117,15 +117,6 @@ class ServiceDetailView(APIView):
         except Service.DoesNotExist:
             return Response({"error": "Service not found"}, status=status.HTTP_404_NOT_FOUND)
         
-
-class ServicesByServicerView(APIView):
-    permission_classes = [AllowAny] 
-
-    def get(self, request, servicer_id):
-        services = Service.objects.filter(servicer_id=servicer_id)
-        print(services)
-        serializer = ServiceSerializer(services, many=True)
-        return Response(serializer.data)
     
 class ServicesByLocationView(APIView):
     permission_classes = [AllowAny]
