@@ -294,3 +294,20 @@ class CancelBookingView(APIView):
 
         serializer = BookingListSerializer(booking)
         return Response({"message": "Booking has been canceled", "data": serializer.data}, status=status.HTTP_200_OK)
+    
+
+
+@api_view(['PUT'])
+@permission_classes([AllowAny])
+def completeservices(request,pk):
+    try:
+        booking=ServiceBooking.objects.get(pk=pk)
+    except ServiceBooking.DoesNotExist:
+        return Response({'error': 'Service booking not found'}, status=status.HTTP_404_NOT_FOUND)
+    if not booking.approval_by_servicer:
+        return Response({'error':'Service booking is not approved by servicer'},status=status.HTTP_400_BAD_REQUEST)
+    booking.status = 'Completed'
+    booking.save()
+    serializer=BookingListSerializer(booking)
+    return Response(serializer.data,status=status.HTTP_200_OK)
+

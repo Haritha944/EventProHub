@@ -222,12 +222,12 @@ def add_review(request,service_id):
         try:
             service = Service.objects.get(id=service_id)
             servicer = service.servicer
-            #try:
-                #booking = ServiceBooking.objects.get(service=service, user=request.user)
-                #if booking.status != 'Completed':
-                    #return Response({'error': 'You can only submit a review after the service is completed.'}, status=status.HTTP_400_BAD_REQUEST)
-            #except ServiceBooking.DoesNotExist:
-                #return Response({'error': 'No booking found for this service.'}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                booking = ServiceBooking.objects.get(service=service, user=request.user)
+                if booking.status != 'Completed':
+                    return Response({'error': 'You can only submit a review after the service is completed.'}, status=status.HTTP_400_BAD_REQUEST)
+            except ServiceBooking.DoesNotExist:
+                return Response({'error': 'No booking found for this service.'}, status=status.HTTP_400_BAD_REQUEST)
             existing_review = Review.objects.filter(service=service, review_by=request.user).first()
             if existing_review:
                 return Response({'error': 'You have already reviewed this service.'}, status=status.HTTP_400_BAD_REQUEST)

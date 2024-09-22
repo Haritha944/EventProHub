@@ -22,6 +22,7 @@ urlpatterns = [
     path('approvebooking/<int:servicer_id>/',ServiceBookingsView.as_view(), name='approvebooking'),
     path('disapproveservice/<int:pk>/', views.disapprove_booking, name='disapproveservice'),
     path('cancel-booking/', CancelBookingView.as_view(), name='cancel_booking'),
+    path('completeservice/<int:pk>/',views.completeservices,name='completeservice'),
 
 
 ]
