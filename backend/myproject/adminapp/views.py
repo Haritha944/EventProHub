@@ -19,6 +19,7 @@ from services.models import Service,ServiceBooking
 from django.db.models import Sum,Avg
 from datetime import datetime
 from payments.models import SubscriptionPayment
+from django.utils import timezone
 
 
 class AdminLoginView(APIView):
@@ -94,7 +95,14 @@ def approve_service(request, pk):
 
     if service.is_available:
         return Response({'error': 'Service is already approved'}, status=status.HTTP_400_BAD_REQUEST)
-
+    servicer=service.servicer
+    try:
+        subscription=SubscriptionPayment.objects.filter(servicer=servicer,is_paid=True).latest('end_date')
+    except SubscriptionPayment.DoesNotExist:
+        return Response({'error': 'Servicer does not have an active or paid subscription'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if subscription.end_date < timezone.now():
+        return Response({'error': 'Servicer subscription has expired'}, status=status.HTTP_400_BAD_REQUEST)
     service.is_available = True
     service.save()
 
