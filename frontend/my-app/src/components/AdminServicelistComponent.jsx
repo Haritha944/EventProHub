@@ -6,6 +6,7 @@ function AdminServicelistComponent  () {
     const [services,setServices] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterType, setFilterType] = useState("");
+    const [error,setError]=useState(null);
   
 
     useEffect (()=>{
@@ -18,6 +19,7 @@ function AdminServicelistComponent  () {
                 
             } catch (error){
                 console.error('Error fetching services:', error);
+                setError('Error fetching services'); 
             }
         };
         fetchServices();
@@ -36,8 +38,11 @@ function AdminServicelistComponent  () {
                         service.id === serviceId ? { ...service, is_available: !isAvailable } : service
                     )
                 );
+                setError(null);
             })
             .catch((error) => {
+                const errorMessage = error.response?.data?.error || `Error ${action}ing service`;
+                setError(errorMessage);
                 console.log(error, `Error ${action}ing service:`);
             });
     };
@@ -52,8 +57,20 @@ function AdminServicelistComponent  () {
         service.servicer_name.toLowerCase().includes(searchQuery.toLowerCase())) &&
         (filterType === "" || service.service_type.toLowerCase() === filterType.toLowerCase())
     );
+    const closeModal = () => setError(null);
   return (
     <>
+      {error && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-5 rounded shadow-md">
+                        <h2 className="text-lg font-semibold">Error</h2>
+                        <p className="mt-2 text-red-500">{error}</p>
+                        <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
                     <label htmlFor="table-search" className="sr-only">Search</label>
@@ -141,6 +158,7 @@ function AdminServicelistComponent  () {
                                 </td>
                             </tr>
                         ))}
+                      
                     </tbody>
                 </table>
             </div>
