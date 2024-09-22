@@ -14,7 +14,6 @@ function UserServiceDetailComponent () {
   const { serviceId} = useParams();
   const { token } = useSelector((state)=> state.user);
   const selectedService = useSelector(selectSelectedServices);
-  const [servicesByServicer, setServicesByServicer] = useState([]);
   const [servicesByLocation, setServicesByLocation] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -147,44 +146,10 @@ const handleNewReview = (newReview) => {
             <ServiceDetailFetcherComponent 
                 servicerId={servicerId}
                 city={city}
-            setServicesByServicer={setServicesByServicer}
             setServicesByLocation={setServicesByLocation}/>
-          <div className='mt-20 mx-10'>
-                <h2  className="text-2xl bg-gradient-to-r from-fuchsia-800 via-blue-500 to-blue-500 bg-clip-text text-transparent font-bold mb-4 text-center">Related Services by the Same Servicer</h2>
-                <div className="overflow-x-auto">
-                <div className='flex space-x-6 pb-4 mt-6'>
-                {servicesByServicer.length > 0 ? (
-                    servicesByServicer.map(service => (
-                        <div key={service.id} onClick={() => handleServiceClick(service)} className="flex-none mb-3 w-64 rounded overflow-hidden shadow-lg cursor-pointer ">
-                           <img
-                               className="w-full h-32 object-cover rounded-t-lg"
-                             src={`http://127.0.0.1:8000${service.images}`}
-                            alt={service.name}/>          
-                             <h3 className="text-lg font-semibold mt-2 p-2">{service.name}</h3>
-                            <p className="text-sm text-gray-600 p-2 ">Service Type: {service.service_type}</p>
-                            <p className="text-sm text-gray-500 p-2">Duration:{service.period}hrs</p>
-                            {service.price > 0.1 && (
-                           <p className="text-red-700 text-base font-semibold mb-1 p-2">Price: ₹{service.price}</p>
-                                  )}
-                           {service.price_per_sqft > 0.1 && (
-                              <p className="text-red-600 text-base font-semibold mb-1 p-2">Price: ₹{service.price_per_sqft} per sq.ft</p>
-                             )}
-                            <div className="px-6 pt-1 pb-1 text-center">
-                          <button type="button" className="bg-gradient-to-b from-sky-400 via-blue-500 to-blue-800 text-white font-medium rounded-lg text-sm px-4 py-2 hover:bg-blue-600 ">
-                               More Details</button>
-                           </div> 
-                           
-                            
-                        </div>
-                    ))
-                  ) : (
-                    <li>No related services found.</li>
-                  )}
-                </div>
-                </div>
-            </div>
+         
 
-            <div className='mt-10 mx-10'>
+            <div className='mt-20 mx-10'>
                 <h2 className="text-2xl bg-gradient-to-r from-fuchsia-800 via-blue-500 to-blue-500 bg-clip-text text-transparent font-bold mb-4 text-center">Related Services in the Same Location</h2>
                 <div className="overflow-x-auto">
                 <div className='flex space-x-6 pb-4 mt-6'>
