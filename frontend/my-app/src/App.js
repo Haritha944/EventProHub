@@ -35,6 +35,7 @@ import ServicerSubscriptionStatusComponent from './components/ServicerSubscripti
 import UserOrderStatusPage from './Pages/UserOrderStatusPage';
 import ChatComponent from './components/ChatComponent';
 import AdminBookingPage from './Pages/AdminBookingPage';
+import AdminDashboardPage from './Pages/AdminDashboardPage';
 
 
 function App() {
@@ -65,7 +66,9 @@ function App() {
         <Route path="/adminsubscription" element={<AdminPrivateRoute><AdminSubscriptionPage/></AdminPrivateRoute>}/>
         <Route path="/adminsubscriplist" element={<AdminPrivateRoute><AdminSubscriplistPage/></AdminPrivateRoute>}/>
         <Route path="/adminbooking" element={<AdminPrivateRoute><AdminBookingPage/></AdminPrivateRoute>}/>
-
+        <Route path='/admindashboard' element={<AdminPrivateRoute><AdminDashboardPage/></AdminPrivateRoute>}/>
+       
+       
         <Route path="/servicersignup" element={<ServicerSignupPage/>}/>
         <Route path="/servicerverifyotp" element={<ServicerOTPVerification/>}/>
         <Route path="/servicelogin" element={<ServiceLoginPage/>}/>
