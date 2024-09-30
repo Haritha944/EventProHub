@@ -16,8 +16,9 @@ function UserServiceDetailComponent () {
   const selectedService = useSelector(selectSelectedServices);
   const [servicesByLocation, setServicesByLocation] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [userReview,setUserReview]=useState(null);
   const [showModal, setShowModal] = useState(false);
- 
+  
   
   
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function UserServiceDetailComponent () {
         try {
             const response = await axios.get(`${BASE_URL}services/servicedetail/${serviceId}/`);
             console.log('Service details:', response.data);
-            console.log('token',token)
+            console.log('token',token.id)
             dispatch(setService(response.data));
            
         } catch (error) {
@@ -55,6 +56,8 @@ function UserServiceDetailComponent () {
       try {
           const response = await axios.get(`${BASE_URL}payments/reviews/${serviceId}/`);
           setReviews(response.data);
+          const existingReview=response.data.find(review=> review.user===token.id);
+          setUserReview(existingReview || null);
           
       } catch (error) {
           console.error('Error fetching reviews:', error);
@@ -63,9 +66,10 @@ function UserServiceDetailComponent () {
 
     fetchServiceDetails();
     fetchReviews();
-}, [dispatch,serviceId]);
+}, [dispatch,serviceId,token.id]);
 
-console.log('Selected Service:', selectedService); 
+ console.log('Selected Service:', selectedService); 
+
 
   const servicerId = selectedService?.servicer;
   console.log('Servicer ID:', servicerId);
@@ -80,6 +84,7 @@ const handleServiceClick = (service) => {
 
 const handleNewReview = (newReview) => {
   setReviews((prevReviews) => [...prevReviews, newReview]);
+  setUserReview(newReview);
    // Append new review to the state
 };
 
@@ -202,12 +207,13 @@ const handleNewReview = (newReview) => {
                         ) : (
                             <p>No reviews yet.</p>
                         )}
+                         {!userReview && (
                         <button
                          onClick={() => setShowModal(true)} // Open modal on button click
                          className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-white mt-2"
                              >
                          Add Review
-                        </button>
+                        </button>)}
                         {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-5 rounded shadow-lg relative w-full max-w-lg">

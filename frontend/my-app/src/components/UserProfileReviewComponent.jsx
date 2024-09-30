@@ -62,7 +62,7 @@ function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
         navigate(`/userservicedetail/${serviceId}`);// Navigate to the service detail page or wherever needed
       }catch (error) {
         console.error('Error submitting review:', error);
-        setError('Failed to submit review.');
+        setError(error.response?.data?.error || 'Failed to submit review.');
       }finally {
         setIsSubmitting(false);
       }
