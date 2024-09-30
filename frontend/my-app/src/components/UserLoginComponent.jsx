@@ -21,6 +21,10 @@ export const UserLoginComponent = () => {
    }
   },[])
   
+  useEffect(()=>{
+    window.scrollTo(0,0);
+  },[]);
+  
   const handleLogin = async()=>{
    
     try{

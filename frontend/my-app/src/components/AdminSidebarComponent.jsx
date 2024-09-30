@@ -23,7 +23,7 @@ function AdminSidebarComponent  ()  {
   <div className='sidebar d-flex flex-column h-screen p-4 w-full sm:w-1/6 md:w-1/6 lg:w-1/6 bg-gray-100'>
     <div className='flex items-center mb-3 whitespace-nowrap'>
         <img src={logo} alt="Event" className='inline-flex items-center justify-center h-10 w-10 mr-2'/>
-        <span className='text-xl font-bold text-blue-400'>Servicelink Pro</span>
+        <span className='sm:text-xl font-bold text-blue-400'>Servicelink Pro</span>
     </div>
     <ul class="flex flex-col py-4">
       <li>

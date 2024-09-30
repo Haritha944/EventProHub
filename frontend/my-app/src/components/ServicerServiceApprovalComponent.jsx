@@ -80,7 +80,7 @@ if (error) return <p>{error}</p>;
   console.log(bookedServices)
   return (
    <>
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative w-full shadow-md sm:rounded-lg">
       <h2 className="text-2xl font-bold mb-4 mt-8 text-center text-sky-600">Booked Services </h2>
       
       {bookedServices.length === 0 ? (
@@ -113,7 +113,7 @@ if (error) return <p>{error}</p>;
                 Type: {service.service.service_type}<br/>
                 Duration: {service.service.period}hrs <br/>
                 Employees: {service.service.employees_required}</td>
-                <td className="px-5 py-4">{service.address}<br/>
+                <td className="px-5 py-4">{service.user.name}<br/>{service.address}<br/>
                 {service.service.city}</td>
                <td className='px-5 py-4'>{service.price_paid}</td>
                <td className='px-5 py-4'>{service.is_paid ? 'Paid' : 'Unpaid'}</td>

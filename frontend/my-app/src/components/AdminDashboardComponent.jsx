@@ -126,6 +126,8 @@ function AdminDashboardComponent ()  {
       return itemDate >=start && itemDate <=end;
     });
     setFilteredSalesData(filteredData);
+    setStartDate('')
+    setEndDate('')
     
     
   };
