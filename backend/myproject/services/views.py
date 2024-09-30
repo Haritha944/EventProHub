@@ -186,7 +186,7 @@ class BookingListView(APIView):
             except User.DoesNotExist:
                 return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         
-        bookings=ServiceBooking.objects.filter(user=user,is_paid=True)
+        bookings=ServiceBooking.objects.filter(user=user,is_paid=True).order_by('-id')
         serializer = BookingListSerializer(bookings,many=True)
         return Response(serializer.data)
 
