@@ -60,6 +60,26 @@ const handleBookingSubmit = async (e) => {
     setOpenSnackbar(true);
     return;
   }
+  const selectedDate = bookingDetails.service_date;
+  const currentDate = new Date();
+  const serviceDateObj = new Date(selectedDate);
+    
+    
+    if (serviceDateObj < currentDate) {
+        setError('Service date cannot be in the past.');
+        setOpenSnackbar(true);
+        return;
+    }
+
+    
+    const oneMonthFromNow = new Date(currentDate);
+    oneMonthFromNow.setMonth(currentDate.getMonth() + 1);
+    
+    if (serviceDateObj > oneMonthFromNow) {
+        setError('Service date must be within one month from today.');
+        setOpenSnackbar(true);
+        return;
+    }
 
 
   try {

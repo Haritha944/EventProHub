@@ -67,7 +67,9 @@ function UserProfileComponent() {
       }
     }, [confirmUpdate]);
 
-
+    useEffect(()=>{
+      window.scrollTo(0,0);
+    },[]);
   return (
     <div className="flex mt-32 h-full">
       <div className='sm:w-1/4 md:w-1/4 p-4 bg-gray-100 min-h-screen text-blue-700 shadow-md'>
