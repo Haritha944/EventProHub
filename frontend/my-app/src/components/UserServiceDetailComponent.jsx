@@ -16,8 +16,9 @@ function UserServiceDetailComponent () {
   const selectedService = useSelector(selectSelectedServices);
   const [servicesByLocation, setServicesByLocation] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [userReview,setUserReview]=useState(null);
+  const [userReview,setUserReview]=useState(false);
   const [showModal, setShowModal] = useState(false);
+  const currentUser = useSelector((state) => state.user.currentUser);
   
   
   
@@ -45,7 +46,7 @@ function UserServiceDetailComponent () {
         try {
             const response = await axios.get(`${BASE_URL}services/servicedetail/${serviceId}/`);
             console.log('Service details:', response.data);
-            console.log('token',token.id)
+            console.log('token',token)
             dispatch(setService(response.data));
            
         } catch (error) {
@@ -53,11 +54,19 @@ function UserServiceDetailComponent () {
         }
     };
     const fetchReviews = async () => {
+      
       try {
           const response = await axios.get(`${BASE_URL}payments/reviews/${serviceId}/`);
+          console.log('Fetched Reviews:', response.data);
           setReviews(response.data);
-          const existingReview=response.data.find(review=> review.user===token.id);
-          setUserReview(existingReview || null);
+          if (currentUser && currentUser.id) {
+            const existingReview = response.data.some((review) => review.review_by === currentUser.email);
+            console.log('Existing Review:', existingReview);
+            setUserReview(existingReview); // Set to true if a review exists
+          }else{
+            setUserReview(false);
+          }
+          
           
       } catch (error) {
           console.error('Error fetching reviews:', error);
@@ -66,13 +75,12 @@ function UserServiceDetailComponent () {
 
     fetchServiceDetails();
     fetchReviews();
-}, [dispatch,serviceId,token.id]);
+}, [dispatch,serviceId,currentUser]);
 
- console.log('Selected Service:', selectedService); 
-
-
+ //console.log('Selected Service:', selectedService); 
+ 
   const servicerId = selectedService?.servicer;
-  console.log('Servicer ID:', servicerId);
+  //console.log('Servicer ID:', servicerId);
   const city = selectedService?.city;
 
 const handleBookNow = () => {
@@ -84,8 +92,8 @@ const handleServiceClick = (service) => {
 
 const handleNewReview = (newReview) => {
   setReviews((prevReviews) => [...prevReviews, newReview]);
-  setUserReview(newReview);
-   // Append new review to the state
+  setUserReview(true)
+  
 };
 
 

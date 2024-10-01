@@ -10,7 +10,12 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 function UserbookingComponent  ()  {
     const navigate=useNavigate();
     const [bookings, setBookings] = useState([]);
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
+    const [selectedBookingId, setSelectedBookingId] = useState(null);
     const accessToken = useSelector(state => state.user.token.access);
+
+
     useEffect(() => {
         const fetchUserBookings = async () => {
             try {
@@ -38,19 +43,23 @@ function UserbookingComponent  ()  {
 
     const handleCancelBooking = async (bookingId) => {
         try {
-            await axios.post(`${BASE_URL}services/cancel-booking/`, { booking_id: bookingId }, {
+            const response = await axios.post(`${BASE_URL}services/cancel-booking/`, { booking_id: bookingId }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
             });
-
-            const updatedBookings = bookings.map(booking => {
+            if (response.status===200){
+              const updatedBookings = bookings.map(booking => {
                 if (booking.id === bookingId) {
                     return { ...booking, is_canceled: true };
                 }
                 return booking;
             });
             setBookings(updatedBookings);
+            setSuccessModalOpen(true);
+            }
+            setConfirmModalOpen(false);
+            
         } catch (error) {
             console.error('Error cancelling booking:', error);
         }
@@ -132,7 +141,7 @@ function UserbookingComponent  ()  {
                 </td>
               ) : (
                 <button 
-                  onClick={() => handleCancelBooking(booking.id)} 
+                  onClick={() => { setSelectedBookingId(booking.id);setConfirmModalOpen(true); }} 
                   className="mt-6 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
                 >
                   Cancel Booking
@@ -145,6 +154,50 @@ function UserbookingComponent  ()  {
         </div>
       )}
     </div>
+    
+    {isConfirmModalOpen && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-5 rounded shadow-lg">
+                        <h2 className="text-lg font-semibold">Confirm Cancellation</h2>
+                        <p>Are you sure you want to cancel this booking?Only 85% booking amount get refunded</p>
+                        <div className="mt-4">
+                            <button
+                                className="mr-2 bg-red-500 text-white px-4 py-2 rounded"
+                                onClick={() => handleCancelBooking(selectedBookingId)} // Call onConfirm if confirmed
+                            >
+                                Yes, Cancel
+                            </button>
+                            <button
+                                className="bg-gray-300 px-4 py-2 rounded"
+                                onClick={() => setConfirmModalOpen(false)} // Call onClose if canceled
+                            >
+                                No, Keep Booking
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Modal */}
+            {isSuccessModalOpen && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-5 rounded shadow-lg">
+                        <h2 className="text-lg font-semibold">Success!</h2>
+                        <p>Booking cancelled successfully!Within 7 days your amount get refunded in your account</p>
+                        <div className="mt-4">
+                            <button
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={() => setSuccessModalOpen(false)} // Close the modal
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
   </div>
   )
 }
