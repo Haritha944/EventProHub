@@ -15,7 +15,9 @@ from account.models import User
 from account.views import get_tokens_for_user
 from django.core.mail import send_mail
 from django.conf import settings
+from decimal import Decimal
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @api_view(['POST'])
 @authentication_classes([ServicerAuthentication])
@@ -261,33 +263,53 @@ def disapprove_booking(request, pk):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
 class CancelBookingView(APIView):
-    permission_classes = [AllowAny]  # Assuming only authenticated users can cancel bookings
+    permission_classes = [AllowAny] # Assuming only authenticated users can cancel bookings
 
     def post(self, request):
         booking_id = request.data.get('booking_id')
+        print("first",booking_id)
 
         if not booking_id:
             return Response({"error": "Booking ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            booking = ServiceBooking.objects.get(pk=booking_id, user=request.user)
+            booking = ServiceBooking.objects.get(pk=booking_id)
+            print(booking_id)
         except ServiceBooking.DoesNotExist:
             return Response({"error": "Booking not found or you are not authorized to cancel this booking"}, status=status.HTTP_404_NOT_FOUND)
 
         if booking.is_canceled:
             return Response({"error": "Booking is already canceled"}, status=status.HTTP_400_BAD_REQUEST)
+        if booking.stripe_session_id:
+            try:
+                session = stripe.checkout.Session.retrieve(booking.stripe_session_id)
+                payment_intent_id = session.payment_intent
+                print(payment_intent_id)
+                payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+                print(payment_intent)
+                if payment_intent.status not in ['succeeded', 'requires_capture']:
+                    return Response({"error": "Payment intent is not completed successfully"}, status=status.HTTP_400_BAD_REQUEST)
+                charge_id = payment_intent['latest_charge']
+                print(f"Charge ID: {charge_id}")
+                charge = stripe.Charge.retrieve(charge_id)
+                amount_to_refund= int(booking.price_paid * Decimal(0.85))
+                refund=stripe.Refund.create(
+                    charge=charge,
+                    amount=amount_to_refund*100
+                )
+                booking.status = 'Canceled'
+                booking.is_canceled = True
+                booking.save()
 
-        # Update booking status to 'Canceled' and set the is_canceled flag
-        booking.status = 'Canceled'
-        booking.is_canceled = True
-        booking.save()
+                serializer = BookingListSerializer(booking)
+                return Response({"message": "Booking has been canceled", "data": serializer.data}, status=status.HTTP_200_OK)
+            except stripe.error.StripeError as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Booking has been canceled"}, status=status.HTTP_200_OK)
 
-        serializer = BookingListSerializer(booking)
-        return Response({"message": "Booking has been canceled", "data": serializer.data}, status=status.HTTP_200_OK)
-    
-
-
+            
 @api_view(['PUT'])
 @permission_classes([AllowAny])
 def completeservices(request,pk):
