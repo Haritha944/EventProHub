@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     'services',
     'payments',
     'channels',
-    'chatapp',
+    'chat',
     
     
     
@@ -206,7 +207,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],  # Default Redis port
+            "hosts": [("127.0.0.1", 6379)],  # Redis server host and port
+           # Optional: Customize expiry time (in seconds)
         },
     },
 }

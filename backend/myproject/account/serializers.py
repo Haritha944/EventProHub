@@ -27,7 +27,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=['id','email','name','phone_number']
+        fields=['id','email','name','phone_number','is_servicer']
 
 class VerifyAccountSerializer(serializers.Serializer):
     email=serializers.EmailField()

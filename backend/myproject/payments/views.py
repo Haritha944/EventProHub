@@ -121,14 +121,14 @@ def create_checkout_session(request):
                 mode="payment",
                 success_url=settings.SITE_URL
                 + f"order-status/?success=true&amount={booking.price_paid}&currency=inr",
-                cancel_url=settings.SITE_URL + "order-status/?canceled=true",
+                cancel_url=settings.SITE_URL + f"order-status/?canceled=true",
             )
         
         # Update the booking with Stripe session details
             print("Stripe Session:", session)
             booking.stripe_session_id = session.id
-            booking.status = "Paid"  # Update status to Paid
-            booking.is_paid = True  # Mark as paid
+            #booking.status = "Paid"  # Update status to Paid
+            #booking.is_paid = True  # Mark as paid
             booking.save()
 
             
@@ -179,7 +179,7 @@ class CreateCheckoutView(APIView):
                 mode="payment",
                 success_url=settings.SITE_URL
                 + f"subscription-status/?success=true&amount={subscription_plan.amount}&currency=inr",
-                cancel_url=settings.SITE_URL + "subscription-status/?canceled=true",
+                cancel_url=settings.SITE_URL + f"subscription-status/?canceled=true",
             )
             servicer = request.user
             subscription_payment = SubscriptionPayment.objects.create(

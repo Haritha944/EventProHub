@@ -203,9 +203,13 @@ class PaymentSuccessView(APIView):
             
             booking = ServiceBooking.objects.filter(price_paid=price_paid).last()
             print(booking)
-            if booking.status != "Paid":
-                return Response({'error': 'Booking is not paid'}, status=status.HTTP_400_BAD_REQUEST)
-            user = booking.user  # Assuming the ServiceBooking model has a ForeignKey to the User model
+            #if booking.status != "Paid":
+                #return Response({'error': 'Booking is not paid'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            booking.status = "Paid"  # Update status to Paid
+            booking.is_paid = True 
+            booking.save()  
+            user = booking.user     # Assuming the ServiceBooking model has a ForeignKey to the User model
             #tokens = get_tokens_for_user(user)
             serializer = UserProfileSerializer(user)
             return Response({
