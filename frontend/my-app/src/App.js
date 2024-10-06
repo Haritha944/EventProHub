@@ -33,9 +33,11 @@ import UserBookingPage from './Pages/UserBookingPage';
 import ServicerserviceApprovalPage from './Pages/ServicerserviceApprovalPage';
 import ServicerSubscriptionStatusComponent from './components/ServicerSubscriptionStatusComponent';
 import UserOrderStatusPage from './Pages/UserOrderStatusPage';
-import ChatComponent from './components/ChatComponent';
 import AdminBookingPage from './Pages/AdminBookingPage';
 import AdminDashboardPage from './Pages/AdminDashboardPage';
+import ChatUserComponent from './components/ChatUserComponent';
+import ChatPagelist from './Pages/ChatPagelist';
+import ChatDemoPage from './Pages/ChatDemoPage';
 
 
 function App() {
@@ -55,7 +57,8 @@ function App() {
         <Route path="/userreviewbooking" element={<UserReviewBookingPage/>}/>
         <Route path="/order-status" element={<UserOrderStatusPage/>}/>
         <Route path="/userbookings" element={<UserBookingPage/>}/>
-        <Route path="/chat" element={<ChatComponent/>}/>
+        <Route path="/chat" element={<ChatPagelist/>}/>
+        <Route path="/chat1" element={<ChatDemoPage/>}/>
        
 
 

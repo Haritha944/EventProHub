@@ -17,6 +17,11 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerSidebarComponent  () {
   const navigate = useNavigate()
   const dispatch=useDispatch();
+  const [isChatVisible, setIsChatVisible] = useState(false);
+
+  const toggleChatVisibility = () => {
+    setIsChatVisible((prev) => !prev);
+  };
 
   const [servicerDetails,setServicerDetails] = useState(() =>{
     const savedServicerDetails = localStorage.getItem('servicerDetails');

@@ -15,6 +15,7 @@ function UserbookingComponent  ()  {
     const [selectedBookingId, setSelectedBookingId] = useState(null);
     const accessToken = useSelector(state => state.user.token.access);
 
+   
 
     useEffect(() => {
         const fetchUserBookings = async () => {
@@ -64,6 +65,7 @@ function UserbookingComponent  ()  {
             console.error('Error cancelling booking:', error);
         }
     };
+    
   return (
 <div className='flex mt-32 h-full'>
     <div className='sm:w-1/6 md:w-1/6 p-4 bg-gray-100 min-h-screen text-blue-700 shadow-md'>
@@ -132,6 +134,7 @@ function UserbookingComponent  ()  {
                                                                  </td>
               <td className="text-gray-600 py-3 px-6 text-sm">{booking.status}
               </td>
+              
               <td className={`text-sm py-3 px-6 font-semibold ${booking.approval_by_servicer ? 'text-green-500' : 'text-red-700'}`}>
               {booking.approval_by_servicer ? 'Approved' : 'Pending'}
               </td>
@@ -142,7 +145,7 @@ function UserbookingComponent  ()  {
               ) : (
                 <button 
                   onClick={() => { setSelectedBookingId(booking.id);setConfirmModalOpen(true); }} 
-                  className="mt-6 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
+                  className="mt-16 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
                 >
                   Cancel Booking
                 </button>
