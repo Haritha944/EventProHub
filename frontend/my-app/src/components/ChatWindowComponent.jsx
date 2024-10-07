@@ -15,8 +15,8 @@ const formatTimestamp = (timestamp) => {
   };
 
 
-const ChatWindowComponent = ({ selectedUser, messages, onSendMessage }) => {
-    const [message, setMessage] = useState("");
+const ChatWindowComponent = ({ selectedUser, messages=[], onSendMessage }) => {
+  const [message, setMessage] = useState("");
   const messagesEndRef = useRef(null);
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -34,6 +34,9 @@ const ChatWindowComponent = ({ selectedUser, messages, onSendMessage }) => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [selectedUser, messages]);
+
+console.log("servicer",selectedUser?.id)
+
 
   return (
     <>

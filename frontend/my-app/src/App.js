@@ -38,6 +38,7 @@ import AdminDashboardPage from './Pages/AdminDashboardPage';
 import ChatUserComponent from './components/ChatUserComponent';
 import ChatPagelist from './Pages/ChatPagelist';
 import ChatDemoPage from './Pages/ChatDemoPage';
+import ChatDemosecondPage from './Pages/ChatDemosecondPage';
 
 
 function App() {
@@ -59,6 +60,8 @@ function App() {
         <Route path="/userbookings" element={<UserBookingPage/>}/>
         <Route path="/chat" element={<ChatPagelist/>}/>
         <Route path="/chat1" element={<ChatDemoPage/>}/>
+        <Route path="/chat2" element={<ChatDemosecondPage/>}/>
+
        
 
 
