@@ -6,6 +6,7 @@ from account.models import User
 from provider.models import Servicer
 from .serializers import ChatMessageSerializer,UserServicerSerializer
 from account.serializers import UserProfileSerializer
+from provider.serializers import ServicerProfileSerializer
 
 class MessageList(generics.ListAPIView):
     permission_classes = [AllowAny]
@@ -76,8 +77,17 @@ class ChatReceiversList(generics.ListAPIView):
         return combined_queryset
 
 class SearchUserView(generics.ListAPIView):
-  
+    permission_classes=[AllowAny]
+
     queryset = User.objects.filter(is_servicer=False, is_active=True)  # Adjust the queryset based on your model fields
     serializer_class = UserProfileSerializer  # Specify the serializer for the User model
+    filter_backends = [filters.SearchFilter]  # Enable search functionality
+    search_fields = ['id','email','name','phone_number','is_servicer'] 
+
+class SearchServicerView(generics.ListAPIView):
+    permission_classes=[AllowAny]
+    
+    queryset = Servicer.objects.filter(is_servicer=True, is_active=True)  # Adjust the queryset based on your model fields
+    serializer_class = ServicerProfileSerializer  # Specify the serializer for the User model
     filter_backends = [filters.SearchFilter]  # Enable search functionality
     search_fields = ['id','email','name','phone_number','is_servicer'] 
