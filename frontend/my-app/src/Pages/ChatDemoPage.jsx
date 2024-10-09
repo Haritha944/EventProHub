@@ -1,31 +1,41 @@
 import React, {useState,useRef,useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 import Userlist from '../components/Userlist';
 import ChatWindowComponent from '../components/ChatWindowComponent';
 import { selectSelectedServices } from '../redux/Slices/userSlice'
 
+
+const BASE_URL =  process.env.REACT_APP_BASE_URL;
 const ChatDemoPage = () => {
      const [selectedServicer,setSelectedServicer]=useState(null);
-     const [messages,setMessages]=useState([])
+     const [messages,setMessages]=useState([]);
+     const [conversationData, setConversationData] = useState([])
      const [messageContent, setMessageContent] = useState(''); 
+     const [receivers, setReceivers] = useState([]); 
      const ws=useRef(null);
      const { currentUser } = useSelector((state)=> state.user);
      const selectedService = useSelector(selectSelectedServices);
      const servicer=selectedService.servicer.id
+     const Token = useSelector(state => state.user.token);
      console.log("servicer",servicer)
 
      const handleServicerSelect = (servicer)=>{
        setSelectedServicer(servicer)
+       
        if (currentUser){
        const senderId = currentUser.id;
        const senderType="user";
        const receiverType="servicer"
        const receiverId=servicer.id
-
+    
         initializeWebSocket(senderId, receiverId, senderType, receiverType);
+       
        }
      }
 
+
+    //  console.log(servicer)
 
      const initializeWebSocket = (senderId, receiverId, senderType, receiverType) => {
       // Close existing WebSocket if it's already open
@@ -43,6 +53,8 @@ const ChatDemoPage = () => {
       ws.current.onmessage = (event) => {
           const data = JSON.parse(event.data);
           console.log("Received message:", data);
+          setConversationData((prev)=> [...prev, data]);
+          console.log(event.data)
           const normalizedMessage = {
             id: Date.now(),
             content: data.message,
@@ -64,9 +76,10 @@ const ChatDemoPage = () => {
         const senderType = "user";
         const receiverId = selectedServicer.id;
         const receiverType = "servicer";
-
+        
         // Initialize WebSocket with dynamic values
         initializeWebSocket(senderId, receiverId, senderType, receiverType);
+        fetchMessages(senderId,senderType,receiverId,receiverType)
     }
 
     // Clean up WebSocket on component unmount or when selectedServicer changes
@@ -77,6 +90,7 @@ const ChatDemoPage = () => {
     };
 }, [selectedServicer, currentUser]);
 
+console.log(selectSelectedServices)
 
 const handleSendMessage = (messageContent) => {
   if (ws.current && ws.current.readyState === WebSocket.OPEN) {
@@ -93,21 +107,41 @@ const handleSendMessage = (messageContent) => {
   }
 };
 
-   
-    // ws.onmessage = (event) => {
-    //     const message = JSON.parse(event.data);
-    //     console.log("Message received:", message);
 
-    //     const normalizedMessage = {
-            
-    //         content: message.message,
-    //         sender: message.sender,
-    //         receiver: 10,
-    //         timestamp: new Date().toISOString()
-    //     };
+   const fetchMessages = async(senderId,senderType,receiverId,receiverType)=>{
+    try{
+        const response =  await axios.get(`${BASE_URL}chats/messages/${senderId}/${receiverId}/${senderType}/${receiverType}/`,{
+            headers:{
+                Authorization:`Bearer ${Token.access}`
+            }
+        });
+        setConversationData(response.data);
+        console.log('Fetched messages',response.data)
+    }catch(error){
+      console.error("Error fetching messages:",error)
+    }
+   }
+    
+   console.log(conversationData)
+   useEffect(() => {
+    const fetchReceivers = async () => {
+        if (Token && Token.access) {
+            try {
+                const senderId = currentUser.id; // Use currentUser.id as sender ID
+                const response = await axios.get(`${BASE_URL}chats/chat/receivers/${senderId}/`, {
+                    headers: {
+                        Authorization: `Bearer ${Token.access}`,
+                    },
+                });
+                setReceivers(response.data);
+            } catch (error) {
+                console.error("Error fetching receivers:", error);
+            }
+        }
+    };
 
-        
-    // };
+    fetchReceivers();
+}, [currentUser, Token]); 
    
 
   
@@ -116,11 +150,12 @@ const handleSendMessage = (messageContent) => {
    <div>
    <div className="flex flex-col h-screen w-full">
    <div className="flex flex-1">
-   <Userlist onSelectUser={handleServicerSelect}/>
+   <Userlist receivers={receivers} onSelectUser={handleServicerSelect}/>
    <div className="flex flex-col flex-1"></div>
    <ChatWindowComponent
         selectedUser={selectedServicer}
         messageContent={messageContent}
+        conversationData={conversationData}
         onSendMessage={handleSendMessage}
         setMessageContent={setMessageContent}
       />
