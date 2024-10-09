@@ -12,6 +12,8 @@ const ChatDemoPage = () => {
      const [messages,setMessages]=useState([]);
      const [conversationData, setConversationData] = useState([])
      const [messageContent, setMessageContent] = useState(''); 
+     const [searchQuery, setSearchQuery] = useState('');
+     const [searchResults, setSearchResults] = useState([]);
      const [receivers, setReceivers] = useState([]); 
      const ws=useRef(null);
      const { currentUser } = useSelector((state)=> state.user);
@@ -143,14 +145,35 @@ const handleSendMessage = (messageContent) => {
     fetchReceivers();
 }, [currentUser, Token]); 
    
-
+const handleSearch = async (query) => {
+    setSearchQuery(query);
+    console.log(query, 'from chatpage');
+  
+    if (query.trim() === '') {
+        setSearchResults([]);
+        return;
+    }
+  
+    try {
+        const response = await axios.get(`${BASE_URL}chats/servicer-search/?search=${query}`);
+        console.log(response.data, 'response from the api search');
+        setSearchResults(response.data);
+    } catch (error) {
+        console.error("Error fetching search results:", error);
+    }
+  };
   
   return (
    <>
    <div>
    <div className="flex flex-col h-screen w-full">
    <div className="flex flex-1">
-   <Userlist receivers={receivers} onSelectUser={handleServicerSelect}/>
+   <Userlist receivers={receivers}
+   searchResults={searchResults}
+   searchQuery={searchQuery}
+   onSearch={(query) => console.log(query)} 
+   onSelectUser={handleServicerSelect}/>
+
    <div className="flex flex-col flex-1"></div>
    <ChatWindowComponent
         selectedUser={selectedServicer}
