@@ -1,12 +1,14 @@
 from django.db.models import Q
-from rest_framework import generics
+from rest_framework import generics,filters
 from rest_framework.permissions import AllowAny
 from .models import ChatMessage
 from account.models import User
 from provider.models import Servicer
 from .serializers import ChatMessageSerializer,UserServicerSerializer
+from account.serializers import UserProfileSerializer
 
 class MessageList(generics.ListAPIView):
+    permission_classes = [AllowAny]
     serializer_class = ChatMessageSerializer
     pagination_class = None  # Optional: Add pagination later if needed
 
@@ -73,3 +75,9 @@ class ChatReceiversList(generics.ListAPIView):
         combined_queryset = list(user_queryset) + list(servicer_queryset)
         return combined_queryset
 
+class SearchUserView(generics.ListAPIView):
+  
+    queryset = User.objects.filter(is_servicer=False, is_active=True)  # Adjust the queryset based on your model fields
+    serializer_class = UserProfileSerializer  # Specify the serializer for the User model
+    filter_backends = [filters.SearchFilter]  # Enable search functionality
+    search_fields = ['id','email','name','phone_number','is_servicer'] 

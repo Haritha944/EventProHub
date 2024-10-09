@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 import json
+from datetime import datetime
 from account.models import User
 from provider.models import Servicer
 from .models import ChatMessage
@@ -55,7 +56,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'chat_message',
                     'message': message,
                     'sender': self.sender_id,
-                    'sender_type': self.sender_type
+                    'sender_type': self.sender_type,
+                    'receiver': self.receiver_id  
                 }
             )
         except (User.DoesNotExist, Servicer.DoesNotExist):
@@ -67,12 +69,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         sender_id = event['sender']
-        sender_type = event['sender_type']  # Whether the sender is a user or servicer
+        sender_type = event['sender_type'] 
+        receiver_id  =event['receiver']
+        timestamp = datetime.now().isoformat()
+       
 
         await self.send(text_data=json.dumps({
             'message': message,
             'sender_id': sender_id,
-            'sender_type': sender_type
+            'sender_type': sender_type,
+            'receiver_id':receiver_id,
+            'timestamp': timestamp 
+            
         }))
 
     @database_sync_to_async
