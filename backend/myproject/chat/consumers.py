@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from account.models import User
 from provider.models import Servicer
-from .models import ChatMessage
+from .models import ChatMessage,Notification
 
 
 
@@ -27,6 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -60,6 +61,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'receiver': self.receiver_id  
                 }
             )
+            
+
         except (User.DoesNotExist, Servicer.DoesNotExist):
             # Handle the case where the sender or receiver does not exist
             await self.send(text_data=json.dumps({
@@ -82,6 +85,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'timestamp': timestamp 
             
         }))
+
+    
 
     @database_sync_to_async
     def get_sender(self):
@@ -120,5 +125,40 @@ class ChatConsumer(AsyncWebsocketConsumer):
             sender_servicer=sender_servicer,
             receiver_user=receiver_user,
             receiver_servicer=receiver_servicer,
+            message=message
+        )
+    
+class NotificationConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.user = self.scope['user']
+        self.sender_type = 'servicer' if getattr(self.user, 'is_servicer', False) else 'user'  # Determine user type
+        self.group_name = f'notifications_{self.user.id}'  # Unique group for each user
+
+        # Join notification group
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+        await self.accept()  # Accept the WebSocket connection
+
+    async def disconnect(self, close_code):
+        # Leave notification group
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+
+    async def send_notification(self, event):
+        notification = event['notification']
+        notification['user_type'] = self.user_type  # Add user type to the notification data
+        await self.send(text_data=json.dumps(notification))  # Send notification to WebSocket
+
+    @database_sync_to_async
+    def save_notification(self, user, servicer, sender_type, message):
+        # Save notification to the database
+        return Notification.objects.create(
+            user=user,
+            servicer=servicer,
+            sender_type=sender_type,
             message=message
         )

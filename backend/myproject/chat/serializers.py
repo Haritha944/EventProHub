@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ChatMessage
+from .models import ChatMessage,Notification
 from provider.serializers import  ServicerProfileSerializer
 from account.models import User
 from account.serializers import UserProfileSerializer
@@ -35,3 +35,10 @@ class UserServicerSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields =  ['id', 'email', 'name', 'phone_number', 'is_servicer', 'servicer']  
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user=UserProfileSerializer(read_only=True)
+    servicer=ServicerProfileSerializer(read_only=True)
+    class Meta:
+        model = Notification
+        fields = ['id', 'user', 'servicer', 'sender_type', 'message', 'timestamp', 'is_read']

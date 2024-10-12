@@ -1,10 +1,14 @@
 from django.db.models import Q
 from rest_framework import generics,filters
 from rest_framework.permissions import AllowAny
-from .models import ChatMessage
+from .models import ChatMessage,Notification
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from account.models import User
+from rest_framework.response import Response
 from provider.models import Servicer
-from .serializers import ChatMessageSerializer,UserServicerSerializer
+from .serializers import ChatMessageSerializer,UserServicerSerializer,NotificationSerializer
 from account.serializers import UserProfileSerializer
 from provider.serializers import ServicerProfileSerializer
 
@@ -45,21 +49,35 @@ class ChatReceiversList(generics.ListAPIView):
     
     def get_queryset(self):
         sender_id = self.kwargs.get('sender_id')
-        if not sender_id:
-            return []
-        sender_user = User.objects.filter(id=sender_id).exists()
-        sender_servicer = Servicer.objects.filter(id=sender_id).exists()
-        sent_messages = received_messages = ChatMessage.objects.none() 
-        if sender_user:
-                
+        sender_type = self.kwargs.get('sender_type') 
+        if not sender_id or not sender_type:
+            return [] 
+        sent_messages = received_messages = ChatMessage.objects.none()
+
+        if sender_type == 'user':
+            # Fetch messages sent and received by the User
             sent_messages = ChatMessage.objects.filter(sender_user=sender_id)
             received_messages = ChatMessage.objects.filter(receiver_user=sender_id)
-        elif sender_servicer:
-               
+        elif sender_type == 'servicer':
+            # Fetch messages sent and received by the Servicer
             sent_messages = ChatMessage.objects.filter(sender_servicer=sender_id)
             received_messages = ChatMessage.objects.filter(receiver_servicer=sender_id)
         else:
-            return None  # Invalid sender_id
+            return None  # Invalid sender_type
+
+        #sender_user = User.objects.filter(id=sender_id).exists()
+        #sender_servicer = Servicer.objects.filter(id=sender_id).exists()
+        #sent_messages = received_messages = ChatMessage.objects.none() 
+        #if sender_user:
+                
+            #sent_messages = ChatMessage.objects.filter(sender_user=sender_id)
+            #received_messages = ChatMessage.objects.filter(receiver_user=sender_id)
+        #elif sender_servicer:
+               
+            #sent_messages = ChatMessage.objects.filter(sender_servicer=sender_id)
+            #received_messages = ChatMessage.objects.filter(receiver_servicer=sender_id)
+        #else:
+            #return None  # Invalid sender_id
 
             # Get distinct user and servicer IDs who have communicated with the sender
         user_receivers = sent_messages.values_list('receiver_user', flat=True).distinct()
@@ -91,3 +109,40 @@ class SearchServicerView(generics.ListAPIView):
     serializer_class = ServicerProfileSerializer  # Specify the serializer for the User model
     filter_backends = [filters.SearchFilter]  # Enable search functionality
     search_fields = ['id','email','name','phone_number','is_servicer'] 
+
+class NotificationListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        receiver_id = self.kwargs.get('receiver_id')
+        sender_type = self.kwargs.get('sender_type')
+
+        if sender_type == 'user':
+            # Fetch notifications for the user
+            return Notification.objects.filter(servicer=receiver_id,sender_type="user")
+
+        elif sender_type == 'servicer':
+            # Fetch notifications for the servicer
+            return Notification.objects.filter(user=receiver_id,sender_type="servicer")
+
+        # Return an empty queryset if sender_type is not valid
+        return Notification.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        """
+        Override the GET method to return notifications in a custom format.
+        """
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class MarkNotificationRead(APIView):
+    def get(self, request, notification_id):
+        try:
+            notification = Notification.objects.get(id=notification_id)
+            notification.is_read = True
+            notification.save()
+            return Response({'message': 'Notification marked as read.'}, status=status.HTTP_200_OK)
+        except Notification.DoesNotExist:
+            return Response({'error': 'Notification not found.'}, status=status.HTTP_404_NOT_FOUND)

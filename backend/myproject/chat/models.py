@@ -16,3 +16,13 @@ class ChatMessage(models.Model):
     def __str__(self):
         return f'Message from {self.sender_user or self.sender_servicer} to {self.receiver_user or self.receiver_servicer}'
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE, null=True, blank=True)
+    sender_type = models.CharField(max_length=10, choices=[('user', 'User'), ('servicer', 'Servicer')])
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set the timestamp when the record is created
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Notification from {self.sender_type} - {"User" if self.sender_type == "user" else "Servicer"}'

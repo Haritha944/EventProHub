@@ -11,6 +11,7 @@ from .serializers import ServiceSerializer,ServiceDetailSerializer,ServiceBookin
 from provider.emails import ServicerAuthentication
 from account.serializers import UserProfileSerializer
 import stripe
+from chat.models import Notification
 from account.models import User
 from account.views import get_tokens_for_user
 from django.core.mail import send_mail
@@ -209,7 +210,11 @@ class PaymentSuccessView(APIView):
             booking.status = "Paid"  # Update status to Paid
             booking.is_paid = True 
             booking.save()  
-            user = booking.user     # Assuming the ServiceBooking model has a ForeignKey to the User model
+            user = booking.user   
+            servicer=booking.servicer  # Assuming the ServiceBooking model has a ForeignKey to the User model
+            self.save_notification(servicer=servicer, user=user, message=f"Payment of {booking.price_paid} for {booking.service.name} with booking ID {booking.id} has been received from {booking.user.name}. You can now proceed with the approval of service as scheduled!", sender_type='user')
+            self.save_notification(user=user, servicer=servicer, message=f"Your payment for booking {booking.service.name} with {booking.id} was successful!.We will shortly approve your service.Thank you.", sender_type='servicer')
+            
             #tokens = get_tokens_for_user(user)
             serializer = UserProfileSerializer(user)
             return Response({
@@ -220,6 +225,16 @@ class PaymentSuccessView(APIView):
         
         except ServiceBooking.DoesNotExist:
             return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+    def save_notification(self, servicer, user, message, sender_type):
+        # Implement your notification logic here
+        notification = Notification.objects.create(
+            servicer=servicer,
+            user=user,
+            message=message,
+            sender_type=sender_type,
+        )
+        return notification
            
 @api_view(['PUT'])
 @permission_classes([AllowAny])
@@ -327,4 +342,7 @@ def completeservices(request,pk):
     booking.save()
     serializer=BookingListSerializer(booking)
     return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
 
