@@ -39,6 +39,8 @@ import ChatUserComponent from './components/ChatUserComponent';
 import ChatPagelist from './Pages/ChatPagelist';
 import ChatDemoPage from './Pages/ChatDemoPage';
 import ChatDemosecondPage from './Pages/ChatDemosecondPage';
+import NotificationComponent from './components/NotificationComponent';
+import UserNotificationComponent from './components/UserNotificationComponent';
 
 
 function App() {
@@ -61,7 +63,8 @@ function App() {
         <Route path="/chat" element={<ChatPagelist/>}/>
         <Route path="/chat1" element={<ChatDemoPage/>}/>
         <Route path="/chat2" element={<ChatDemosecondPage/>}/>
-
+        <Route path="/notifications/:receiverId/:senderType" element={<NotificationComponent />} />
+        <Route path="/notification/:receiverId/:senderType" element={<UserNotificationComponent />} />
        
 
 

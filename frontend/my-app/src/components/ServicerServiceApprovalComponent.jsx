@@ -124,7 +124,8 @@ if (error) return <p>{error}</p>;
                   </span>
                 </td>
                 <td className="px-5 py-4">
-                  {service.approval_by_servicer ? (
+                  { (service.status === "completed" || service.status === "Paid" )&&(
+                  service.approval_by_servicer  ? (
                     <button
                       onClick={() => handleDisapprove(service.id)}
                       className="bg-red-700 text-white px-2 py-1 rounded-md"
@@ -138,8 +139,8 @@ if (error) return <p>{error}</p>;
                     >
                       Approve
                     </button>
-                  )}
-                  {service.status !== 'Completed' && service.approval_by_servicer &&(
+                  ))}
+                  {service.status !== 'Completed'&& service.approval_by_servicer &&(
                    <button
                     onClick={() => handleComplete(service.id)}
                     className="bg-blue-800 mt-2 text-white px-2 py-1 rounded-md"

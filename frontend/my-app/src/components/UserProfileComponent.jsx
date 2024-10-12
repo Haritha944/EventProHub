@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function UserProfileComponent() {
@@ -83,6 +85,21 @@ function UserProfileComponent() {
                       </span>
                       <span>My Bookings</span>
                   </a>
+              </li>
+              <li>
+             <a onClick={() => {
+                if (userDetails) {
+        const receiverId = userDetails.id; // Assuming this is your servicer ID
+        const senderType = 'servicer'; // You can change this based on your logic
+        
+        // Navigate to the notification page with sender_id and sender_type as URL parameters
+        navigate(`/notification/${receiverId}/${senderType}`);
+      }
+    }} class="flex items-center space-x-3 text-emerald-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                      <span className=" text-emerald-700">
+                         <NotificationsActiveIcon/>
+                      </span>
+                      <span > Notification</span></a>
               </li>
         </ul>
         </div>

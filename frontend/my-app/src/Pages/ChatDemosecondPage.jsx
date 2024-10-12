@@ -136,8 +136,9 @@ const handleSendMessage = (messageContent) => {
    const fetchReceivers = async () => {
        
            try {
-               const senderId = servicerId; // Use currentUser.id as sender ID
-               const response = await axios.get(`${BASE_URL}chats/chat/receivers/${senderId}/`);
+               const senderId = servicerId; 
+               const senderType = 'servicer';
+               const response = await axios.get(`${BASE_URL}chats/chat/receivers/${senderId}/${senderType}/`);
                setReceivers(response.data);
            } catch (error) {
                console.error("Error fetching receivers:", error);

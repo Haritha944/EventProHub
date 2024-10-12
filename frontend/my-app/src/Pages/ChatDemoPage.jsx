@@ -16,6 +16,7 @@ const ChatDemoPage = () => {
      const [searchResults, setSearchResults] = useState([]);
      const [receivers, setReceivers] = useState([]); 
      const ws=useRef(null);
+     const [notifications, setNotifications] = useState([]);
      const { currentUser } = useSelector((state)=> state.user);
      const selectedService = useSelector(selectSelectedServices);
      const servicer=selectedService.servicer.id
@@ -129,8 +130,9 @@ const handleSendMessage = (messageContent) => {
     const fetchReceivers = async () => {
         if (Token && Token.access) {
             try {
-                const senderId = currentUser.id; // Use currentUser.id as sender ID
-                const response = await axios.get(`${BASE_URL}chats/chat/receivers/${senderId}/`, {
+                const senderId = currentUser.id;
+                const senderType="user" // Use currentUser.id as sender ID
+                const response = await axios.get(`${BASE_URL}chats/chat/receivers/${senderId}/${senderType}/`, {
                     headers: {
                         Authorization: `Bearer ${Token.access}`,
                     },

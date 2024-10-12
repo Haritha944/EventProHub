@@ -12,6 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import BookIcon from '@mui/icons-material/Book';
 import ChatIcon from '@mui/icons-material/Chat';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 function ServicerSidebarComponent  () {
@@ -125,6 +126,22 @@ function ServicerSidebarComponent  () {
                       <span>Chats</span>
                   </a>  
                 </li>
+                <li>
+                  <a  onClick={() => {
+                if (servicerDetails) {
+        const receiverId = servicerDetails.id; // Assuming this is your servicer ID
+        const senderType = 'user'; // You can change this based on your logic
+        
+        // Navigate to the notification page with sender_id and sender_type as URL parameters
+        navigate(`/notifications/${receiverId}/${senderType}`);
+      }
+    }} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
+                      <span class=" text-gray-600">
+                         <NotificationsActiveIcon/>
+                      </span>
+                      <span>Notification</span>
+                  </a>
+              </li>
               <li>
                   <a href="#" onClick={handleLogout} class="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline">
                       <span class="text-gray-600">

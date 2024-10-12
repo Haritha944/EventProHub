@@ -1,15 +1,18 @@
 import React, {useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import man from '../Images/prof.png';
-//import { selectSelectedServices } from '../redux/Slices/userSlice';
+import { selectSelectedServices } from '../redux/Slices/userSlice';
 
 const Userlist = ({receivers=[],searchResults = [], searchQuery, onSearch,onSelectUser}) => {
       
       
-      // const selectedService = useSelector(selectSelectedServices);
-      // const servicerName = selectedService ? selectedService.servicer.name : ''
-      // const selectedServicerId = selectedService ? selectedService.servicer.id : null;
+      const selectedService = useSelector(selectSelectedServices);
+      const servicerName = selectedService ? selectedService.servicer.name : ''
+      const selectedServicerId = selectedService ? selectedService.servicer.id : null;
       
+      const [receiversToDisplay, setReceiversToDisplay] = useState(
+        searchQuery ? searchResults : receivers
+      );
       // const filteredReceivers = selectedServicerId
       // ? receivers.filter(receiver => receiver.id !== selectedServicerId)
       // : receivers;
@@ -18,7 +21,18 @@ const Userlist = ({receivers=[],searchResults = [], searchQuery, onSearch,onSele
         console.log(e.target.value, 'from userlist');
       };
     
-      const receiversToDisplay = searchQuery ? searchResults : receivers;
+
+      useEffect(() => {
+        if (receivers.length === 0 && selectedService) {
+          // Add the selected servicer as a receiver if no receivers are found
+          setReceiversToDisplay([selectedService.servicer]);
+        } else {
+          setReceiversToDisplay([selectedService.servicer, ...(searchQuery ? searchResults : receivers)]);
+          
+        }
+      }, [receivers, searchResults, searchQuery, selectedService]);
+    
+      //const receiversToDisplay = searchQuery ? searchResults : receivers;
   
       // useEffect(()=>{
       //   if (selectedService && selectedService.servicer){
@@ -39,7 +53,6 @@ const Userlist = ({receivers=[],searchResults = [], searchQuery, onSearch,onSele
         {receiversToDisplay.length === 0 ? (
           <p className='m-10 px-4 py-2'>No users found</p>
         ) : (
-          
           receiversToDisplay.map((receiver) => (
             <li
               key={receiver.id}
