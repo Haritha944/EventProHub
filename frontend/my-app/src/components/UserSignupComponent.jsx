@@ -5,9 +5,11 @@ import { HiOutlineArrowCircleRight } from "react-icons/hi";
 import axios from 'axios';
 import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { setUserEmail,setUserName } from '../redux/Slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import signup from '../Images/lady.png'
+
 const fields = [
     {label:'Name',name:'name',type:'text',required : true,gridCols:2, placeholder:'Enter your Name'},
     {label:'Email',name:'email',type:'text',required:true,gridCols:2,placeholder:'Enter your Email'},
@@ -57,6 +59,8 @@ export default function UserSignupComponent () {
       navigate('/userservice')
     }
     },[])
+
+    
     
   return (
     <div>

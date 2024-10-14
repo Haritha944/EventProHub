@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 const BASE_URL =  process.env.REACT_APP_BASE_URL;
 const ChatDemosecondPage = () => {
-    const [selectedServicer,setSelectedServicer]=useState(null);
+    const [selectedUser,setSelectedUser]=useState(null);
     const [messages,setMessages]=useState([]);
     const [conversationData, setConversationData] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,13 +33,14 @@ const ChatDemosecondPage = () => {
     //console.log("servicer",servicer)
 
     const handleServicerSelect = (user)=>{
-      setSelectedServicer(user)
+      setSelectedUser(user)
       
       if (!currentUser){
       const senderId = servicerId;
       const senderType="servicer";
       const receiverType="user"
       const receiverId=user.id
+      
      
        initializeWebSocket(senderId, receiverId, senderType, receiverType);
       
@@ -47,7 +48,7 @@ const ChatDemosecondPage = () => {
     }
 
 
-   //  console.log(servicer)
+   console.log("Receiver",selectedUser ? selectedUser.id : null)
 
     const initializeWebSocket = (senderId, receiverId, senderType, receiverType) => {
      // Close existing WebSocket if it's already open
@@ -83,10 +84,10 @@ const ChatDemosecondPage = () => {
      };
  };
  useEffect(() => {
-   if (selectedServicer && !currentUser) {
+   if (selectedUser && !currentUser) {
        const senderId = servicerId;
        const senderType = "servicer";
-       const receiverId = selectedServicer.id;
+       const receiverId = selectedUser.id;
        const receiverType = "user";
        
        // Initialize WebSocket with dynamic values
@@ -100,7 +101,7 @@ const ChatDemosecondPage = () => {
            ws.current.close();
        }
    };
-}, [selectedServicer, currentUser]);
+}, [selectedUser, currentUser]);
 
 console.log(selectSelectedServices)
 
@@ -109,7 +110,7 @@ const handleSendMessage = (messageContent) => {
      const message = {
          message: messageContent.content,
          sender: servicerId, // Use currentUser.id for dynamic sender ID
-         receiver: selectedServicer ? selectedServicer.id : null, // Ensure receiver ID is set
+         receiver: selectedUser ? selectedUser.id : null, // Ensure receiver ID is set
      };
 
      ws.current.send(JSON.stringify(message));
@@ -181,7 +182,7 @@ const handleSearch = async (query) => {
        /> 
     <div className="flex flex-col flex-1"></div>
    <ChatServicerWindowComponent
-        selectedUser={selectedServicer}
+        selectedUser={selectedUser}
         messageContent={messageContent}
         conversationData={conversationData}
         onSendMessage={handleSendMessage}

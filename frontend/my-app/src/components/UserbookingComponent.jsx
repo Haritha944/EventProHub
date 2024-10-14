@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
@@ -43,6 +44,33 @@ function UserbookingComponent  ()  {
     };
 
     const handleCancelBooking = async (bookingId) => {
+      const bookingToCancel = bookings.find(booking => booking.id === bookingId);
+    
+    if (!bookingToCancel) {
+        alert("Booking not found.");
+        return;
+    }
+
+    const serviceTime = bookingToCancel.service_time; // Access the service_time from the booking
+
+    // Convert serviceTime to a Date object
+    const scheduledServiceTime = new Date(serviceTime);
+
+    // Get the current time
+    const currentTime = new Date();
+
+    // Calculate the time difference in milliseconds
+    const timeDifference = scheduledServiceTime - currentTime;
+
+    // Convert milliseconds to hours
+    const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+    // Check if cancellation is allowed (at least 1 hour before the scheduled time)
+    if (hoursDifference < 1) {
+        alert("You can only cancel your booking at least 1 hour before the scheduled service time.");
+        return; // Exit the function if cancellation is not allowed
+    }
+
         try {
             const response = await axios.post(`${BASE_URL}services/cancel-booking/`, { booking_id: bookingId }, {
                 headers: {
@@ -137,19 +165,26 @@ function UserbookingComponent  ()  {
               
               <td className={`text-sm py-3 px-6 font-semibold ${booking.approval_by_servicer ? 'text-green-500' : 'text-red-700'}`}>
               {booking.approval_by_servicer ? 'Approved' : 'Pending'}
-              </td>
-              {booking.is_canceled ? (
-                <td className="mt-6 text-sm font-semibold text-red-700 rounded-full px-5 py-2">
+              </td >
+              <div className='mt-12'>
+              {booking.status === 'Completed' ? (
+            <span className="text-sm  font-semibold text-green-700 py-3 px-6 ">
+                 Completed
+              </span>
+             ) :
+              booking.is_canceled ? (
+                <td className=" mt-8 text-sm font-semibold text-red-700 py-3 px-6">
                   Cancelled
                 </td>
               ) : (
                 <button 
                   onClick={() => { setSelectedBookingId(booking.id);setConfirmModalOpen(true); }} 
-                  className="mt-16 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
+                  className=" mt-4 text-sm font-bold text-white bg-red-800 rounded-full px-5 py-2 hover:bg-blue-800"
                 >
                   Cancel Booking
                 </button>
               )}
+              </div>
             </tr>
           ))}
         </tbody>

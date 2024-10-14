@@ -27,7 +27,8 @@ const Userlist = ({receivers=[],searchResults = [], searchQuery, onSearch,onSele
           // Add the selected servicer as a receiver if no receivers are found
           setReceiversToDisplay([selectedService.servicer]);
         } else {
-          setReceiversToDisplay([selectedService.servicer, ...(searchQuery ? searchResults : receivers)]);
+          const filteredReceivers = receivers.filter(receiver => receiver.id !== selectedService.servicer.id);
+          setReceiversToDisplay([selectedService.servicer, ...(searchQuery ? searchResults : filteredReceivers)]);
           
         }
       }, [receivers, searchResults, searchQuery, selectedService]);
