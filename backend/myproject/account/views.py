@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate 
 from account.emails import *
@@ -9,6 +10,8 @@ from account.serializers import UserRegistrationSerializer,UserLoginSerializer,U
 from .models import User
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+
+
 
 
 # Create your views here.
@@ -215,3 +218,4 @@ class PasswordResetView(APIView):
             return Response({'message': 'Password has been reset.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
