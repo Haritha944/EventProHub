@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'payments',
     'channels',
     'chat',
+    'django_celery_beat',
     
     
     
@@ -218,7 +219,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
 
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  
-
+CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
