@@ -64,8 +64,9 @@ const handleBookingSubmit = async (e) => {
   const bookingCity=bookingDetails.city.toLowerCase().trim();
   const serviceCity = serviceDetails.city.toLowerCase().trim();
   
-  if (bookingCity !== serviceCity) {
-  setError(`This service only available in ${serviceDetails.city} please choose as per that`);
+  if (bookingCity !== serviceCity && !(bookingCity === "trivandrum" && serviceCity === "thiruvananthapuram") 
+    && !(bookingCity ==='thiruvanathapuram' &&  serviceCity === "trivandrum")) {
+  setError(`This service only available in ${serviceDetails.city}`);
   setOpenSnackbar(true);
   return;
   }
