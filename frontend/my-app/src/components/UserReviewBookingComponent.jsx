@@ -24,7 +24,7 @@ function UserReviewBookingComponent () {
   const navigate = useNavigate();
   
   console.log(currentUser)
-  
+  console.log(serviceDetails)
   const [bookingDetails, setBookingDetails] = useState({
     service_date: '',
     service_time: '',
@@ -60,6 +60,17 @@ const handleBookingSubmit = async (e) => {
     setOpenSnackbar(true);
     return;
   }
+
+  const bookingCity=bookingDetails.city.toLowerCase().trim();
+  const serviceCity = serviceDetails.city.toLowerCase().trim();
+  
+  if (bookingCity !== serviceCity) {
+  setError(`This service only available in ${serviceDetails.city} please choose as per that`);
+  setOpenSnackbar(true);
+  return;
+  }
+
+
   const selectedDate = bookingDetails.service_date;
   const currentDate = new Date();
   const serviceDateObj = new Date(selectedDate);
@@ -70,7 +81,7 @@ const handleBookingSubmit = async (e) => {
         setOpenSnackbar(true);
         return;
     }
-
+  
     
     const oneMonthFromNow = new Date(currentDate);
     oneMonthFromNow.setMonth(currentDate.getMonth() + 1);
@@ -81,7 +92,7 @@ const handleBookingSubmit = async (e) => {
         return;
     }
 
-
+ 
   try {
       const formData = new FormData();
       formData.append('service_date', bookingDetails.service_date);
