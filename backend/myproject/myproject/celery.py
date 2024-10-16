@@ -15,13 +15,13 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 app.conf.beat_schedule = {
-    'send-reminder-emails-every-10-minutes': {
+    'send-reminder-emails-every-hour': {
         'task': 'services.tasks.send_service_reminder_email',  # Update with the correct path to your task
-        'schedule': crontab(minute='*/10'),  # Every 10 minutes
+        'schedule': crontab(minute=0),  
     },
 }
 
-
+app.conf.broker_connection_retry_on_startup = True
 
 @app.task(bind=True)
 def debug_task(self):

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'channels',
     'chat',
     'django_celery_beat',
+    'django_celery_results', 
     
     
     
@@ -224,4 +225,4 @@ CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'  # S
+CELERY_TIMEZONE = 'Asia/Kolkata'  # S
