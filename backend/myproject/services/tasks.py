@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from datetime import timedelta,datetime
 from .models import ServiceBooking 
-import logging
+from django.conf import settings
 
-logger = logging.getLogger(__name__)
+
 
 @shared_task(bind=True)
 def send_service_reminder_email(self):

@@ -69,20 +69,42 @@ class ServiceListView(APIView):
         return Response(serializer.data)
     
 
-@api_view(['POST'])
-@authentication_classes([ServicerAuthentication])
-@permission_classes([IsAuthenticated])    
+@api_view(['PUT'])
+#@authentication_classes([ServicerAuthentication])
+@permission_classes([AllowAny])    
 def update_service(request,id):
     try:
         service=Service.objects.get(id=id)
-        serializer = ServiceSerializer(service,data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Service.DoesNotExist:
-        return Response({'error': 'service not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Service not found or you do not have permission to edit this service.'}, status=status.HTTP_404_NOT_FOUND )   
+    name = request.data.get('name', service.name)  # If no new data is provided, keep the existing value
+    city = request.data.get('city', service.city)
+    service_type = request.data.get('service_type', service.service_type)
+    description = request.data.get('description', service.description)
+    price = request.data.get('price', service.price)
+    price_per_sqft = request.data.get('price_per_sqft', service.price_per_sqft)
+    employees_required = request.data.get('employees_required', service.employees_required)
+    period = request.data.get('period', service.period)
+    images = request.data.get('images', service.images)
+    additional_notes = request.data.get('additional_notes', service.additional_notes)
+    try:
+        service.name = name
+        service.city = city
+        service.service_type = service_type
+        service.description = description
+        service.price = price
+        service.price_per_sqft = price_per_sqft
+        service.employees_required = employees_required
+        service.period = period
+        if images:
+            service.images = images
+        service.additional_notes = additional_notes
+        service.save()
 
+        serializer = ServiceSerializer(service)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])

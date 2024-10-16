@@ -19,6 +19,7 @@ app.conf.beat_schedule = {
         'task': 'services.tasks.send_service_reminder_email',  # Update with the correct path to your task
         'schedule': crontab(minute=0),  
     },
+    
 }
 
 app.conf.broker_connection_retry_on_startup = True
