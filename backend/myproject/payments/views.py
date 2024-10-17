@@ -222,8 +222,13 @@ def add_review(request,service_id):
         try:
             service = Service.objects.get(id=service_id)
             servicer = service.servicer
+            booking_id = request.data.get('booking_id')
+            
+            if not booking_id:
+                return Response({'error': 'Booking ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            booking_instance=ServiceBooking.objects.get(id=booking_id)
             try:
-                booking = ServiceBooking.objects.filter(service=service, user=request.user).order_by('-id').first()
+                booking = ServiceBooking.objects.filter(id=booking_id,service=service, user=request.user).order_by('-id').first()
                 if booking.status != 'Completed':
                     return Response({'error': 'You can only submit a review after the service is completed.'}, status=status.HTTP_400_BAD_REQUEST)
             except ServiceBooking.DoesNotExist:
@@ -240,6 +245,7 @@ def add_review(request,service_id):
                 servicer=servicer,
                 review_by=request.user,  # Authenticated user
                 review=review_text,
+                booking=booking_instance,
                 stars=stars,  # Save the stars rating (defaults to 1 if not provided)
             )
 

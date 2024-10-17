@@ -1,7 +1,7 @@
 from django.db import models
 from provider.models import Servicer
 from account.models import User
-from services.models import Service
+from services.models import Service,ServiceBooking
 from django.utils import timezone
 from datetime import timedelta
 # Create your models here.
@@ -61,7 +61,8 @@ class Review(models.Model):
     review_by = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField()
     service = models.ForeignKey(Service, on_delete=models.CASCADE)  # Link to Service model
-    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE)  # Link to Servicer model
+    servicer = models.ForeignKey(Servicer, on_delete=models.CASCADE) 
+    booking = models.ForeignKey(ServiceBooking, on_delete=models.CASCADE,blank=True, null=True) # Link to Servicer model
     stars = models.IntegerField(default=1, blank=True, null=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
 
