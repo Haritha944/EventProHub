@@ -13,6 +13,7 @@ export const UserLoginComponent = () => {
   const dispatch = useDispatch();
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const [error,setError]=useState('');
   const { currentUser } = useSelector((state)=> state.user);
 
   useEffect(()=>{
@@ -56,9 +57,11 @@ export const UserLoginComponent = () => {
        
       }else {
         console.error(data);
+        setError(data.error || 'Invalid credentials. Please try again.');
       }
     } catch(error){
       console.error('Error during login:',error);
+      setError('Something went wrong. Please try again.');
     }
   };
   
@@ -91,6 +94,7 @@ export const UserLoginComponent = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         </div>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
         <div className="mt-4 flex justify-between font-semibold text-sm">
         
           <a

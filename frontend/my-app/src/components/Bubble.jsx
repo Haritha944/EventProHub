@@ -3,7 +3,7 @@ import '../bubbles.css'; // Ensure this path is correct
 import home1 from '../Images/home11.png'
 import {motion} from 'framer-motion'
 
-const services = ['Home Cleaning', 'Office Cleaning', 'Carpet Cleaning', 'Window Cleaning'];
+const services = ['Home Cleaning', 'Office Cleaning', 'Vehicle Washing', 'Commercial Cleaning'];
 const SlideUp = (delay)=>{
     return {
       initial:{

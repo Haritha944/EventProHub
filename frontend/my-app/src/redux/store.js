@@ -7,7 +7,7 @@ import adminUsersReducer from './Slices/adminUserSlice';
 import servicerReducer from './Slices/servicerSlice';
 import adminServicerReducer from './Slices/adminservicerSlice';
 import servicesReducer from './Slices/adminserviceapprovalSlice';
-import chatSliceReducer from './Slices/chatSlice';
+
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
     servicer: servicerReducer,
     adminServicers: adminServicerReducer,
     services: servicesReducer,
-    newMessages:chatSliceReducer
+    
 });
 
 // Config for redux-persist
