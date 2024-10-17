@@ -134,6 +134,7 @@ function UserbookingComponent  ()  {
         <table className="min-w-full bg-white border mt-4 border-gray-200 shadow-md rounded-lg">
         <thead>
                 <tr className="w-full bg-gray-100">
+                 <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Booking id</th>
                   <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Service Name</th>
                   <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Service Date & Time</th>
                   <th className="py-3 px-6 text-left text-sm font-medium text-gray-700">Servicer Details</th>
@@ -148,32 +149,33 @@ function UserbookingComponent  ()  {
         <tbody>
           {bookings.map((booking, index) => (
             <tr key={index} className="bg-white shadow-md rounded-lg p-4">
+              <td className="text-sm py-3 px-6 font-normal text-blue-700">{booking.id}</td>
               <td className="text-sm py-3 px-6 font-normal text-blue-700">
                 {booking.service && `${booking.service.name} - ${booking.service.service_type}`}
               </td>
               <td className="text-gray-600 py-3 px-6 text-sm ">{booking.service_date},<br/>{formatTime(booking.service_time)}</td>
               <td className="text-gray-600 py-3 px-6 text-sm">{booking.service.servicer.name},
                 <br/>{booking.service.servicer.address}<br/>Ph: {booking.service.servicer.phone_number}</td>
-              <td className="text-gray-600 py-3 px-6 text-sm">Duration:{booking.service.period}hr
+              <td className="text-gray-600 py-3 px-4 text-sm">Duration:{booking.service.period}hr
                 <br/>Employees:{booking.service.employees_required}
               </td>
-              <td className="text-gray-600 py-3 px-6 text-sm">{booking.price_paid}</td>
-              <td className="text-gray-600 py-3 px-6 text-sm">{booking.user.name}<br/>{booking.address}
+              <td className="text-gray-600 py-2 px-4 text-sm">{booking.price_paid}</td>
+              <td className="text-gray-600 py-2 px-4 text-sm">{booking.user.name}<br/>{booking.address}
                                                                  </td>
-              <td className="text-gray-600 py-3 px-6 text-sm">{booking.status}
+              <td className="text-gray-600 py-3 px-4 text-sm">{booking.status}
               </td>
               
-              <td className={`text-sm py-3 px-6 font-semibold ${booking.approval_by_servicer ? 'text-green-500' : 'text-red-700'}`}>
+              <td className={`text-sm py-3 px-4 font-semibold ${booking.approval_by_servicer ? 'text-green-500' : 'text-red-700'}`}>
               {booking.approval_by_servicer ? 'Approved' : 'Pending'}
               </td >
-              <div className='mt-12'>
+              <td className='mt-14'>
               {booking.status === 'Completed' ? (
-            <span className="text-sm  font-semibold text-green-700 py-3 px-6 ">
+            <span className="text-sm  font-semibold text-green-700 py-3 px-6 mt-5">
                  Completed
               </span>
              ) :
               booking.is_canceled ? (
-                <td className=" mt-8 text-sm font-semibold text-red-700 py-3 px-6">
+                <td className=" mt-15 text-sm font-semibold text-red-700 py-3 px-6 ">
                   Cancelled
                 </td>
               ) : (
@@ -184,7 +186,7 @@ function UserbookingComponent  ()  {
                   Cancel Booking
                 </button>
               )}
-              </div>
+              </td>
             </tr>
           ))}
         </tbody>

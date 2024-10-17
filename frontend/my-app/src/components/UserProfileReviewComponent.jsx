@@ -17,6 +17,7 @@ function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
   const [showReviewForm, setShowReviewForm] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReviewSubmitted, setIsReviewSubmitted] = useState(false);
+  const [bookingId, setBookingId] = useState(''); 
   const userToken = useSelector((state) => state.user.token.access);
  
   const handleReviewChange = (e) => {
@@ -27,7 +28,10 @@ function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
   const handleRatingChange = (rating) => {
     setNewRating(rating);
   };
-
+  
+  const handleBookingIdChange = (e) => {
+    setBookingId(e.target.value); // Capture booking ID input
+  };
   const handleSubmitReview = async () => {
     if (newReview.trim() === '') {
       setError('Review cannot be empty.');
@@ -44,7 +48,7 @@ function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
         try {
          const response = await axios.post(
           `${BASE_URL}payments/add-review/${serviceId}/`, // Adjust API endpoint as needed
-          { review: newReview, stars: newRating },
+          { review: newReview, stars: newRating ,booking_id: bookingId,},
           {
             headers: {
               'Authorization': `Bearer ${userToken}`,
@@ -113,6 +117,16 @@ function UserProfileReviewComponent ({ onReviewAdded,editingReview})  {
         ))}
       </div>
     </div>
+    <div className="mt-2">
+            <label className="font-semibold">Booking ID:</label>
+            <input
+              type="text"
+              value={bookingId}
+              onChange={handleBookingIdChange}
+              className="w-full p-2 border rounded"
+              placeholder="Enter your booking ID"
+            />
+          </div>
     <button
       onClick={() => {
         setShowModal(true);
