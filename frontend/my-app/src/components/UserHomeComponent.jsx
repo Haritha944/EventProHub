@@ -20,6 +20,8 @@ import man from '../Images/man.png'
 import AddIcon from '@mui/icons-material/Add';
 import prof1 from '../Images/prof1.png'
 import prof from '../Images/home2.png'
+import prof5 from '../Images/prof5.png'
+import prof6 from '../Images/prof6.png'
 
 
 
@@ -258,7 +260,7 @@ const UserHomeComponent = () => {
         {/* Team Member 3 */}
         <div className="flex flex-col items-center">
           <div className="relative w-60 h-60 mb-4">
-            <img src={prof} alt="Arina Habbit" className="w-full h-full object-cover rounded-full" />
+            <img src={prof5} alt="Arina Habbit" className="w-full h-full object-cover rounded-full" />
           </div>
           <div className="bg-gradient-to-t from-sky-400 via-blue-500 rounded-b-full pt-3 pb-2 px-8 w-3/4 -mt-8">
           <AddIcon className='text-blue-600'/>
@@ -270,7 +272,7 @@ const UserHomeComponent = () => {
         {/* Team Member 4 */}
         <div className="flex flex-col items-center">
           <div className="relative w-60 h-60 mb-4">
-            <img src={prof1} alt="Harry White" className="w-full h-full object-cover rounded-full" />
+            <img src={prof6} alt="Harry White" className="w-full h-full object-cover rounded-full" />
            
           </div>
           <div className="bg-gradient-to-t from-sky-400 via-blue-500 rounded-b-full pt-3 pb-2 px-8 w-3/4 -mt-8">

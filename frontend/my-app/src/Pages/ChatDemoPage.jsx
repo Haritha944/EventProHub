@@ -65,7 +65,8 @@ const ChatDemoPage = () => {
             receiver: data.receiver,
             timestamp: new Date().toISOString()
         };
-
+          
+          fetchMessages(senderId,senderType,receiverId,receiverType)
           setMessages((prevMessages) => [...prevMessages, data]); // Add received message to state
       };
 
@@ -109,6 +110,7 @@ const handleSendMessage = (messageContent) => {
       console.error("WebSocket is not connected or ready");
   }
 };
+
 
 
    const fetchMessages = async(senderId,senderType,receiverId,receiverType)=>{

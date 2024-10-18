@@ -40,7 +40,7 @@ const Userlist = ({receivers=[],searchResults = [], searchQuery, onSearch,onSele
       //     onSelectUser(selectedService.servicer);
       //   }
       // },[selectedService,onSelectUser])
-  
+    //useEffect(()=>{handleSearchChange()});
     return (
         <div className="w-1/4 bg-shadow-lg shadow-black h-screen overflow-y-auto pt-20 sticky top-0 mr-2">
           <input

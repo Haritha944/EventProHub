@@ -129,6 +129,7 @@ const formatTimestamp = (timestamp) => {
 const ChatWindowComponent = ({ onSendMessage, conversationData, selectedUser }) => {
   const [message, setMessage] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const Token = useSelector(state => state.user.token);
   const messagesEndRef = useRef(null);
 
   const handleInputChange = (e) => {
@@ -139,6 +140,7 @@ const ChatWindowComponent = ({ onSendMessage, conversationData, selectedUser }) 
     if (message.trim() && selectedUser) {
       onSendMessage({ content: message, receiver: selectedUser.id });
       setMessage("");
+      console.log("Receiver",selectedUser.id)
     }
   };
 
@@ -146,8 +148,8 @@ const ChatWindowComponent = ({ onSendMessage, conversationData, selectedUser }) 
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [selectedUser, conversationData]);
-
+  }, [selectedUser, conversationData,message]);
+  
   console.log("time", formatTimestamp("2024-10-08 11:53:55.862972+05:30"));
   console.log("Message Timestamp:", message.timestamp);
   console.log("Message :", message);

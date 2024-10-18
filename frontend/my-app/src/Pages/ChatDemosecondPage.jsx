@@ -75,7 +75,7 @@ const ChatDemosecondPage = () => {
            receiver: data.receiver,
            timestamp: new Date().toISOString()
        };
-
+        fetchMessages(senderId,senderType,receiverId,receiverType)
          setMessages((prevMessages) => [...prevMessages, data]); // Add received message to state
      };
 

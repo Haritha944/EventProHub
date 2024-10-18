@@ -52,7 +52,7 @@ function App() {
         <Route path="/login" element={<UserLoginPage/>}/>
         <Route path="/userprofile" element={<PrivateRoute><UserProfilePage/></PrivateRoute>}/>
         <Route path="/userservice" element={<UserServicelistingPage/>}/>
-        <Route path="/userservicedetail/:serviceId" element={<PrivateRoute><UserServiceDetailPage/></PrivateRoute>}/>
+        <Route path="/userservicedetail/:serviceId" element={<UserServiceDetailPage/>}/>
         <Route path="/request-reset" element={<UserPasswordResetPage/>}/>
         <Route path="/reset-password" element={<UserResetPasswordComponent/>}/>
         <Route path="/verifyOTP" element={<UserOTPVerificationPage/>}/>
